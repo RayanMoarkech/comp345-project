@@ -1,0 +1,8 @@
+//
+// COMP345_PROJECT_TERRITORY_H
+//
+
+#ifndef TERRITORY_H
+#define TERRITORY_H
+
+#endif //TERRITORY_H

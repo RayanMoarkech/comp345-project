@@ -1,0 +1,8 @@
+//
+// COMP345_PROJECT_CONTINENT_H
+//
+
+#ifndef CONTINENT_H
+#define CONTINENT_H
+
+#endif //CONTINENT_H

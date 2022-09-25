@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "MapLoader.h"
+#include "../MapLoader/MapLoader.h"
 
 int testLoadMaps()
 {
     MapLoader mapLoader = MapLoader();
-    mapLoader.load("./configs/001_I72_Ghtroc 720.map");
+    mapLoader.load("./configs/001_I72_Ghtroc 720.MapLoader");
     return 0;
 }

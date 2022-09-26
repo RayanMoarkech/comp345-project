@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-#include "../Continent/Continent.h"
+#include "Continent.h"
 
 class Map
 {

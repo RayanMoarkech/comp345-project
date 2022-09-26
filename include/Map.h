@@ -16,6 +16,8 @@ private:
 
 public:
     Map();
+    void addContinent(Continent* continent);
+    Continent* getContinent(const std::string& name);
     bool validate();
 };
 

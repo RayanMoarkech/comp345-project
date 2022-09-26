@@ -8,19 +8,21 @@
 #include <iostream>
 #include <vector>
 
+#include "Continent.h"
+
 class Territory
 {
 private:
     int coordinateX;
     int coordinateY;
     std::string name;
-    std::string continentName; // References the Continent. A territory can be in only one Continent. Maybe switch later to pointer of object.
-    std::vector<Territory*> adjacentTerritories; // The maximum allowed is 10. Maybe change to array?
+    Continent* continent;
+    std::vector<std::string> adjacentTerritoryNames; // The maximum allowed is 10. Maybe change to array?
 //    Player* ownedBy; // TODO: A territory is owned by a player and contain a number of armies.
     int numberOfArmies;
 
 public:
-    Territory(std::string name, int coordinateX, int coordinateY, std::string continentName, std::vector<Territory*> adjacentTerritories);
+    Territory(std::string name, int coordinateX, int coordinateY, Continent* continent, std::vector<std::string> adjacentTerritoryNames);
 };
 
 #endif //TERRITORY_H

@@ -17,10 +17,6 @@ private:
 public:
     Map();
     bool validate();
-    // The Map class includes a validate() method that makes the following checks:
-    // 1) the map is a connected graph,
-    // 2) continents are connected subgraphs and
-    // 3) each country belongs to one and only one continent.
 };
 
 #endif //Map_H

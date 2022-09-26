@@ -20,7 +20,7 @@ private:
     int numberOfArmies;
 
 public:
-    Territory();
+    Territory(std::string name, int coordinateX, int coordinateY, std::string continentName, std::vector<Territory*> adjacentTerritories);
 };
 
 #endif //TERRITORY_H

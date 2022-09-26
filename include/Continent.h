@@ -18,11 +18,10 @@ private:
     // Maybe add later pointer to map object.
 
 public:
-    Continent();
     Continent(std::string name, int score);
     std::string getName();
     int getScore();
-    std::vector<Territory> getTerritories();
+    std::vector<Territory*> getTerritories();
 };
 
 #endif //CONTINENT_H

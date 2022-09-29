@@ -26,6 +26,23 @@ Continent* Map::getContinent(const std::string& name)
     return nullptr;
 }
 
+void Map::addTerritory(Territory* territory)
+{
+    this->territories.push_back(territory);
+}
+
+Territory* Map::getTerritory(const std::string &name)
+{
+    for(auto& territory: this->territories)
+    {
+        if (territory->getName() == name)
+        {
+            return territory;
+        }
+    }
+    return nullptr;
+}
+
 // The Map class includes a validate() method that makes the following checks:
 // 1) the map is a connected graph,
 // 2) continents are connected subgraphs and

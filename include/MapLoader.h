@@ -10,11 +10,10 @@
 class MapLoader
 {
     private:
-        std::string mapFileDir;
 
     public:
         MapLoader();
-        void load(std::string mapFileDir);
+        static void load(const std::string& mapFileDir);
 
 };
 

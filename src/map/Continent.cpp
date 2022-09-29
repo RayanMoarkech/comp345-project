@@ -19,7 +19,7 @@ std::string Continent::getName()
     return name;
 }
 
-int Continent::getScore()
+int Continent::getScore() const
 {
     return score;
 }

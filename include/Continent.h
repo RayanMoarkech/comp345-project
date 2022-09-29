@@ -5,23 +5,28 @@
 #ifndef CONTINENT_H
 #define CONTINENT_H
 
+#include <string>
+    using std::string;
 #include <vector>
+    using std::vector;
 
 #include "Territory.h"
+
+class Territory; // Used to determine size of the pointer
 
 class Continent
 {
 private:
-    std::string name;
+    string name;
     int score;
-    std::vector<Territory*> territories;
+    vector<Territory*> territories;
     // Maybe add later pointer to map object.
 
 public:
-    Continent(std::string name, int score);
-    std::string getName();
-    int getScore();
-    std::vector<Territory*> getTerritories();
+    Continent(string name, int score);
+    string getName();
+    int getScore() const;
+    vector<Territory*> getTerritories();
 };
 
 #endif //CONTINENT_H

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../../include/MapLoader.h"
 
 int testLoadMaps()

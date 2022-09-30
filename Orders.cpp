@@ -82,7 +82,7 @@ Deploy::Deploy() : Order()
 {
 	targetTerritory = nullptr;
 	numOfArmyUnits = new unsigned int(0);
-	cout << "Created a deploy order." << endl;
+	cout << "Created a Deploy order." << endl;
 }
 
 //Parametized constructor for Deploy class
@@ -119,14 +119,14 @@ Deploy& Deploy::operator=(const Deploy& rightSide)
 }
 
 //Stream insertion operator for deploy class
-std::ostream& operator<<(std::ostream& out, const Deploy& toOutput)
+ostream& operator<<(ostream& out, const Deploy& toOutput)
 {
 	return toOutput.print(out);
 }
 
 ostream& Deploy::print(ostream& out) const
 {
-	out << "This is Deploy order. ";
+	out << "This is a Deploy order. ";
 	if (*executed) {
 		out << " This order was executed. The effect was Deploy effect." << endl;
 		return out;
@@ -202,7 +202,7 @@ Advance& Advance::operator=(const Advance& rightSide)
 }
 
 //Stream insertion operator for Advance class
-std::ostream& operator<<(std::ostream& out, const Advance& toOutput)
+ostream& operator<<(ostream& out, const Advance& toOutput)
 {
 	return toOutput.print(out);
 }
@@ -275,7 +275,7 @@ Bomb& Bomb::operator=(const Bomb& rightSide)
 }
 
 //Stream insertion operator for Bomb class
-std::ostream& operator<<(std::ostream& out, const Bomb& toOutput)
+ostream& operator<<(ostream& out, const Bomb& toOutput)
 {
 	return toOutput.print(out);
 }
@@ -345,7 +345,7 @@ Blockade& Blockade::operator=(const Blockade& rightSide)
 }
 
 //Stream insertion operator for Blockade class
-std::ostream& operator<<(std::ostream& out, const Blockade& toOutput)
+ostream& operator<<(ostream& out, const Blockade& toOutput)
 {
 	return toOutput.print(out);
 }
@@ -429,7 +429,7 @@ Airlift& Airlift::operator=(const Airlift& rightSide)
 }
 
 //Stream insertion operator for Airlift class
-std::ostream& operator<<(std::ostream& out, const Airlift& toOutput)
+ostream& operator<<(ostream& out, const Airlift& toOutput)
 {
 	return toOutput.print(out);
 }
@@ -499,7 +499,7 @@ Negotiate& Negotiate::operator=(const Negotiate& rightSide)
 }
 
 //Stream insertion operator for Negotiate class
-std::ostream& operator<<(std::ostream& out, const Negotiate& toOutput)
+ostream& operator<<(ostream& out, const Negotiate& toOutput)
 {
 	return toOutput.print(out);
 }
@@ -570,7 +570,7 @@ OrdersList& OrdersList::operator=(const OrdersList& rightSide)
 }
 
 //Stream insertion operator for OrdersList class
-std::ostream& operator<<(std::ostream& out, const OrdersList& toOutput)
+ostream& operator<<(ostream& out, const OrdersList& toOutput)
 {
 	std::list<Order*>* order_list = toOutput.order_list;
 	out << "List of Orders :" << std::endl;
@@ -591,7 +591,7 @@ void OrdersList::remove(int index)
 		return;
 	}
 
-	list<Order*>::iterator itr = order_list->begin(); //Create an iterator for list
+	std::list<Order*>::iterator itr = order_list->begin(); //Create an iterator for list
 	advance(itr, index - 1); //Advancee iterator to correct position (-1 because indices start at 0)
 	order_list->erase(itr);//Delete element from list
 	cout << "Removed order " << index << " from orders list." << endl;
@@ -605,8 +605,8 @@ void OrdersList::move(int oldIndex, int newIndex)
 		cout << "Index out of bounds to move." << endl;
 		return;
 	}
-	list<Order*>::iterator old = order_list->begin();
-	list<Order*>::iterator newPosition = order_list->begin();
+	std::list<Order*>::iterator old = order_list->begin();
+	std::list<Order*>::iterator newPosition = order_list->begin();
 	advance(old, oldIndex - 1);
 	advance(newPosition, newIndex - 1);
 	//TODO: Change splice

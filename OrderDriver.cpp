@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Orders.h"
-using namespace std;
+using std::cout;
 
 void testOrdersList() {
 	cout << "\nCreating an ordersList object:" << endl;

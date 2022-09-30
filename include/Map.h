@@ -1,5 +1,5 @@
 //
-// COMP345_PROJECT_MAP_H
+// COMP345_PROJECT_MAP_H Map.h
 //
 
 #ifndef Map_H
@@ -7,11 +7,16 @@
 
 #include <string>
     using std::string;
-
-#include "Continent.h"
-#include "Territory.h"
+#include <vector>
+    using std::vector;
 
 class Continent; // Used to determine size of the pointer
+class Territory; // Used to determine size of the pointer
+
+
+//
+// Map Section
+//
 
 class Map
 {
@@ -26,6 +31,48 @@ public:
     void addTerritory(Territory* territory);
     Territory* getTerritory(const string& name);
     bool validate();
+};
+
+
+//
+// Continent Section
+//
+
+class Continent
+{
+private:
+    string name;
+    int score;
+    vector<Territory*> territories;
+    // Maybe add later pointer to map object.
+
+public:
+    Continent(string name, int score);
+    string getName();
+    int getScore() const;
+    vector<Territory*> getTerritories();
+};
+
+
+//
+// Territory Section
+//
+
+class Territory
+{
+private:
+    int coordinateX;
+    int coordinateY;
+    string name;
+    Continent* continent;
+    vector<Territory*> adjacentTerritories; // The maximum allowed is 10. Maybe change to array?
+//    Player* ownedBy; // TODO: A territory is owned by a player and contain a number of armies.
+    int numberOfArmies;
+
+public:
+    Territory(string name, int coordinateX, int coordinateY, Continent* continent);
+    string getName();
+    void addAdjacentTerritory(Territory* territory);
 };
 
 #endif //Map_H

@@ -1,8 +1,18 @@
 //
-//
+// Map.cpp
 //
 
+#include <string>
+    using std::string;
+#include <vector>
+    using std::vector;
+
 #include "../../include/Map.h"
+
+
+//
+// Map Section
+//
 
 Map::Map()
 {
@@ -52,4 +62,56 @@ bool Map::validate()
     bool isValid = false;
     //TODO: the checks
     return isValid;
+}
+
+
+//
+// Continent Section
+//
+
+Continent::Continent(std::string name, int score)
+{
+    this->name = std::move(name);
+    this->score = score;
+    this->territories = {};
+}
+
+std::string Continent::getName()
+{
+    return name;
+}
+
+int Continent::getScore() const
+{
+    return score;
+}
+
+std::vector<Territory*> Continent::getTerritories()
+{
+    return territories;
+}
+
+
+//
+// Territory Section
+//
+
+Territory::Territory(string name, int coordinateX, int coordinateY, Continent* continent)
+{
+    this->name = std::move(name);
+    this->coordinateX = coordinateX;
+    this->coordinateY = coordinateY;
+    this->continent = continent;
+    this->adjacentTerritories = {};
+    this->numberOfArmies = 0;
+}
+
+string Territory::getName()
+{
+    return this->name;
+}
+
+void Territory::addAdjacentTerritory(Territory *territory)
+{
+    this->adjacentTerritories.push_back(territory);
 }

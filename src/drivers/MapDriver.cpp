@@ -1,7 +1,7 @@
 #include "../../include/MapLoader.h"
 
-int testLoadMaps()
+int main()
 {
-    MapLoader::load("../../config/001_I72_Ghtroc 720.MapLoader");
+    MapLoader::load("./001_I72_Ghtroc720.map");
     return 0;
 }

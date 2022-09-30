@@ -14,8 +14,6 @@
 
 #include "../../include/MapLoader.h"
 #include "../../include/Map.h"
-#include "../../include/Continent.h"
-#include "../../include/Territory.h"
 
 MapLoader::MapLoader() = default;
 
@@ -37,6 +35,10 @@ void MapLoader::load(const std::string& mapFileDir)
             // Loop through the lines
             while(getline(input, line))
             {
+                if (line == "\r")
+                {
+                    break;
+                }
                 // Get the name and score of Continent
                 unsigned long delimiterPos = line.find('=');
                 string name = line.substr(0, delimiterPos);
@@ -74,6 +76,8 @@ void MapLoader::load(const std::string& mapFileDir)
                 string continentName = line.substr(0, delimiterPos);
                 // Get the Continent reference
                 Continent* continent = map->getContinent(continentName);
+
+                line = line.substr(delimiterPos + 1);
 
                 // Create the Territory object
                 Territory territory = Territory(name, coordinateX, coordinateY, continent);

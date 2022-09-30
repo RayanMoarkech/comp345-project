@@ -26,6 +26,7 @@ private:
 
 public:
     Map();
+    ~Map();
     void addContinent(Continent* continent);
     Continent* getContinent(const string& name);
     void addTerritory(Territory* territory);
@@ -48,6 +49,7 @@ private:
 
 public:
     Continent(string name, int score);
+    ~Continent();
     string getName();
     int getScore() const;
     vector<Territory*> getTerritories();
@@ -71,6 +73,7 @@ private:
 
 public:
     Territory(string name, int coordinateX, int coordinateY, Continent* continent);
+    ~Territory();
     string getName();
     void addAdjacentTerritory(Territory* territory);
 };

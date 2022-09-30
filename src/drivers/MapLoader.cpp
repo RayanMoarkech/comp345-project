@@ -44,9 +44,9 @@ void MapLoader::load(const std::string& mapFileDir)
                 string name = line.substr(0, delimiterPos);
                 int score = std::stoi(line.substr(delimiterPos + 1));
                 // Create a new Continent object
-                Continent continent = Continent(name, score);
+                Continent* continent = new Continent(name, score);
                 // Add the Continent Object reference to the Map
-                map->addContinent(&continent);
+                map->addContinent(continent);
             }
         }
         // Territories section
@@ -80,8 +80,8 @@ void MapLoader::load(const std::string& mapFileDir)
                 line = line.substr(delimiterPos + 1);
 
                 // Create the Territory object
-                Territory territory = Territory(name, coordinateX, coordinateY, continent);
-                territoryAdjMap.insert(std::pair<Territory*, vector<string>>(&territory, {}));
+                Territory* territory = new Territory(name, coordinateX, coordinateY, continent);
+                territoryAdjMap.insert(std::pair<Territory*, vector<string>>(territory, {}));
 
                 // Loop through the remaining line with a delimiter ',' to get the names of the adjacent territories
                 string adjacentTerritoryName;
@@ -89,7 +89,7 @@ void MapLoader::load(const std::string& mapFileDir)
                 lineStream << line;
                 while(getline(lineStream, adjacentTerritoryName, ','))
                 {
-                    territoryAdjMap[&territory].push_back(adjacentTerritoryName);
+                    territoryAdjMap[territory].push_back(adjacentTerritoryName);
                 }
 
             }

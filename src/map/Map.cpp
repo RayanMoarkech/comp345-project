@@ -59,15 +59,47 @@ void Map::setValidFalse()
     this->isValid = false;
 }
 
-// The Map class includes a validate() method that makes the following checks:
+// Method that makes the following checks:
 // 1) the map is a connected graph,
-// 2) continents are connected subgraphs and
+// 2) continents are connected sub-graphs, and
 // 3) each country belongs to one and only one continent.
 bool Map::validate()
 {
-    bool isValid = false;
-    //TODO: the checks
-    return isValid;
+    // The load function already checks if there is any adjacent territory that is not a territory
+    // and if the territory is in a continent that does not exist.
+    // If the map is not valid, skip the check.
+    if (!this->isValid)
+    {
+        return false;
+    }
+
+    // Check if there is a duplicate Continent with the same name
+    vector<std::string> continentNames = {};
+    for (Continent* continent: this->continents)
+    {
+        const string continentName = continent->getName();
+        if (std::find(continentNames.begin(), continentNames.end(), continentName) != continentNames.end())
+        {
+            this->isValid = false;
+            return false;
+        }
+        continentNames.push_back(continentName);
+    }
+
+    // Check if there is a duplicate Territory with the same name
+    vector<std::string> territoryNames = {};
+    for (Territory* territory: this->territories)
+    {
+        const string territoryName = territory->getName();
+        if (std::find(territoryNames.begin(), territoryNames.end(), territoryName) != territoryNames.end())
+        {
+            this->isValid = false;
+            return false;
+        }
+        continentNames.push_back(territoryName);
+    }
+
+    return true;
 }
 
 

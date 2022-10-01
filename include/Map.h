@@ -54,7 +54,7 @@ public:
     ~Continent();
     string getName();
     int getScore() const;
-    vector<Territory*> getTerritories();
+    void addTerritory(Territory* territory);
 };
 
 

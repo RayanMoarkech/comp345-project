@@ -92,9 +92,9 @@ int Continent::getScore() const
     return score;
 }
 
-std::vector<Territory*> Continent::getTerritories()
+void Continent::addTerritory(Territory* territory)
 {
-    return territories;
+    this->territories.push_back(territory);
 }
 
 

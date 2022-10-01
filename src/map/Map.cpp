@@ -10,15 +10,17 @@
 #include "../../include/Map.h"
 
 
-//
-// Map Section
-//
+// ---------------------------------------------
+// ---------------- Map Section ----------------
+// ---------------------------------------------
 
 Map::Map()
 {
     this->continents = {};
     this->isValid = true;
 }
+
+Map::~Map() = default;
 
 void Map::addContinent(Continent* continent)
 {
@@ -103,9 +105,9 @@ bool Map::validate()
 }
 
 
-//
-// Continent Section
-//
+// ---------------------------------------------
+// ------------- Continent Section -------------
+// ---------------------------------------------
 
 Continent::Continent(std::string name, int score)
 {
@@ -113,6 +115,8 @@ Continent::Continent(std::string name, int score)
     this->score = score;
     this->territories = {};
 }
+
+Continent::~Continent() = default;
 
 std::string Continent::getName()
 {
@@ -130,9 +134,9 @@ void Continent::addTerritory(Territory* territory)
 }
 
 
-//
-// Territory Section
-//
+// ---------------------------------------------
+// ------------- Territory Section -------------
+// ---------------------------------------------
 
 Territory::Territory(string name, int coordinateX, int coordinateY, Continent* continent)
 {
@@ -143,6 +147,8 @@ Territory::Territory(string name, int coordinateX, int coordinateY, Continent* c
     this->adjacentTerritories = {};
     this->numberOfArmies = 0;
 }
+
+Territory::~Territory() = default;
 
 string Territory::getName()
 {

@@ -17,6 +17,7 @@
 Map::Map()
 {
     this->continents = {};
+    this->isValid = true;
 }
 
 void Map::addContinent(Continent* continent)
@@ -51,6 +52,11 @@ Territory* Map::getTerritory(const std::string &name)
         }
     }
     return nullptr;
+}
+
+void Map::setValidFalse()
+{
+    this->isValid = false;
 }
 
 // The Map class includes a validate() method that makes the following checks:

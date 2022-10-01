@@ -21,8 +21,9 @@ class Territory; // Used to determine size of the pointer
 class Map
 {
 private:
-    std::vector<Continent*> continents;
-    std::vector<Territory*> territories;
+    vector<Continent*> continents;
+    vector<Territory*> territories;
+    bool isValid;
 
 public:
     Map();
@@ -31,6 +32,7 @@ public:
     Continent* getContinent(const string& name);
     void addTerritory(Territory* territory);
     Territory* getTerritory(const string& name);
+    void setValidFalse();
     bool validate();
 };
 

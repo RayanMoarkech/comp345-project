@@ -122,5 +122,5 @@ void MapLoader::load(const std::string& mapFileDir)
         cout << "An error has occurred when creating the map from config file: " << mapFileDir << std::endl;
         map->setValidFalse();
     }
-    map->validate();
+    cout << std::boolalpha << mapFileDir << " is valid: " << map->validate() << endl;
 }

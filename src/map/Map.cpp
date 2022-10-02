@@ -20,7 +20,19 @@ Map::Map()
     this->isValid = true;
 }
 
-Map::~Map() = default;
+Map::~Map()
+{
+    for (Continent* continent: this->continents)
+    {
+        delete continent;
+        continent = nullptr;
+    }
+    for (Territory* territory: this->territories)
+    {
+        delete territory;
+        territory = nullptr;
+    }
+}
 
 void Map::addContinent(Continent* continent)
 {

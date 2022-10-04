@@ -6,38 +6,35 @@
 // Default constructor for Order parent class
 Order::Order()
 {
-	executed = new bool(false);
+	executed = false;
 	player = nullptr;
 }
 
 //Parametized constructor for Order parent class
 Order::Order(Player* player)
 {
-	executed = new bool(false);
+	executed = false;
 	this->player = player;
 }
 
 //Destructor for Order parent class
 Order::~Order()
 {
-	delete executed;
-
 	this->player = nullptr;
-	this->executed = nullptr;
 }
 
 //Deep copy constructor for Order parent class
 Order::Order(const Order& toCopy)
 {
 	this->player = toCopy.player; //Player of order will point to the same player as toCopy
-	this->executed = new bool(*toCopy.executed);
+	executed = toCopy.executed;
 }
 
 //Assignment operator for Order parent class
 Order& Order::operator=(const Order& o)
 {
 	this->player = o.player;
-	this->executed = o.executed;
+	executed = o.executed;
 	return *this;
 }
 
@@ -51,7 +48,7 @@ ostream& operator << (ostream& out, const Order& toOutput)
 ostream& Order::print(ostream& out) const
 {
 	out << "This is an order.";
-	if (*executed) {
+	if (executed) {
 		out << " This order was executed. The effect was order effect." << endl;
 	}
 	return out;
@@ -70,7 +67,7 @@ void Order::execute()
 		cout << "Order invalid. Will not execute." << endl;
 		return;
 	}
-	this->executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Order executed." << endl;
 }
@@ -80,12 +77,12 @@ void Order::execute()
 Deploy::Deploy() : Order()
 {
 	targetTerritory = nullptr;
-	numOfArmyUnits = new unsigned int(0);
+	numOfArmyUnits = 0;
 	cout << "Created a Deploy order." << endl;
 }
 
 //Parametized constructor for Deploy class
-Deploy::Deploy(Player* player, Territory* territory, unsigned int* numOfArmyUnits) : Order(player)
+Deploy::Deploy(Player* player, Territory* territory, unsigned int numOfArmyUnits) : Order(player)
 {
 	this->targetTerritory = territory;
 	this->numOfArmyUnits = numOfArmyUnits;
@@ -94,17 +91,14 @@ Deploy::Deploy(Player* player, Territory* territory, unsigned int* numOfArmyUnit
 //Destructor for deploy class
 Deploy::~Deploy()
 {
-	delete numOfArmyUnits;
-
 	this->targetTerritory = nullptr;
-	this->numOfArmyUnits = nullptr;
 }
 
 //Deep copy constructor for Deploy class
 Deploy::Deploy(const Deploy& toCopy) : Order(toCopy)
 {
 	this->targetTerritory = toCopy.targetTerritory;
-	this->numOfArmyUnits = new unsigned int(*toCopy.numOfArmyUnits);
+	this->numOfArmyUnits = toCopy.numOfArmyUnits;
 }
 
 //Assignment operator for Deploy class
@@ -125,7 +119,7 @@ ostream& operator<<(ostream& out, const Deploy& toOutput)
 ostream& Deploy::print(ostream& out) const
 {
 	out << "This is a Deploy order. ";
-	if (*executed) {
+	if (executed) {
 		out << " This order was executed. The effect was Deploy effect." << endl;
 		return out;
 	}
@@ -146,7 +140,7 @@ void Deploy::execute()
 		cout << "Deploy order invalid. Will not execute." << endl;
 		return;
 	}
-	this->executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Deploy order executed." << endl;
 }
@@ -157,12 +151,12 @@ Advance::Advance() : Order()
 {
 	this->targetTerritory = nullptr;
 	this->sourceTerritory = nullptr;
-	numOfArmyUnits = new unsigned int(0);
+	numOfArmyUnits = 0;
 	cout << "Created an Advance order." << endl;
 }
 
 //Parametized constructor for Advance class
-Advance::Advance(Player* player, Territory* source, Territory* target, unsigned int* numOfArmyUnits) : Order(player)
+Advance::Advance(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits) : Order(player)
 {
 	this->sourceTerritory = source;
 	this->targetTerritory = target;
@@ -172,11 +166,8 @@ Advance::Advance(Player* player, Territory* source, Territory* target, unsigned 
 //Destructor for Advance class
 Advance::~Advance()
 {
-	delete numOfArmyUnits;
-
 	this->sourceTerritory = nullptr;
 	this->targetTerritory = nullptr;
-	this->numOfArmyUnits = nullptr;
 }
 
 //Deep copy constructor for Advance class
@@ -184,7 +175,7 @@ Advance::Advance(const Advance& toCopy) : Order(toCopy)
 {
 	this->sourceTerritory = toCopy.sourceTerritory;
 	this->targetTerritory = toCopy.targetTerritory;
-	this->numOfArmyUnits = new unsigned int(*toCopy.numOfArmyUnits);
+	this->numOfArmyUnits = toCopy.numOfArmyUnits;
 }
 
 //Assignment operator for Advance class
@@ -206,7 +197,7 @@ ostream& operator<<(ostream& out, const Advance& toOutput)
 ostream& Advance::print(ostream& out) const
 {
 	out << "This is an Advance order.";
-	if (*executed) {
+	if (executed) {
 		out << " This order was executed. The effect was Advance effect.";
 	}
 	return out;
@@ -229,7 +220,7 @@ void Advance::execute()
 		cout << "Advance order invalid. Will not execute" << endl;
 		return;
 	}
-	this->executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Advance order executed." << endl;
 }
@@ -278,7 +269,7 @@ ostream& operator<<(ostream& out, const Bomb& toOutput)
 ostream& Bomb::print(ostream& out) const
 {
 	out << "This is a Bomb order.";
-	if (*executed) {
+	if (executed) {
 		out << " This order was executed. The effect was Bomb effect.";
 	}
 	return out;
@@ -299,7 +290,7 @@ void Bomb::execute()
 		cout << "Bomb order invalid. Will not execute" << endl;
 		return;
 	}
-	executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Bomb order executed." << endl;
 }
@@ -368,7 +359,7 @@ void Blockade::execute()
 		cout << "Blockade order invalid. Will not execute" << endl;
 		return;
 	}
-	executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Blockade order executed." << endl;
 }
@@ -380,12 +371,12 @@ void Blockade::execute()
 Airlift::Airlift() : Order() {
 	sourceTerritory = nullptr;
 	targetTerritory = nullptr;
-	numOfArmyUnits = nullptr;
+	numOfArmyUnits = 0;
 	cout << "Created an Airlift order." << endl;
 }
 
 //Parametized constructor for Airlift class
-Airlift::Airlift(Player* player, Territory* source, Territory* target, unsigned int* numOfArmyUnits) : Order(player)
+Airlift::Airlift(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits) : Order(player)
 {
 	this->sourceTerritory = source;
 	this->targetTerritory = target;
@@ -395,11 +386,8 @@ Airlift::Airlift(Player* player, Territory* source, Territory* target, unsigned 
 //Destructor for Airlift class
 Airlift::~Airlift()
 {
-	delete numOfArmyUnits;
-
 	this->sourceTerritory = nullptr;
 	this->targetTerritory = nullptr;
-	this->numOfArmyUnits = nullptr;
 }
 
 //Deep copy constructor for Airlift class
@@ -407,7 +395,7 @@ Airlift::Airlift(const Airlift& toCopy) : Order(toCopy)
 {
 	this->sourceTerritory = toCopy.sourceTerritory;
 	this->targetTerritory = toCopy.targetTerritory;
-	this->numOfArmyUnits = new unsigned int(*toCopy.numOfArmyUnits);
+	this->numOfArmyUnits = toCopy.numOfArmyUnits;
 }
 
 //Assignment operator for Airlift class
@@ -450,7 +438,7 @@ void Airlift::execute()
 		cout << "Airlift order invalid. Will not execute" << endl;
 		return;
 	}
-	executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Airlift order executed." << endl;
 }
@@ -498,7 +486,7 @@ ostream& operator<<(ostream& out, const Negotiate& toOutput)
 ostream& Negotiate::print(ostream& out) const
 {
 	out << "This is a Negotiate order.";
-	if (*executed) {
+	if (executed) {
 		out << " This order was executed. The effect was Negotiate effect.";
 	}
 	return out;
@@ -519,7 +507,7 @@ void Negotiate::execute()
 		cout << "Negotiate order invalid. Will not execute" << endl;
 		return;
 	}
-	executed = new bool(true);
+	executed = true;
 	//TODO: Insert execution behaviour
 	cout << "Negotiate order executed." << endl;
 }
@@ -529,8 +517,12 @@ void Negotiate::execute()
 //Default constructor for OrdersList class
 OrdersList::OrdersList()
 {
-	order_list = new std::list<Order*>();
 	cout << "Created an ordersList object." << endl;
+}
+
+OrdersList::OrdersList(std::list<Order*> order_list)
+{
+	this->order_list = order_list;
 }
 
 //Destructor for OrdersList class
@@ -538,19 +530,16 @@ OrdersList::~OrdersList()
 {
 	//Delete orders in list and orders_list
 	/*
-	* for (auto const& order : *order_list) {
+	* for (auto const& order : order_list) {
 		delete order;
 	}
 	*/
-
-	delete order_list;
-	order_list = nullptr;
 }
 
 //Deep copy constructor for OrdersList class
 OrdersList::OrdersList(const OrdersList& toCopy)
 {
-	this->order_list = new std::list<Order*>(*toCopy.order_list);
+	this->order_list = std::list<Order*>(toCopy.order_list);
 }
 
 //Assignment operator for OrdersList class
@@ -563,10 +552,10 @@ OrdersList& OrdersList::operator=(const OrdersList& rightSide)
 //Stream insertion operator for OrdersList class
 ostream& operator<<(ostream& out, const OrdersList& toOutput)
 {
-	std::list<Order*>* order_list = toOutput.order_list;
+	std::list<Order*> order_list = toOutput.order_list;
 	out << "List of Orders :" << std::endl;
 
-	for (auto const& order : *order_list) {
+	for (auto const& order : order_list) {
 		std::cout << *order << std::endl;
 	}
 
@@ -577,14 +566,14 @@ ostream& operator<<(ostream& out, const OrdersList& toOutput)
 void OrdersList::remove(int index)
 {
 	//Check if index out of bounds
-	if (index < 0 || index >= order_list->size()) {
+	if (index < 0 || index >= order_list.size()) {
 		cout << "Index out of bounds for remove" << endl;
 		return;
 	}
 
-	std::list<Order*>::iterator itr = order_list->begin(); //Create an iterator for list
+	std::list<Order*>::iterator itr = order_list.begin(); //Create an iterator for list
 	advance(itr, index - 1); //Advancee iterator to correct position (-1 because indices start at 0)
-	order_list->erase(itr);//Delete element from list
+	order_list.erase(itr);//Delete element from list
 	cout << "Removed order " << index << " from orders list." << endl;
 }
 
@@ -592,21 +581,21 @@ void OrdersList::remove(int index)
 void OrdersList::move(int oldIndex, int newIndex)
 {
 	//Check if index out of bounds
-	if (oldIndex < 0 || oldIndex >= order_list->size() || newIndex < 0 || newIndex > order_list->size()) {
+	if (oldIndex < 0 || oldIndex >= order_list.size() || newIndex < 0 || newIndex > order_list.size()) {
 		cout << "Index out of bounds to move." << endl;
 		return;
 	}
-	std::list<Order*>::iterator old = order_list->begin();
-	std::list<Order*>::iterator newPosition = order_list->begin();
+	std::list<Order*>::iterator old = order_list.begin();
+	std::list<Order*>::iterator newPosition = order_list.begin();
 	advance(old, oldIndex - 1);
 	advance(newPosition, newIndex - 1);
 	//TODO: Change splice
-	order_list->splice(newPosition, *order_list, old);
+	order_list.splice(newPosition, order_list, old);
 	cout << "Moved order " << oldIndex << " to position " << newIndex << "." << endl;
 }
 
 //Method to add order to list
 void OrdersList::addOrder(Order* o)
 {
-	order_list->push_back(o);
+	order_list.push_back(o);
 }

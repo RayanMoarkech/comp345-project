@@ -14,7 +14,7 @@ class Territory;
 //Parent order class
 class Order {
 protected: // protected access specifies is used to ensure that members can be accessed by inherited classes
-	bool* executed; //Keeps track of whether order has been executed
+	bool executed; //Keeps track of whether order has been executed
 	Player* player; //Player that the order belongs to
 	virtual std::ostream& print(std::ostream& out) const; //Virtual function to delegate print to derived classes
 
@@ -45,7 +45,7 @@ public:
 class Deploy : public Order {
 public:
 	Deploy(); //Default Constructor
-	Deploy(Player* player, Territory* territory, unsigned int* numOfArmyUnits); //Parametized constructor
+	Deploy(Player* player, Territory* territory, unsigned int numOfArmyUnits); //Parametized constructor
 	~Deploy(); //Destructor 
 	Deploy(const Deploy& toCopy); //Copy constructor
 	Deploy& operator=(const Deploy& rightSide); //Assignment operator
@@ -56,7 +56,7 @@ public:
 
 private:
 	Territory* targetTerritory;
-	unsigned int* numOfArmyUnits;
+	unsigned int numOfArmyUnits;
 	std::ostream& print(std::ostream& out) const override;
 };
 
@@ -64,7 +64,7 @@ private:
 class Advance : public Order {
 public:
 	Advance(); //Default Constructor
-	Advance(Player* player, Territory* source, Territory* target, unsigned int* numOfArmyUnits); //Parametized constructor
+	Advance(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametized constructor
 	~Advance(); //Destructor 
 	Advance(const Advance& toCopy); //Copy constructor
 	Advance& operator=(const Advance& rightSide); //Assignment operator
@@ -74,7 +74,7 @@ public:
 private:
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
-	unsigned int* numOfArmyUnits;
+	unsigned int numOfArmyUnits;
 	std::ostream& print(std::ostream& out) const;
 };
 
@@ -111,7 +111,7 @@ private:
 class Airlift : public Order {
 public:
 	Airlift(); //Default Constructor
-	Airlift(Player* player, Territory* source, Territory* target, unsigned int* numOfArmyUnits); //Parametized constructor
+	Airlift(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametized constructor
 	~Airlift(); //Destructor 
 	Airlift(const Airlift& toCopy); //Copy constructor
 	Airlift& operator=(const Airlift& rightSide); //Assignment operator
@@ -119,7 +119,7 @@ public:
 	bool validate() override;
 	void execute() override;
 private:
-	unsigned int* numOfArmyUnits;
+	unsigned int numOfArmyUnits;
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
 	std::ostream& print(std::ostream& out) const;
@@ -143,11 +143,14 @@ private:
 class OrdersList {
 private:
 	//Pointer to a list of order objects
-	std::list<Order*>* order_list;
+	std::list<Order*> order_list;
 
 public:
 	//Default constructor for OrdersList
 	OrdersList();
+
+	//Parametized constructor for OrdersList
+	OrdersList(std::list<Order*> order_list);
 
 	//OrdersList destructor
 	~OrdersList();

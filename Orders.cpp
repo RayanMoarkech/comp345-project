@@ -20,7 +20,6 @@ Order::Order(Player* player)
 //Destructor for Order parent class
 Order::~Order()
 {
-	delete player; //Destructor for player comes from player class 
 	delete executed;
 
 	this->player = nullptr;
@@ -95,7 +94,6 @@ Deploy::Deploy(Player* player, Territory* territory, unsigned int* numOfArmyUnit
 //Destructor for deploy class
 Deploy::~Deploy()
 {
-	delete targetTerritory;
 	delete numOfArmyUnits;
 
 	this->targetTerritory = nullptr;
@@ -174,8 +172,6 @@ Advance::Advance(Player* player, Territory* source, Territory* target, unsigned 
 //Destructor for Advance class
 Advance::~Advance()
 {
-	delete sourceTerritory;
-	delete targetTerritory;
 	delete numOfArmyUnits;
 
 	this->sourceTerritory = nullptr;
@@ -256,7 +252,6 @@ Bomb::Bomb(Player* player, Territory* target) : Order(player)
 //Destructor for Bomb class
 Bomb::~Bomb()
 {
-	delete targetTerritory;
 	this->targetTerritory = nullptr;
 }
 
@@ -326,7 +321,6 @@ Blockade::Blockade(Player* player, Territory* target) : Order(player)
 //Destructor for Blockade class
 Blockade::~Blockade()
 {
-	delete targetTerritory;
 	this->targetTerritory = nullptr;
 }
 
@@ -401,8 +395,6 @@ Airlift::Airlift(Player* player, Territory* source, Territory* target, unsigned 
 //Destructor for Airlift class
 Airlift::~Airlift()
 {
-	delete sourceTerritory;
-	delete targetTerritory;
 	delete numOfArmyUnits;
 
 	this->sourceTerritory = nullptr;
@@ -480,7 +472,6 @@ Negotiate::Negotiate(Player* player, Player* target) : Order(player)
 //Destructor for Negotiate class
 Negotiate::~Negotiate()
 {
-	delete targetPlayer;
 	this->targetPlayer = nullptr;
 }
 

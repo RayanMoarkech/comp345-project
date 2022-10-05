@@ -6,6 +6,7 @@
 #define MapLoader_H
 
 #include <string>
+#include "Map.h"
 
 class MapLoader
 {
@@ -13,7 +14,7 @@ class MapLoader
 
     public:
         MapLoader();
-        static void load(const std::string& mapFileDir);
+        static Map load(const std::string& mapFileDir);
 
 };
 

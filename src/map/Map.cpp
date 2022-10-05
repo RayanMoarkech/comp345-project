@@ -68,6 +68,11 @@ Territory* Map::getTerritory(const std::string &name)
     return nullptr;
 }
 
+vector<Territory*> Map::getTerritories()
+{
+    return this->territories;
+}
+
 void Map::setValidFalse()
 {
     this->isValid = false;

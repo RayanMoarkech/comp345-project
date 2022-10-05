@@ -20,7 +20,7 @@
 
 MapLoader::MapLoader() = default;
 
-void MapLoader::load(const std::string& mapFileDir)
+Map MapLoader::load(const std::string& mapFileDir)
 {
     // Create a new Map
     Map* map = new Map();
@@ -33,10 +33,10 @@ void MapLoader::load(const std::string& mapFileDir)
         // Loop through the lines of the map config
         while (getline(input, line)) {
             // Continent section
-            if (line == "[Continents]\r") {
+            if (line == "[Continents]") {
                 // Loop through the lines
                 while (getline(input, line)) {
-                    if (line == "\r") {
+                    if (line == "") {
                         break;
                     }
                     // Get the name and score of Continent
@@ -50,7 +50,7 @@ void MapLoader::load(const std::string& mapFileDir)
                 }
             }
                 // Territories section
-            else if (line == "[Territories]\r") {
+            if (line == "[Territories]") {
                 // Create a map that stores the Territory object reference with the names of the adjacent Territories
                 std::map<Territory*, vector<string>> territoryAdjMap;
 
@@ -123,4 +123,5 @@ void MapLoader::load(const std::string& mapFileDir)
         map->setValidFalse();
     }
     cout << std::boolalpha << mapFileDir << " is valid: " << map->validate() << endl;
+    return *map;
 }

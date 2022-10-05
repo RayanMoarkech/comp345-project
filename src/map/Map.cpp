@@ -249,9 +249,18 @@ string Territory::getName()
     return this->name;
 }
 
+Continent *Territory::getContinent()
+{
+    return this->continent;
+}
+
 void Territory::addAdjacentTerritory(Territory *territory)
 {
     this->adjacentTerritories.push_back(territory);
+}
+
+vector<Territory*> Territory::getAdjacentTerritories() {
+    return this->adjacentTerritories;
 }
 
 ostream& operator<<(ostream& os, Territory& territory)

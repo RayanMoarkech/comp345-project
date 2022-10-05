@@ -20,6 +20,21 @@ Map::Map()
     this->isValid = true;
 }
 
+Map::Map(const Map& map)
+{
+    this->continents = {};
+    for (Continent* continent: map.continents)
+    {
+        continents.push_back(new Continent(*continent));
+    }
+    this->territories = {};
+    for (Territory* territory: map.territories)
+    {
+        this->territories.push_back(new Territory(*territory));
+    }
+    this->isValid = map.isValid;
+}
+
 Map::~Map()
 {
     for (Continent* continent: this->continents)
@@ -128,6 +143,17 @@ Continent::Continent(std::string name, int score)
     this->territories = {};
 }
 
+Continent::Continent(const Continent& continent)
+{
+    this->name = continent.name;
+    this->score = continent.score;
+    this->territories = {};
+    for (Territory* territory: continent.territories)
+    {
+        this->territories.push_back(new Territory(*territory));
+    }
+}
+
 Continent::~Continent() = default;
 
 std::string Continent::getName()
@@ -158,6 +184,22 @@ Territory::Territory(string name, int coordinateX, int coordinateY, Continent* c
     this->continent = continent;
     this->adjacentTerritories = {};
     this->numberOfArmies = 0;
+}
+
+Territory::Territory(const Territory& territory)
+{
+    this->coordinateX = territory.coordinateX;
+    this->coordinateY = territory.coordinateY;
+    this->name = territory.name;
+    this->continent = new Continent(*territory.continent);
+    this->adjacentTerritories = {};
+    for (Territory* adjTerritory: territory.adjacentTerritories)
+    {
+        this->adjacentTerritories.push_back(new Territory(*adjTerritory));
+    }
+    // TODO
+//    this->ownedBy = territory.ownedBy;
+    this->numberOfArmies = territory.numberOfArmies;
 }
 
 Territory::~Territory() = default;

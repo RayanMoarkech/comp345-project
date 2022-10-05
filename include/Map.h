@@ -14,9 +14,9 @@ class Continent; // Used to determine size of the pointer
 class Territory; // Used to determine size of the pointer
 
 
-//
-// Map Section
-//
+// ---------------------------------------------
+// ---------------- Map Section ----------------
+// ---------------------------------------------
 
 class Map
 {
@@ -27,6 +27,7 @@ private:
 
 public:
     Map();
+    Map(const Map& map);
     ~Map();
     void addContinent(Continent* continent);
     Continent* getContinent(const string& name);
@@ -37,9 +38,9 @@ public:
 };
 
 
-//
-// Continent Section
-//
+// ---------------------------------------------
+// ------------- Continent Section -------------
+// ---------------------------------------------
 
 class Continent
 {
@@ -51,6 +52,7 @@ private:
 
 public:
     Continent(string name, int score);
+    Continent(const Continent& continent);
     ~Continent();
     string getName();
     int getScore() const;
@@ -58,9 +60,9 @@ public:
 };
 
 
-//
-// Territory Section
-//
+// ---------------------------------------------
+// ------------- Territory Section -------------
+// ---------------------------------------------
 
 class Territory
 {
@@ -75,6 +77,7 @@ private:
 
 public:
     Territory(string name, int coordinateX, int coordinateY, Continent* continent);
+    Territory(const Territory& territory);
     ~Territory();
     string getName();
     void addAdjacentTerritory(Territory* territory);

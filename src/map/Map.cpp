@@ -17,6 +17,7 @@
 Map::Map()
 {
     this->continents = {};
+    this->territories = {};
     this->isValid = true;
 }
 
@@ -153,6 +154,11 @@ bool Map::validate()
     return true;
 }
 
+ostream& operator<<(ostream& os, Map& map)
+{
+    return os << "Map is " << (map.isValid ? "valid" : "not valid");
+}
+
 
 // ---------------------------------------------
 // ------------- Continent Section -------------
@@ -192,6 +198,11 @@ int Continent::getScore() const
 //{
 //    this->territories.push_back(territory);
 //}
+
+ostream& operator<<(ostream& os, Continent& continent)
+{
+    return os << "Continent " << continent.name << " with score of " << continent.score;
+}
 
 
 // ---------------------------------------------
@@ -241,4 +252,12 @@ string Territory::getName()
 void Territory::addAdjacentTerritory(Territory *territory)
 {
     this->adjacentTerritories.push_back(territory);
+}
+
+ostream& operator<<(ostream& os, Territory& territory)
+{
+    return os << "Territory " << territory.name
+        << " with coordinates (" << territory.coordinateX << "," << territory.coordinateY << ")"
+        << " belongs to " << territory.continent->getName()
+        << " and has " << territory.numberOfArmies;
 }

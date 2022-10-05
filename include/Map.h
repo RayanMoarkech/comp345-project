@@ -9,6 +9,8 @@
     using std::string;
 #include <vector>
     using std::vector;
+#include <iostream>
+    using std::ostream;
 
 class Continent; // Used to determine size of the pointer
 class Territory; // Used to determine size of the pointer
@@ -35,6 +37,7 @@ public:
     Territory* getTerritory(const string& name);
     void setValidFalse();
     bool validate();
+    friend ostream& operator<<(ostream& os, Map& map);
 };
 
 
@@ -56,6 +59,7 @@ public:
     string getName();
     int getScore() const;
 //    void addTerritory(Territory* territory);
+    friend ostream& operator<<(ostream& os, Continent& continent);
 };
 
 
@@ -82,6 +86,8 @@ public:
     Continent* getContinent();
     void addAdjacentTerritory(Territory* territory);
     vector<Territory*> getAdjacentTerritories();
+    friend ostream& operator<<(ostream& os, Territory& territory);
 };
+
 
 #endif //Map_H

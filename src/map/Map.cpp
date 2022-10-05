@@ -22,26 +22,46 @@ Map::Map()
 
 Map::Map(const Map& map)
 {
+    // Deep copy all continents
     this->continents = {};
     for (Continent* continent: map.continents)
     {
         continents.push_back(new Continent(*continent));
     }
+    // Deep copy all territories
     this->territories = {};
-    for (Territory* territory: map.territories)
+    vector<Territory*> originalTerritories = map.territories;
+    for (Territory* territory: originalTerritories)
     {
-        this->territories.push_back(new Territory(*territory));
+        // Get the new continent object of the territory
+        Continent* newContinent = this->getContinent(territory->getContinent()->getName());
+        // Create a new territory
+        Territory* newTerritory = new Territory(*territory, newContinent);
+        // Add this new territory to the list of territories of the map
+        this->territories.push_back(newTerritory);
+        // Get the new created territories created by the new territory for the adjacency graph of the territories
+        vector<Territory*> newAdjTerritories = newTerritory->getAdjacentTerritories();
+        // Insert these new created territories that are adjacent to the new territory into the map territories
+        this->territories.insert(std::end(this->territories), std::begin(newAdjTerritories), std::end(newAdjTerritories));
+        // Remove these adjacent territories that were created, to avoid looping through them again
+        for (Territory* originalAdjTerritory: territory->getAdjacentTerritories())
+        {
+            remove(originalTerritories.begin(), originalTerritories.end(), originalAdjTerritory);
+        }
     }
+    // Copy isValid
     this->isValid = map.isValid;
 }
 
 Map::~Map()
 {
+    // Delete all Continents
     for (Continent* continent: this->continents)
     {
         delete continent;
         continent = nullptr;
     }
+    // Delete all Territories
     for (Territory* territory: this->territories)
     {
         delete territory;
@@ -54,6 +74,7 @@ void Map::addContinent(Continent* continent)
     this->continents.push_back(continent);
 }
 
+// Return nullptr if not found
 Continent* Map::getContinent(const std::string& name)
 {
     for(auto& continent: this->continents)
@@ -71,6 +92,7 @@ void Map::addTerritory(Territory* territory)
     this->territories.push_back(territory);
 }
 
+// Return nullptr if not found
 Territory* Map::getTerritory(const std::string &name)
 {
     for(auto& territory: this->territories)
@@ -140,18 +162,18 @@ Continent::Continent(std::string name, int score)
 {
     this->name = std::move(name);
     this->score = score;
-    this->territories = {};
+//    this->territories = {};
 }
 
 Continent::Continent(const Continent& continent)
 {
     this->name = continent.name;
     this->score = continent.score;
-    this->territories = {};
-    for (Territory* territory: continent.territories)
-    {
-        this->territories.push_back(new Territory(*territory));
-    }
+//    this->territories = {};
+//    for (Territory* territory: continent.territories)
+//    {
+//        this->territories.push_back(new Territory(*territory));
+//    }
 }
 
 Continent::~Continent() = default;
@@ -166,10 +188,10 @@ int Continent::getScore() const
     return score;
 }
 
-void Continent::addTerritory(Territory* territory)
-{
-    this->territories.push_back(territory);
-}
+//void Continent::addTerritory(Territory* territory)
+//{
+//    this->territories.push_back(territory);
+//}
 
 
 // ---------------------------------------------
@@ -186,12 +208,19 @@ Territory::Territory(string name, int coordinateX, int coordinateY, Continent* c
     this->numberOfArmies = 0;
 }
 
-Territory::Territory(const Territory& territory)
+Territory::Territory(const Territory& territory, Continent* continent)
 {
     this->coordinateX = territory.coordinateX;
     this->coordinateY = territory.coordinateY;
     this->name = territory.name;
-    this->continent = new Continent(*territory.continent);
+    if (continent == nullptr)
+    {
+        this->continent = new Continent(*territory.continent);
+    }
+    else
+    {
+        this->continent = continent;
+    }
     this->adjacentTerritories = {};
     for (Territory* adjTerritory: territory.adjacentTerritories)
     {

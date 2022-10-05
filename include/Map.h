@@ -47,8 +47,7 @@ class Continent
 private:
     string name;
     int score;
-    vector<Territory*> territories;
-    // Maybe add later pointer to map object.
+//    vector<Territory*> territories;
 
 public:
     Continent(string name, int score);
@@ -56,7 +55,7 @@ public:
     ~Continent();
     string getName();
     int getScore() const;
-    void addTerritory(Territory* territory);
+//    void addTerritory(Territory* territory);
 };
 
 
@@ -77,10 +76,12 @@ private:
 
 public:
     Territory(string name, int coordinateX, int coordinateY, Continent* continent);
-    Territory(const Territory& territory);
+    Territory(const Territory& territory, Continent* continent = nullptr);
     ~Territory();
     string getName();
+    Continent* getContinent();
     void addAdjacentTerritory(Territory* territory);
+    vector<Territory*> getAdjacentTerritories();
 };
 
 #endif //Map_H

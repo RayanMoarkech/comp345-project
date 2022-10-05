@@ -49,7 +49,7 @@ void MapLoader::load(const std::string& mapFileDir)
                     map->addContinent(continent);
                 }
             }
-                // Territories section
+            // Territories section
             else if (line == "[Territories]\r") {
                 // Create a map that stores the Territory object reference with the names of the adjacent Territories
                 std::map<Territory*, vector<string>> territoryAdjMap;
@@ -83,7 +83,7 @@ void MapLoader::load(const std::string& mapFileDir)
 
                     // Add the territory to the map and corresponding continent
                     map->addTerritory(territory);
-                    continent->addTerritory(territory);
+//                    continent->addTerritory(territory);
 
                     // Loop through the remaining line with a delimiter ',' to get the names of the adjacent territories
                     string adjacentTerritoryName;

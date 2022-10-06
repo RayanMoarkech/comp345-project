@@ -20,7 +20,7 @@
 
 MapLoader::MapLoader() = default;
 
-void MapLoader::load(const std::string& mapFileDir)
+Map MapLoader::load(const std::string& mapFileDir)
 {
     // Create a new Map
     Map* map = new Map();
@@ -49,8 +49,10 @@ void MapLoader::load(const std::string& mapFileDir)
                     map->addContinent(continent);
                 }
             }
+
             // Territories section
             else if (line == "[Territories]\r") {
+            
                 // Create a map that stores the Territory object reference with the names of the adjacent Territories
                 std::map<Territory*, vector<string>> territoryAdjMap;
 
@@ -123,4 +125,5 @@ void MapLoader::load(const std::string& mapFileDir)
         map->setValidFalse();
     }
     cout << std::boolalpha << mapFileDir << " is valid: " << map->validate() << endl;
+    return *map;
 }

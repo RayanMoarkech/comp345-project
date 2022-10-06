@@ -14,7 +14,7 @@
 
 class Continent; // Used to determine size of the pointer
 class Territory; // Used to determine size of the pointer
-
+class Player;
 
 // ---------------------------------------------
 // ---------------- Map Section ----------------
@@ -35,6 +35,7 @@ public:
     Continent* getContinent(const string& name);
     void addTerritory(Territory* territory);
     Territory* getTerritory(const string& name);
+    vector<Territory*> getTerritories();
     void setValidFalse();
     bool validate();
     friend ostream& operator<<(ostream& os, Map& map);
@@ -75,7 +76,7 @@ private:
     string name;
     Continent* continent;
     vector<Territory*> adjacentTerritories; // The maximum allowed is 10. Maybe change to array?
-//    Player* ownedBy; // TODO: A territory is owned by a player and contain a number of armies.
+    Player* ownedBy; // TODO: A territory is owned by a player and contain a number of armies.
     int numberOfArmies;
 
 public:

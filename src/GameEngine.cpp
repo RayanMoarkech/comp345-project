@@ -2,7 +2,7 @@
 #include <vector>
 #include <ostream>
 #include <ostream>
-#include "../../include/GameEngine.h"
+#include "../include/GameEngine.h"
 using namespace std;
 
 

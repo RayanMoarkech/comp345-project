@@ -15,7 +15,3 @@ void testPlayers()
 	vector<Territory*> territoriesToDefend = player->toDefend();
 	vector<Territory*> territoriesToAttack = player->toAttack();
 }
-
-//int main() {
-//	testPlayers();
-//}

@@ -7,7 +7,7 @@
 #include <vector>
     using std::vector;
 
-#include "../../include/Map.h"
+#include "../include/Map.h"
 
 
 // ---------------------------------------------

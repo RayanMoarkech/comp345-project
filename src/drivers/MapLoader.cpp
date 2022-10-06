@@ -33,10 +33,10 @@ Map MapLoader::load(const std::string& mapFileDir)
         // Loop through the lines of the map config
         while (getline(input, line)) {
             // Continent section
-            if (line == "[Continents]") {
+            if (line == "[Continents]\r") {
                 // Loop through the lines
                 while (getline(input, line)) {
-                    if (line == "") {
+                    if (line == "\r") {
                         break;
                     }
                     // Get the name and score of Continent
@@ -49,8 +49,10 @@ Map MapLoader::load(const std::string& mapFileDir)
                     map->addContinent(continent);
                 }
             }
-                // Territories section
-            if (line == "[Territories]") {
+
+            // Territories section
+            else if (line == "[Territories]\r") {
+            
                 // Create a map that stores the Territory object reference with the names of the adjacent Territories
                 std::map<Territory*, vector<string>> territoryAdjMap;
 
@@ -83,7 +85,7 @@ Map MapLoader::load(const std::string& mapFileDir)
 
                     // Add the territory to the map and corresponding continent
                     map->addTerritory(territory);
-                    continent->addTerritory(territory);
+//                    continent->addTerritory(territory);
 
                     // Loop through the remaining line with a delimiter ',' to get the names of the adjacent territories
                     string adjacentTerritoryName;

@@ -9,14 +9,16 @@
     using std::string;
 #include <vector>
     using std::vector;
+#include <iostream>
+    using std::ostream;
 
 class Continent; // Used to determine size of the pointer
 class Territory; // Used to determine size of the pointer
 class Player;
 
-//
-// Map Section
-//
+// ---------------------------------------------
+// ---------------- Map Section ----------------
+// ---------------------------------------------
 
 class Map
 {
@@ -27,6 +29,7 @@ private:
 
 public:
     Map();
+    Map(const Map& map);
     ~Map();
     void addContinent(Continent* continent);
     Continent* getContinent(const string& name);
@@ -35,33 +38,35 @@ public:
     vector<Territory*> getTerritories();
     void setValidFalse();
     bool validate();
+    friend ostream& operator<<(ostream& os, Map& map);
 };
 
 
-//
-// Continent Section
-//
+// ---------------------------------------------
+// ------------- Continent Section -------------
+// ---------------------------------------------
 
 class Continent
 {
 private:
     string name;
     int score;
-    vector<Territory*> territories;
-    // Maybe add later pointer to map object.
+//    vector<Territory*> territories;
 
 public:
     Continent(string name, int score);
+    Continent(const Continent& continent);
     ~Continent();
     string getName();
     int getScore() const;
-    void addTerritory(Territory* territory);
+//    void addTerritory(Territory* territory);
+    friend ostream& operator<<(ostream& os, Continent& continent);
 };
 
 
-//
-// Territory Section
-//
+// ---------------------------------------------
+// ------------- Territory Section -------------
+// ---------------------------------------------
 
 class Territory
 {
@@ -76,9 +81,14 @@ private:
 
 public:
     Territory(string name, int coordinateX, int coordinateY, Continent* continent);
+    Territory(const Territory& territory, Continent* continent = nullptr);
     ~Territory();
     string getName();
+    Continent* getContinent();
     void addAdjacentTerritory(Territory* territory);
+    vector<Territory*> getAdjacentTerritories();
+    friend ostream& operator<<(ostream& os, Territory& territory);
 };
+
 
 #endif //Map_H

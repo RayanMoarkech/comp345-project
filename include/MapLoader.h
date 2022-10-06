@@ -14,7 +14,7 @@ class MapLoader
 
     public:
         MapLoader();
-        static Map load(const std::string& mapFileDir);
+        static Map* load(const std::string& mapFileDir);
 
 };
 

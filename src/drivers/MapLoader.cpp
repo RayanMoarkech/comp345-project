@@ -20,7 +20,7 @@
 
 MapLoader::MapLoader() = default;
 
-Map MapLoader::load(const std::string& mapFileDir)
+Map* MapLoader::load(const std::string& mapFileDir)
 {
     // Create a new Map
     Map* map = new Map();
@@ -31,12 +31,16 @@ Map MapLoader::load(const std::string& mapFileDir)
         string line;
 
         // Loop through the lines of the map config
-        while (getline(input, line)) {
+        while (getline(input, line))
+        {
             // Continent section
-            if (line == "[Continents]\r") {
+            if (line == "[Continents]\r")
+            {
                 // Loop through the lines
-                while (getline(input, line)) {
-                    if (line == "\r") {
+                while (getline(input, line))
+                {
+                    if (line == "\r")
+                    {
                         break;
                     }
                     // Get the name and score of Continent
@@ -49,15 +53,15 @@ Map MapLoader::load(const std::string& mapFileDir)
                     map->addContinent(continent);
                 }
             }
-
             // Territories section
-            else if (line == "[Territories]\r") {
-            
+            else if (line == "[Territories]\r")
+            {
                 // Create a map that stores the Territory object reference with the names of the adjacent Territories
                 std::map<Territory*, vector<string>> territoryAdjMap;
 
                 // Loop through each line
-                while (getline(input, line)) {
+                while (getline(input, line))
+                {
                     // Use delimiter ',' to extract the Territory name from the line
                     unsigned long delimiterPos = line.find(',');
                     string name = line.substr(0, delimiterPos);
@@ -91,8 +95,10 @@ Map MapLoader::load(const std::string& mapFileDir)
                     string adjacentTerritoryName;
                     stringstream lineStream;
                     lineStream << line;
-                    while (getline(lineStream, adjacentTerritoryName, ',')) {
-                        if (adjacentTerritoryName.find('\r') != std::string::npos) {
+                    while (getline(lineStream, adjacentTerritoryName, ','))
+                    {
+                        if (adjacentTerritoryName.find('\r') != std::string::npos)
+                        {
                             adjacentTerritoryName.pop_back();
                         }
                         territoryAdjMap[territory].push_back(adjacentTerritoryName);
@@ -125,5 +131,5 @@ Map MapLoader::load(const std::string& mapFileDir)
         map->setValidFalse();
     }
     cout << std::boolalpha << mapFileDir << " is valid: " << map->validate() << endl;
-    return *map;
+    return map;
 }

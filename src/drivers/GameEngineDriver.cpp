@@ -59,8 +59,3 @@ void testGameStates() {
 	}
 	cout << "Bye bye!" << endl;
 }
-
-int main() {
-	testGameStates();
-	return 0;
-}

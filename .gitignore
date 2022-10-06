@@ -70,3 +70,11 @@
 /CppProperties.json
 /comp345-project.sln
 /x64/Debug
+
+# VSCode
+.vs/
+out/
+
+# CMake builds
+cmake-build-debug
+.idea

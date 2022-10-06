@@ -1,3 +1,0 @@
-C:/Users/smerh/Documents/Concordia/Fall 2022/COMP 345/Assignment/out/build/x64-Debug/CMakeFiles/comp345_project.dir
-C:/Users/smerh/Documents/Concordia/Fall 2022/COMP 345/Assignment/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/smerh/Documents/Concordia/Fall 2022/COMP 345/Assignment/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

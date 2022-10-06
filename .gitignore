@@ -33,7 +33,7 @@
 
 # VSCode
 .vs/
-.out/
+out/
 
 # CMake builds
 cmake-build-debug

@@ -9,12 +9,13 @@
     using std::string;
 #include <vector>
     using std::vector;
-#include <iostream>
+#include <ostream>
     using std::ostream;
 
 class Continent; // Used to determine size of the pointer
 class Territory; // Used to determine size of the pointer
 class Player;
+
 
 // ---------------------------------------------
 // ---------------- Map Section ----------------
@@ -76,7 +77,7 @@ private:
     string name;
     Continent* continent;
     vector<Territory*> adjacentTerritories; // The maximum allowed is 10. Maybe change to array?
-    Player* ownedBy; // TODO: A territory is owned by a player and contain a number of armies.
+    Player* ownedBy;
     int numberOfArmies;
 
 public:
@@ -87,8 +88,26 @@ public:
     Continent* getContinent();
     void addAdjacentTerritory(Territory* territory);
     vector<Territory*> getAdjacentTerritories();
+    void setOwnedBy(Player* ownedBy, int numberOfArmies);
     friend ostream& operator<<(ostream& os, Territory& territory);
 };
 
 
-#endif //Map_H
+// ---------------------------------------------
+// ------------- MapLoader Section -------------
+// ---------------------------------------------
+
+class MapLoader
+{
+private:
+
+public:
+    MapLoader();
+    MapLoader(const MapLoader& mapLoader);
+    ~MapLoader();
+    static Map* load(const string& mapFileDir);
+    friend ostream& operator<<(ostream& os, MapLoader& mapLoader);
+};
+
+
+#endif

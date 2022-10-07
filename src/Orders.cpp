@@ -1,5 +1,9 @@
+//
+// COMP345_PROJECT_ORDERS_CPP Orders.cpp
+//
+
 #include "../include/Orders.h"
-#include <iostream>
+#include <ostream>
 
 //----Order Class----
 
@@ -10,7 +14,7 @@ Order::Order()
 	player = nullptr;
 }
 
-//Parametized constructor for Order parent class
+//Parametrized constructor for Order parent class
 Order::Order(Player* player)
 {
 	executed = false;
@@ -81,7 +85,7 @@ Deploy::Deploy() : Order()
 	cout << "Created a Deploy order." << endl;
 }
 
-//Parametized constructor for Deploy class
+//Parametrized constructor for Deploy class
 Deploy::Deploy(Player* player, Territory* territory, unsigned int numOfArmyUnits) : Order(player)
 {
 	this->targetTerritory = territory;

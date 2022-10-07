@@ -145,7 +145,7 @@ bool Map::validate()
         const string continentName = continent->getName();
         if (std::find(continentNames.begin(), continentNames.end(), continentName) != continentNames.end())
         {
-            cout << "Map has duplicate continent names" << endl;
+            cout << "Map has duplicate continent names: \"" << continentName << "\"" << endl;
             this->isValid = false;
             return false;
         }
@@ -159,13 +159,13 @@ bool Map::validate()
         const string territoryName = territory->getName();
         if (territory->getContinent() == nullptr)
         {
-            cout << "Map has a territory with no continent" << endl;
+            cout << "Map has a territory \"" << territoryName << "\" with no continent" << endl;
             this->isValid = false;
             return false;
         }
         if (std::find(territoryNames.begin(), territoryNames.end(), territoryName) != territoryNames.end())
         {
-            cout << "Map has duplicate territory names" << endl;
+            cout << "Map has duplicate territory names: \"" << territoryName << "\"" << endl;
             this->isValid = false;
             return false;
         }
@@ -174,7 +174,7 @@ bool Map::validate()
         {
             if (!adjTerritory)
             {
-                cout << "Map has an adjacent territory for the " << territory->getName() << " territory that does not exists" << endl;
+                cout << "Map has an adjacent territory for the \"" << territoryName << "\" territory that does not exists" << endl;
                 this->isValid = false;
                 return false;
             }
@@ -361,6 +361,12 @@ Map* MapLoader::load(const std::string& mapFileDir)
                 // Loop through each line
                 while (getline(input, line))
                 {
+                    // Skip empty lines
+                    if (line == "\r" || line.empty())
+                    {
+                        continue;
+                    }
+
                     // Use delimiter ',' to extract the Territory name from the line
                     unsigned long delimiterPos = line.find(',');
                     string name = line.substr(0, delimiterPos);
@@ -425,7 +431,7 @@ Map* MapLoader::load(const std::string& mapFileDir)
             }
         }
         input.close();
-    } catch (...) {
+    } catch (const std::exception &exc) {
         cout << "An error has occurred when creating the map from config file: " << mapFileDir << std::endl;
         map->setValidFalse();
     }

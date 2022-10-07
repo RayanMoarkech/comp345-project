@@ -40,6 +40,7 @@ public:
     void setValidFalse();
     bool validate();
     friend ostream& operator<<(ostream& os, Map& map);
+    Map& operator=(const Map& map);
 };
 
 
@@ -62,6 +63,7 @@ public:
     int getScore() const;
 //    void addTerritory(Territory* territory);
     friend ostream& operator<<(ostream& os, Continent& continent);
+    Continent& operator=(const Continent& continent);
 };
 
 
@@ -90,6 +92,7 @@ public:
     vector<Territory*> getAdjacentTerritories();
     void setOwnedBy(Player* ownedBy, int numberOfArmies);
     friend ostream& operator<<(ostream& os, Territory& territory);
+    Territory& operator=(const Territory& territory);
 };
 
 
@@ -107,6 +110,7 @@ public:
     ~MapLoader();
     static Map* load(const string& mapFileDir);
     friend ostream& operator<<(ostream& os, MapLoader& mapLoader);
+    MapLoader& operator=(const MapLoader& mapLoader);
 };
 
 

@@ -145,6 +145,7 @@ bool Map::validate()
         const string continentName = continent->getName();
         if (std::find(continentNames.begin(), continentNames.end(), continentName) != continentNames.end())
         {
+            cout << "Map has duplicate continent names" << endl;
             this->isValid = false;
             return false;
         }
@@ -156,10 +157,27 @@ bool Map::validate()
     for (Territory* territory: this->territories)
     {
         const string territoryName = territory->getName();
-        if (std::find(territoryNames.begin(), territoryNames.end(), territoryName) != territoryNames.end())
+        if (territory->getContinent() == nullptr)
         {
+            cout << "Map has a territory with no continent" << endl;
             this->isValid = false;
             return false;
+        }
+        if (std::find(territoryNames.begin(), territoryNames.end(), territoryName) != territoryNames.end())
+        {
+            cout << "Map has duplicate territory names" << endl;
+            this->isValid = false;
+            return false;
+        }
+        territoryNames.push_back(territoryName);
+        for (Territory* adjTerritory: territory->getAdjacentTerritories())
+        {
+            if (!adjTerritory)
+            {
+                cout << "Map has an adjacent territory for the " << territory->getName() << " territory that does not exists" << endl;
+                this->isValid = false;
+                return false;
+            }
         }
         continentNames.push_back(territoryName);
     }
@@ -171,6 +189,9 @@ ostream& operator<<(ostream& os, Map& map)
 {
     return os << "Map is " << (map.isValid ? "valid" : "not valid");
 }
+
+Map &Map::operator=(const Map &map)
+= default;
 
 
 // ---------------------------------------------
@@ -217,6 +238,9 @@ ostream& operator<<(ostream& os, Continent& continent)
     return os << "Continent " << continent.name << " with score of " << continent.score;
 }
 
+Continent &Continent::operator=(const Continent& continent)
+= default;
+
 
 // ---------------------------------------------
 // ------------- Territory Section -------------
@@ -229,6 +253,7 @@ Territory::Territory(string name, int coordinateX, int coordinateY, Continent* c
     this->coordinateY = coordinateY;
     this->continent = continent;
     this->adjacentTerritories = {};
+    this->ownedBy = nullptr;
     this->numberOfArmies = 0;
 }
 
@@ -250,8 +275,7 @@ Territory::Territory(const Territory& territory, Continent* continent)
     {
         this->adjacentTerritories.push_back(new Territory(*adjTerritory));
     }
-    // TODO
-//    this->ownedBy = territory.ownedBy;
+    this->ownedBy = territory.ownedBy;
     this->numberOfArmies = territory.numberOfArmies;
 }
 
@@ -291,6 +315,9 @@ ostream& operator<<(ostream& os, Territory& territory)
         << " and has " << territory.numberOfArmies;
 }
 
+Territory &Territory::operator=(const Territory& territory)
+= default;
+
 
 // ---------------------------------------------
 // ------------- MapLoader Section -------------
@@ -304,6 +331,8 @@ MapLoader::~MapLoader() = default;
 
 Map* MapLoader::load(const std::string& mapFileDir)
 {
+    cout << "Loading file: " << mapFileDir << endl;
+
     // Create a new Map
     Map* map = new Map();
 
@@ -335,12 +364,11 @@ Map* MapLoader::load(const std::string& mapFileDir)
                     map->addContinent(continent);
                 }
             }
-                // Territories section
+            // Territories section
             else if (line == "[Territories]\r" || line == "[Territories]")
             {
                 // Create a map that stores the Territory object reference with the names of the adjacent Territories
                 std::map<Territory*, vector<string>> territoryAdjMap;
-
                 // Loop through each line
                 while (getline(input, line))
                 {
@@ -396,9 +424,10 @@ Map* MapLoader::load(const std::string& mapFileDir)
                         // if adjTerritory is a nullptr
                         if (!adjTerritory)
                         {
-                            cout << pair.first->getName() << endl;
-                            cout << adjTerritoryName << endl;
                             // Could not find territory
+                            cout << "Map has an adjacent territory \"" << adjTerritoryName
+                                << "\" for the \"" << pair.first->getName() << "\" territory that does not exists"
+                                << endl;
                             throw std::exception();
                         }
                         pair.first->addAdjacentTerritory(adjTerritory);
@@ -412,7 +441,9 @@ Map* MapLoader::load(const std::string& mapFileDir)
         cout << "An error has occurred when creating the map from config file: " << mapFileDir << std::endl;
         map->setValidFalse();
     }
-    cout << std::boolalpha << mapFileDir << " is valid: " << map->validate() << endl;
+    const bool valid = map->validate();
+    cout << std::boolalpha << mapFileDir << " is valid: " << valid << endl;
+    cout << "---------------------------" << endl;
     return map;
 }
 
@@ -420,3 +451,6 @@ ostream& operator<<(ostream& os, MapLoader& mapLoader)
 {
     return os << "MapLoader";
 }
+
+MapLoader &MapLoader::operator=(const MapLoader& mapLoader)
+= default;

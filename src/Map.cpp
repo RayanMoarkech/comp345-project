@@ -202,18 +202,12 @@ Continent::Continent(std::string name, int score)
 {
     this->name = std::move(name);
     this->score = score;
-//    this->territories = {};
 }
 
 Continent::Continent(const Continent& continent)
 {
     this->name = continent.name;
     this->score = continent.score;
-//    this->territories = {};
-//    for (Territory* territory: continent.territories)
-//    {
-//        this->territories.push_back(new Territory(*territory));
-//    }
 }
 
 Continent::~Continent() = default;
@@ -227,11 +221,6 @@ int Continent::getScore() const
 {
     return score;
 }
-
-//void Continent::addTerritory(Territory* territory)
-//{
-//    this->territories.push_back(territory);
-//}
 
 ostream& operator<<(ostream& os, Continent& continent)
 {
@@ -399,7 +388,6 @@ Map* MapLoader::load(const std::string& mapFileDir)
 
                     // Add the territory to the map and corresponding continent
                     map->addTerritory(territory);
-//                    continent->addTerritory(territory);
 
                     // Loop through the remaining line with a delimiter ',' to get the names of the adjacent territories
                     string adjacentTerritoryName;

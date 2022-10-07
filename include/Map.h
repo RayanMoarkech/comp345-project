@@ -53,7 +53,6 @@ class Continent
 private:
     string name;
     int score;
-//    vector<Territory*> territories;
 
 public:
     Continent(string name, int score);
@@ -61,7 +60,6 @@ public:
     ~Continent();
     string getName();
     int getScore() const;
-//    void addTerritory(Territory* territory);
     friend ostream& operator<<(ostream& os, Continent& continent);
     Continent& operator=(const Continent& continent);
 };

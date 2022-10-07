@@ -1,7 +1,12 @@
+//
+// COMP345_PROJECT_GAMEENGINEDRIVER_CPP GameEngineDriver.cpp
+//
+
 #include "../../include/GameEngine.h"
 #include <iostream>
-
-using namespace std;
+    using std::cout;
+    using std::cin;
+    using std::endl;
 
 void testGameStates() {
 	string stateName[]{ "start", "mapLoaded", "mapValidated", "playersAdded", "assignReinforcement", "issueOrders", "executeOrders", "win" };

@@ -6,7 +6,7 @@
 #define Player_H
 
 #include <vector>
-using std::vector;
+    using std::vector;
 
 #include "../include/Map.h"
 

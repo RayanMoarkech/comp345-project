@@ -1,17 +1,16 @@
 //
-// Player.cpp
+// COMP345_PROJECT_PLAYER_CPP Player.cpp
 //
 
-#include "../include/Player.h"
-#include "../include/MapLoader.h"
-#include "../include/Map.h"
-#include <stdlib.h>     /* srand, rand */
-
-using::vector;
-
+#include <cstdlib>     /* srand, rand */
+#include <vector>
+    using std::vector;
 #include <iostream>
-using std::cout;
-using std::endl;
+    using std::cout;
+    using std::endl;
+
+#include "../include/Player.h"
+
 
 Player::Player() {
 // TO DO

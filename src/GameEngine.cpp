@@ -1,12 +1,16 @@
+//
+// COMP345_PROJECT_GAMEENGINE_CPP GameEngine.cpp
+//
+
 #include <string>
+    using std::string;
 #include <vector>
+    using std::vector;
 #include <ostream>
-#include <ostream>
+    using std::endl;
+
 #include "../include/GameEngine.h"
-using namespace std;
 
-
-using namespace std;
 
 Transition::Transition(string currentState, string command, int nextStateIndex) {
 	_currentState = currentState;
@@ -47,8 +51,8 @@ ostream& operator<<(ostream &strm, const Transition &transition) {
 
 
 State::State(string name, vector<Transition*> transition) {
-	_name = name;
-	_transition = transition;
+	_name = std::move(name);
+	_transition = std::move(transition);
 }
 State::State(const State &state)
 {
@@ -77,6 +81,6 @@ vector<Transition*> State::getTransition() {
 ostream& operator<<(ostream& strm, const State& state) {
 	strm << "The current state is \"" + state._name + "\", and has those/this valid transition/s:" << endl;
 	for (auto& transition : state._transition)
-		 strm <<  *transition << endl;
+		 strm << *transition << endl;
 	return strm;
 }

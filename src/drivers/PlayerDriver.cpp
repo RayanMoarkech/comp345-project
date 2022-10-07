@@ -1,4 +1,3 @@
-#include "../../include/MapLoader.h"
 #include "../../include/Map.h"
 #include "../../include/Player.h"
 #include <vector>

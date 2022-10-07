@@ -1,7 +1,21 @@
-#include <string>
-#include <vector>
-using namespace std;
+//
+// COMP345_PROJECT_GAMEENGINE_H GameEngine.h
+//
 
+#ifndef GameEngine_H
+#define GameEngine_H
+
+#include <string>
+    using std::string;
+#include <vector>
+    using std::vector;
+#include <ostream>
+    using std::ostream;
+
+
+// ---------------------------------------------
+// ------------ Transition Section -------------
+// ---------------------------------------------
 
 class Transition
 {
@@ -22,8 +36,13 @@ private:
 	friend ostream& operator<<(ostream&, const Transition&);
 };
 
+
+// ---------------------------------------------
+// --------------- State Section ---------------
+// ---------------------------------------------
+
 class State
-{;
+{
 public:
 	State(string name, vector<Transition*> transition);
 	State(const State&);
@@ -36,5 +55,7 @@ private:
 	string _name;
 	vector<Transition*> _transition;
 	friend ostream& operator<<(ostream&, const State&);
-
 };
+
+
+#endif

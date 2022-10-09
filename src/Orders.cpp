@@ -592,3 +592,8 @@ void OrdersList::addOrder(Order* o)
 {
 	order_list.push_back(o);
 }
+
+std::list<Order*> OrdersList::getOrdersList()
+{
+	return this->order_list;
+}

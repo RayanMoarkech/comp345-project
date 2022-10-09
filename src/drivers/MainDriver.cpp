@@ -4,8 +4,8 @@
 
 void testLoadMaps();
 void testPlayers();
+void testCards();
 void testOrdersList();
-//TODO: void testCards();
 void testGameStates();
 
 int main()
@@ -13,7 +13,7 @@ int main()
     testLoadMaps();
     testPlayers();
     testOrdersList();
-    //TODO: testCards();
+    testCards();
     testGameStates();
     return 0;
 }

@@ -47,12 +47,12 @@ public:
 
 // ---------------------------------------------
 // ---------------- Deck Section ---------------
-
+// ---------------------------------------------
 
 class Deck {
-
-public:
+    private:
     std::vector<Card*> cards; // Vector of the cards in the deck
+public:
 
     Deck(); // Default constructor
 
@@ -68,6 +68,8 @@ public:
 
     void returnCard(Card* card); // Return a card to the deck
 
+    vector<Card *> getDeck(); // Return the deck
+
 };
 
 // ---------------------------------------------
@@ -76,7 +78,7 @@ public:
 
 class Hand {
 public:
-    std::vector<Card*> cards;
+    std::vector<Card*> cards; // Vector of the cards in the hand
     Hand(); // Default constructor
 
     Hand(const Hand& hand); // Copy constructor

@@ -24,5 +24,6 @@ void testPlayers()
 	srand(time(NULL)); //change seed to get random numbers every run
 	Player* player = new Player();
 	vector<Territory*> territoriesToDefend = player->toDefend();
+    cout << endl;
 	vector<Territory*> territoriesToAttack = player->toAttack();
 }

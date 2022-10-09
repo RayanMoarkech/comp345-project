@@ -12,11 +12,12 @@
 
 #include "../include/Player.h"
 #include "../include/Orders.h"
+#include "../include/Cards.h"
 
 //Default constructor
 Player::Player() {
 	this->ownedTerritories = {};
-	//this->playerHand  = new Hand();
+	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
 }
 
@@ -30,7 +31,7 @@ Player::Player(const Player& player) {
 		Territory* newTerritory = new Territory(*t, newContinent);
 		this->ownedTerritories.push_back(newTerritory);
 	}
-	//this->playerHand = new Hand(player.playerHand);
+	this->playerHand = new Hand(player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
 }
 
@@ -77,8 +78,12 @@ ostream& operator<<(ostream& os, const Player& player)
 		os << t->getName() << endl;
 	}
 	//Orders and Orderslist do not have a name, so using size instead
-	os << "Player has issued " << player.playerOrders->getOrdersList().size() << endl;
-	//TODO Add Cards/Hands os stream
+	os << "Player has issued " << player.playerOrders->getOrdersList().size() << " orders." << endl;
+	os << "Player has following cards in hand" << endl;
+	for (Card* c : player.playerHand.cards)
+	{
+		os << c.getType(); << endl
+	}
 	return os;
 }
 
@@ -155,7 +160,6 @@ void Player::issueOrder()
 	this->playerOrders->addOrder(newOrder);
 	cout << "New Order Issued!" << endl;
 	cout << "playerOrders is now of size " << this->playerOrders->getOrdersList().size() << endl;
-
 }
 
 

@@ -27,7 +27,7 @@ Order::~Order()
 	this->player = nullptr;
 }
 
-//Deep copy constructor for Order parent class
+//Copy constructor for Order parent class
 Order::Order(const Order& toCopy)
 {
 	this->player = toCopy.player; //Player of order will point to the same player as toCopy
@@ -98,7 +98,7 @@ Deploy::~Deploy()
 	this->targetTerritory = nullptr;
 }
 
-//Deep copy constructor for Deploy class
+//Copy constructor for Deploy class
 Deploy::Deploy(const Deploy& toCopy) : Order(toCopy)
 {
 	this->targetTerritory = toCopy.targetTerritory;
@@ -133,7 +133,7 @@ ostream& Deploy::print(ostream& out) const
 //Method to return whether deploy order is valid
 bool Deploy::validate()
 {
-	// return (targetTerritory.getPlayer() == player); //Check that the address of targetTerritory's player is the same address of this player
+	// TODO: Check that the address of targetTerritory's player is the same address of this player
 	return false; //Temporary for A1 testing
 }
 
@@ -174,7 +174,7 @@ Advance::~Advance()
 	this->targetTerritory = nullptr;
 }
 
-//Deep copy constructor for Advance class
+//Copy constructor for Advance class
 Advance::Advance(const Advance& toCopy) : Order(toCopy)
 {
 	this->sourceTerritory = toCopy.sourceTerritory;
@@ -210,9 +210,8 @@ ostream& Advance::print(ostream& out) const
 //Validate method for Advance class
 bool Advance::validate()
 {
-	//Check if source territory belongs to player and that territories are adjacent
-	//TODO isAdjacent method in territory
-	//return (sourceTerritory.getPlayer() == player && sourceTerriotry.isAdjacent(targetTerritory));
+	//TODO: Check if source territory belongs to player and that territories are adjacent
+	//TODO: isAdjacent method in territory
 	return true; //Temporary for A1 testing
 
 }
@@ -250,7 +249,7 @@ Bomb::~Bomb()
 	this->targetTerritory = nullptr;
 }
 
-//Deep copy constructor for Bomb class
+//Copy constructor for Bomb class
 Bomb::Bomb(const Bomb& toCopy) : Order(toCopy)
 {
 	this->targetTerritory = toCopy.targetTerritory;
@@ -282,9 +281,8 @@ ostream& Bomb::print(ostream& out) const
 //Validate method for Bomb class
 bool Bomb::validate()
 {
-	//Check that player has bomb card,target Territory does not belong to player and is adjacent to one of the player's current territories
-	//TODO Player checkHand() method, Territory getPlayer method and adjacentToPlayer method
-	//return (player.checkHand("Bomb") && targetTerritory.getPlayer() != player && targetTerritory.adjacentToPlayer());
+	//TODO: Check that player has bomb card,target Territory does not belong to player and is adjacent to one of the player's current territories
+	//TODO: Player checkHand() method, Territory getPlayer method and adjacentToPlayer method
 	return true; //Temporary for A1 testing
 }
 
@@ -319,7 +317,7 @@ Blockade::~Blockade()
 	this->targetTerritory = nullptr;
 }
 
-//Deep copy constructor for Blockade class
+//Copy constructor for Blockade class
 Blockade::Blockade(const Blockade& toCopy) : Order(toCopy)
 {
 	this->targetTerritory = toCopy.targetTerritory;
@@ -351,9 +349,8 @@ ostream& Blockade::print(ostream& out) const
 //Validate method for Blockade class
 bool Blockade::validate()
 {
-	//Check that player has blockade card and territory belongs to player
-	//TODO Player checkHand(), Territory getPlayer method and adjacentToPlayer method
-	//return (player.checkHand("Blockade") && targetTerritory.getPlayer() == player);
+	//TODO: Check that player has blockade card and territory belongs to player
+	//TODO: Player checkHand(), Territory getPlayer method and adjacentToPlayer method
 	return true; //Temporary for A1 testing
 }
 
@@ -394,7 +391,7 @@ Airlift::~Airlift()
 	this->targetTerritory = nullptr;
 }
 
-//Deep copy constructor for Airlift class
+//Copy constructor for Airlift class
 Airlift::Airlift(const Airlift& toCopy) : Order(toCopy)
 {
 	this->sourceTerritory = toCopy.sourceTerritory;
@@ -430,9 +427,8 @@ ostream& Airlift::print(ostream& out) const
 //Validate method for Airlift class
 bool Airlift::validate()
 {
-	//Check if player has airlift card and source territory belongs to player
-	//TODO Player checkHand() and Territory getPlayer()
-	//return ((player.checkHand("Airlift") && sourceTerritory.getPlayer() == player));
+	//TODO: Check if player has airlift card and source territory belongs to player
+	//TODO: Player checkHand() and Territory getPlayer()
 	return true; //Temporary for A1 testing
 }
 
@@ -467,7 +463,7 @@ Negotiate::~Negotiate()
 	this->targetPlayer = nullptr;
 }
 
-//Deep copy constructor for Negotiate class
+//Copy constructor for Negotiate class
 Negotiate::Negotiate(const Negotiate& toCopy) : Order(toCopy)
 {
 	this->targetPlayer = toCopy.targetPlayer;
@@ -499,9 +495,8 @@ ostream& Negotiate::print(ostream& out) const
 //Validate method for Negotiate class
 bool Negotiate::validate()
 {
-	//Check that player has Negotiate card and current and target player are not the same
-	//TODO Player checkHand() method
-	//return ((player.checkHand("Diplomacy") && targetPlayer != player));
+	//TODO: Check that player has Negotiate card and current and target player are not the same
+	//TODO: Player checkHand() method
 	return true; //Temporary for A1 testing
 }
 
@@ -533,14 +528,9 @@ OrdersList::OrdersList(std::list<Order*> order_list)
 OrdersList::~OrdersList()
 {
 	//Delete orders in list and orders_list
-	/*
-	* for (auto const& order : order_list) {
-		delete order;
-	}
-	*/
 }
 
-//Deep copy constructor for OrdersList class
+//Copy constructor for OrdersList class
 OrdersList::OrdersList(const OrdersList& toCopy)
 {
 	this->order_list = std::list<Order*>(toCopy.order_list);
@@ -576,7 +566,7 @@ void OrdersList::remove(int index)
 	}
 
 	std::list<Order*>::iterator itr = order_list.begin(); //Create an iterator for list
-	advance(itr, index - 1); //Advancee iterator to correct position (-1 because indices start at 0)
+	advance(itr, index - 1); //Advance iterator to correct position (-1 because indices start at 0)
 	order_list.erase(itr);//Delete element from list
 	cout << "Removed order " << index << " from orders list." << endl;
 }
@@ -593,7 +583,6 @@ void OrdersList::move(int oldIndex, int newIndex)
 	std::list<Order*>::iterator newPosition = order_list.begin();
 	advance(old, oldIndex - 1);
 	advance(newPosition, newIndex - 1);
-	//TODO: Change splice
 	order_list.splice(newPosition, order_list, old);
 	cout << "Moved order " << oldIndex << " to position " << newIndex << "." << endl;
 }

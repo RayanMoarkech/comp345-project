@@ -453,7 +453,6 @@ Map* MapLoader::load(const std::string& mapFileDir)
     }
     const bool valid = map->validate();
     cout << std::boolalpha << mapFileDir << " is valid: " << valid << endl;
-    cout << "---------------------------" << endl;
     return map;
 }
 

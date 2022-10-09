@@ -14,6 +14,8 @@
 #include <iostream>
     using std::cout;
     using std::endl;
+#include <algorithm>
+    using std::for_each;
 
 #include "../include/Map.h"
 
@@ -86,9 +88,13 @@ void Map::addContinent(Continent* continent)
 // Return nullptr if not found
 Continent* Map::getContinent(const std::string& name)
 {
+    auto* continentName = new string(name);
+    for_each((*continentName).begin(), (*continentName).end(), [](char & c) {
+        c = ::tolower(c);
+    });
     for(auto& continent: this->continents)
     {
-        if (continent->getName() == name)
+        if (continent->getName() == *continentName)
         {
             return continent;
         }
@@ -104,9 +110,13 @@ void Map::addTerritory(Territory* territory)
 // Return nullptr if not found
 Territory* Map::getTerritory(const std::string &name)
 {
+    auto* territoryName = new string(name);
+    for_each((*territoryName).begin(), (*territoryName).end(), [](char & c) {
+        c = ::tolower(c);
+    });
     for(auto& territory: this->territories)
     {
-        if (territory->getName() == name)
+        if (territory->getName() == *territoryName)
         {
             return territory;
         }
@@ -200,6 +210,9 @@ Map &Map::operator=(const Map &map)
 
 Continent::Continent(std::string name, int score)
 {
+    for_each(name.begin(), name.end(), [](char & c) {
+        c = ::tolower(c);
+    });
     this->name = std::move(name);
     this->score = score;
 }
@@ -237,6 +250,9 @@ Continent &Continent::operator=(const Continent& continent)
 
 Territory::Territory(string name, int coordinateX, int coordinateY, Continent* continent)
 {
+    for_each(name.begin(), name.end(), [](char & c) {
+        c = ::tolower(c);
+    });
     this->name = std::move(name);
     this->coordinateX = coordinateX;
     this->coordinateY = coordinateY;
@@ -422,7 +438,6 @@ Map* MapLoader::load(const std::string& mapFileDir)
                             cout << "Map has an adjacent territory \"" << adjTerritoryName
                                 << "\" for the \"" << pair.first->getName() << "\" territory that does not exists"
                                 << endl;
-                            throw std::exception();
                         }
                         pair.first->addAdjacentTerritory(adjTerritory);
                     }
@@ -432,6 +447,7 @@ Map* MapLoader::load(const std::string& mapFileDir)
         }
         input.close();
     } catch (const std::exception &exc) {
+        std::cerr << exc.what();
         cout << "An error has occurred when creating the map from config file: " << mapFileDir << std::endl;
         map->setValidFalse();
     }

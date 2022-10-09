@@ -33,6 +33,9 @@ public:
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
 	void issueOrder();
+	vector<Territory*> getOwnedTerritories();
+	Hand* getPlayerHand();
+	OrdersList* getPlayerOrders();
 };
 
 #endif //Player_H

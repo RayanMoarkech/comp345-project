@@ -80,9 +80,9 @@ ostream& operator<<(ostream& os, const Player& player)
 	//Orders and Orderslist do not have a name, so using size instead
 	os << "Player has issued " << player.playerOrders->getOrdersList().size() << " orders." << endl;
 	os << "Player has following cards in hand" << endl;
-	for (Card* c : player.playerHand.cards)
+	for (Card* c : player.playerHand->cards)
 	{
-		os << c.getCardType(); << endl
+		os << c->getCardType() << endl;
 	}
 	return os;
 }

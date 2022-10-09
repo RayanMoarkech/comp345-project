@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Orders.h"
+#include "../../include/Orders.h"
 using std::cout;
 
 void testOrdersList() {
@@ -47,9 +47,4 @@ void testOrdersList() {
 	cout << "\nTesting stream insertion operator of unexecuted order:" << endl;
 	cout << deployOrder << endl;
 
-}
-
-int main()
-{
-	testOrdersList();
 }

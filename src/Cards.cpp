@@ -87,26 +87,27 @@ void Card::play(Player* player, Deck* deck)
     switch (this->type ) {
         case BOMB:
             cout << "Card played: BOMB\n";
-            player->issueOrder();
+//            player->issueOrder();
             break;
         case REINFORCEMENT:
             cout << "Card played: REINFORCEMENT\n";
-            player->issueOrder();
+//            player->issueOrder();
             break;
         case BLOCKADE:
             cout << "Card played: BLOCKADE\n";
-            player->issueOrder();
+//            player->issueOrder();
             break;
         case AIRLIFT:
             cout << "Card played: AIRLIFT\n";
-            player->issueOrder();
+//            player->issueOrder();
             break;
         case DIPLOMACY:
             cout << "Card played: DIPLOMACY\n";
-            player->issueOrder();
+//            player->issueOrder();
             break;
     }
     deck->returnCard(this);
+    player->playerHand->cards.erase(player->playerHand->cards.begin());
 }
 
 // ---------------------------------------------

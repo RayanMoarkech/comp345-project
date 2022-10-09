@@ -51,10 +51,9 @@ public:
 
 class Deck {
 
-private:
-std::vector<Card*> cards; // Vector of the cards in the deck
-
 public:
+    std::vector<Card*> cards; // Vector of the cards in the deck
+
     Deck(); // Default constructor
 
     Deck(const Deck& deck); // Copy constructor

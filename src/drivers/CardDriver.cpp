@@ -30,23 +30,25 @@ void testCards() {
     // Status Summary
     cout << endl << "\nHand Has been Completed!" << endl;
     cout << "Player Hand Size: " << player->playerHand->cards.size() << endl;
+    cout << "Deck Size: " << deck->cards.size() << endl;
+
 
     // Play each card in the hand
+    cout << endl << "Player Hand: \n" << *player->playerHand << endl;
     cout << endl << "Playing each Card...\n" << endl;
-    while (!player->playerHand->cards.empty()) {
-        Card* c = player->playerHand->cards.back();
-        c->play(player, deck);
-    }
 
-    // Status Summary
-    cout << endl << "- All Cards in Hand have been played." << endl;
-    cout << *deck;
+    while (!player->playerHand->cards.empty()) {
+            Card* card = player->playerHand->cards.front();
+            card->play(player, deck);
+        }
+
+    cout << endl << "\nAll cards have been played in the hand!\n" << endl;
     cout << "Player Hand Size: " << player->playerHand->cards.size() << endl;
+    cout << "Deck Size: " << deck->cards.size() << endl;
 
     // Freeing the memory
     delete deck;
     delete player;
     cout << "Player and Deck successfully deleted!" << endl;
-    cout << "Player Hand Size: " << player->playerHand->cards.size() << endl;
 
 }

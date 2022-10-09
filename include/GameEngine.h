@@ -6,11 +6,11 @@
 #define GameEngine_H
 
 #include <string>
-    using std::string;
+using std::string;
 #include <vector>
-    using std::vector;
+using std::vector;
 #include <ostream>
-    using std::ostream;
+using std::ostream;
 
 
 // ---------------------------------------------
@@ -20,20 +20,20 @@
 class Transition
 {
 public:
-	Transition(string currentState, string command, int nextStateIndex);
-	Transition(const Transition&);
-	Transition& operator=(const Transition&);
+    Transition(string currentState, string command, int nextStateIndex);
+    Transition(const Transition&);
+    Transition& operator=(const Transition&);
 
-	string getCurrentState();
-	string getCommand();
-	int getNextStateIndex();
+    string getCurrentState();
+    string getCommand();
+    int getNextStateIndex();
 
 
 private:
-	string _currentState;
-	string _command;
-	int _nextStateIndex;
-	friend ostream& operator<<(ostream&, const Transition&);
+    string _currentState;
+    string _command;
+    int _nextStateIndex;
+    friend ostream& operator<<(ostream&, const Transition&);
 };
 
 
@@ -44,18 +44,36 @@ private:
 class State
 {
 public:
-	State(string name, vector<Transition*> transition);
-	State(const State&);
-	State& operator=(const State&);
+    State(string name, vector<Transition*> transition);
+    State(const State&);
+    State& operator=(const State&);
 
-	string getName();
-	vector<Transition*> getTransition();
+    string getName();
+    vector<Transition*> getTransition();
 
 private:
-	string _name;
-	vector<Transition*> _transition;
-	friend ostream& operator<<(ostream&, const State&);
+    string _name;
+    vector<Transition*> _transition;
+    friend ostream& operator<<(ostream&, const State&);
 };
+
+
+// ---------------------------------------------
+// --------------- GameEngine Section ---------------
+// ---------------------------------------------
+
+class GameEngine {
+public:
+    GameEngine(State* state);
+    GameEngine& operator=(const GameEngine&);
+
+    State* getState();
+
+private:
+    State* _state;
+    friend ostream& operator<<(ostream&, const GameEngine&);
+};
+
 
 
 #endif

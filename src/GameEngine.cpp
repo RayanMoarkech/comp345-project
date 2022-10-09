@@ -31,15 +31,15 @@ Transition& Transition::operator=(const Transition & transition)
 	_nextStateIndex = transition._nextStateIndex;
 	return *this;
 }
-;
+
 
 string Transition::getCurrentState() {
 	return _currentState;
-};
+}
 
 int Transition::getNextStateIndex() {
 	return _nextStateIndex;
-};
+}
 
 string Transition::getCommand() {
 	return _command;
@@ -69,7 +69,6 @@ State& State::operator=(const State &state)
 	_transition = state._transition;
 	return *this;
 }
-;
 
 string State::getName() {
 	return _name;
@@ -81,6 +80,33 @@ vector<Transition*> State::getTransition() {
 ostream& operator<<(ostream& strm, const State& state) {
 	strm << "The current state is \"" + state._name + "\", and has those/this valid transition/s:" << endl;
 	for (auto& transition : state._transition)
+		 strm << *transition << endl;
+	return strm;
+}
+
+
+GameEngine::GameEngine(State* state) {
+	_state = std::move(state);
+}
+
+GameEngine::GameEngine(const GameEngine &gameEngine)
+{
+    _state =new State(* gameEngine._state);
+}
+
+GameEngine& GameEngine::operator=(const GameEngine &gameEngine)
+{
+    _state = gameEngine._state;
+	return *this;
+}
+
+
+State* GameEngine::getState() {
+    return _state;
+}
+ostream& operator<<(ostream& strm, const GameEngine& gameEngine) {
+	strm << "The current state is \"" + gameEngine._state->getName() + "\", and has those/this valid transition/s:" << endl;
+	for (auto& transition : gameEngine._state->getTransition())
 		 strm << *transition << endl;
 	return strm;
 }

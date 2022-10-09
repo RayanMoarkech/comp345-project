@@ -113,9 +113,6 @@ vector<Territory*> Player::toDefend()
 		cout << territoriesToDefend.at(i)->getName() << endl;
 	}
 
-	delete map;
-	map = nullptr;
-
 	return territoriesToDefend;
 }
 
@@ -145,9 +142,6 @@ vector<Territory*> Player::toAttack()
 	for (int i = 0; i < nbOfTerritoriesToAttack; i++) {
 		cout << territoriesToAttack.at(i)->getName() << endl;
 	}
-
-	delete map;
-	map = nullptr;
 
 	return territoriesToAttack;
 }

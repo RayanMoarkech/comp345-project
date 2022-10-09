@@ -82,7 +82,7 @@ ostream& operator<<(ostream& os, const Player& player)
 	os << "Player has following cards in hand" << endl;
 	for (Card* c : player.playerHand.cards)
 	{
-		os << c.getType(); << endl
+		os << c.getCardType(); << endl
 	}
 	return os;
 }

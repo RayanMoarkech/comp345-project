@@ -1,6 +1,7 @@
 #include "../include/Cards.h"
 #include "../include/Player.h"
-#include <ostream>
+#include <iostream>
+using std::cout;
 #include <cstdlib>
 
 // ---------------------------------------------

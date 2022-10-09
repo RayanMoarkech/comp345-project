@@ -4,8 +4,8 @@
 
 void testLoadMaps();
 void testPlayers();
-void testCards();
 void testOrdersList();
+void testCards();
 void testGameStates();
 
 int main()

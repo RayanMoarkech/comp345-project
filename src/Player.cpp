@@ -8,25 +8,78 @@
 #include <iostream>
     using std::cout;
     using std::endl;
+#include <ostream>
 
 #include "../include/Player.h"
+#include "../include/Orders.h"
 
-
+//Default constructor
 Player::Player() {
-// TO DO
+	this->ownedTerritories = {};
+	//this->playerHand  = new Hand();
+	this->playerOrders = new OrdersList();
 }
 
-Player::Player(vector<Territory*> ownedTerritories, Deck* playerDeck, OrdersList* playerOrders)
+//Copy constructor (Deep)
+Player::Player(const Player& player) {
+	//Deep copy all territories
+	this->ownedTerritories = {};
+	for (Territory* t : player.ownedTerritories)
+	{
+		Continent* newContinent = new Continent(*t->getContinent());
+		Territory* newTerritory = new Territory(*t, newContinent);
+		this->ownedTerritories.push_back(newTerritory);
+	}
+	//this->playerHand = new Hand(player.playerHand);
+	this->playerOrders = new OrdersList(*player.playerOrders);
+}
+
+//Parametrized constructor
+Player::Player(vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
 {
 	this->ownedTerritories = ownedTerritories;
-	this->playerDeck = playerDeck;
+	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
 }
 
-Player::Player(const Player& player) {
-	this->ownedTerritories = player.ownedTerritories;
-	this->playerDeck = player.playerDeck;
-	this->playerOrders = player.playerOrders;
+//Destructor
+Player::~Player()
+{
+	for (Territory* t : this->ownedTerritories)
+	{
+		delete t;
+		t = nullptr;
+	}
+	delete this->playerHand;
+	this->playerHand = nullptr;
+	delete this->playerOrders;
+	this->playerOrders = nullptr;
+
+}
+
+//Assignment Operator
+Player& Player::operator=(const Player& player)
+{
+	this->ownedTerritories = ownedTerritories;
+	this->playerHand = playerHand;
+	this->playerOrders = playerOrders;
+	return *this;
+}
+
+//Stream Insertion Operator for Player class
+ostream& operator<<(ostream& os, const Player& player)
+{
+	vector<Territory*> ownedTerritories = player.ownedTerritories;
+	os << "Player owns territories: " << endl;
+	//print all territory names
+	for (Territory* t : player.ownedTerritories)
+	{
+		os << t->getName() << endl;
+	}
+	//Orders and Orderslist do not have a name, so using size instead
+	os << "Player has issued " << player.playerOrders->getOrdersList().size() << endl;
+	//TODO Add Cards/Hands os stream
+	return os;
 }
 
 vector<Territory*> Player::toDefend()
@@ -54,7 +107,10 @@ vector<Territory*> Player::toDefend()
 	for (int i = 0; i < nbOfTerritoriesToDefend; i++) {
 		cout << territoriesToDefend.at(i)->getName() << endl;
 	}
-	
+
+	delete map;
+	map = nullptr;
+
 	return territoriesToDefend;
 }
 
@@ -85,16 +141,21 @@ vector<Territory*> Player::toAttack()
 		cout << territoriesToAttack.at(i)->getName() << endl;
 	}
 
+	delete map;
+	map = nullptr;
+
 	return territoriesToAttack;
 }
 
 void Player::issueOrder()
 {
-	//TO DO 
 	// Create new order
-	//Order newOrder = new Order();
+	Order* newOrder = new Order();
 	// Add it to the player's orders list
-	//this->playerOrders.addOrder(newOrder);
+	this->playerOrders->addOrder(newOrder);
+	cout << "New Order Issued!" << endl;
+	cout << "playerOrders is now of size " << this->playerOrders->getOrdersList().size() << endl;
+
 }
 
 

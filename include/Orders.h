@@ -172,4 +172,6 @@ public:
 
 	//Adds an order to the list
 	void addOrder(Order* o);
+
+	std::list<Order*> getOrdersList();
 };

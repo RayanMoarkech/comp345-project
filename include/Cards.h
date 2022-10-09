@@ -36,6 +36,8 @@ public:
 
     ~Card(); // Destructor
 
+    std::string getCardType(); // Returns the type of the card
+
     Card &operator=(const Card &card); // Assignment operator overloading
 
     friend ostream &operator<<(ostream &out, const Card &card); // Stream insertion operator overloading

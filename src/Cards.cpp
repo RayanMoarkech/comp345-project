@@ -47,6 +47,18 @@ Card& Card::operator = (const Card& card) {
     return *this;
 }
 
+// Outputs Card type as a string
+std::string Card::getCardType() {
+    switch(type) {
+        case CardType::AIRLIFT:         return "Airlift";
+        case CardType::BLOCKADE:        return "Blockade";
+        case CardType::BOMB:            return "Bomb";
+        case CardType::DIPLOMACY:       return "Diplomacy";
+        case CardType::REINFORCEMENT:   return "Reinforcement";
+        default:                        return "Error: Unable to determine card type";
+    }
+}
+
 // Stream insertion operator
 ostream& operator << (ostream& out, const Card& card) {
     switch (card.type) {

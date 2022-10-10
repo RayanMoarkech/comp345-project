@@ -2,14 +2,22 @@
 // COMP345_PROJECT_GAMEENGINEDRIVER_CPP GameEngineDriver.cpp
 //
 
-#include "../../include/GameEngine.h"
+
 #include <iostream>
+    using std::cout;
+    using std::cin;
+    using std::endl;
 
-using std::cout;
-using std::cin;
-using std::endl;
+#include "../../include/GameEngine.h"
 
-void testGameStates() {
+void testGameStates()
+{
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Test Game States" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+
     //Used as a flag to be true if the command is valid to allow going to the next state
     bool validCommand = false;
     string userCommand;

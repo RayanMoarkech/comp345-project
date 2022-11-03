@@ -149,7 +149,7 @@ vector<Territory*> Player::toAttack()
 void Player::issueOrder()
 {
 	// Create new order
-	Order* newOrder = new Order();
+	Order* newOrder = new Deploy(); //**TEMP CHANGE FOR PART 4 Testing**//
 	// Add it to the player's orders list
 	this->playerOrders->addOrder(newOrder);
 	cout << "New Order Issued!" << endl;
@@ -169,5 +169,20 @@ Hand* Player::getPlayerHand()
 OrdersList* Player::getPlayerOrders()
 {
 	return this->playerOrders;
+}
+
+void Player::addTerritory(Territory* t)
+{
+	this->ownedTerritories.push_back(t);
+}
+
+void Player::addNegotiator(Player* p)
+{
+	negotiatingWith.push_back(p);
+}
+
+std::list<Player*> Player::getNegotiatorList()
+{
+	return this->negotiatingWith;
 }
 

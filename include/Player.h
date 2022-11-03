@@ -9,6 +9,7 @@
     using std::vector;
 #include <ostream>
 	using std::ostream;
+#include <list>
 
 #include "../include/Map.h"
 #include "../include/Orders.h"
@@ -20,6 +21,7 @@ class Player
 {
 private:
 	vector<Territory*> ownedTerritories;
+	std::list<Player*> negotiatingWith;
 	Hand* playerHand;
 	OrdersList* playerOrders;
 
@@ -36,6 +38,11 @@ public:
 	vector<Territory*> getOwnedTerritories();
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
+	void addTerritory(Territory* t);
+	void removeTerritory(Territory* t); //TODO
+	void addNegotiator(Player* p); //Adds a negotiating player
+	//May need to add a method to remove someone from the list of negotiators
+	std::list<Player*> getNegotiatorList();
 };
 
 #endif //Player_H

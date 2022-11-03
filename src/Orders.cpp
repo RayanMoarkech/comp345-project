@@ -3,6 +3,8 @@
 //
 
 #include "../include/Orders.h"
+#include "../include/Map.h"
+#include "../include/Player.h"
 #include <ostream>
 
 //----Order Class----
@@ -58,22 +60,10 @@ ostream& Order::print(ostream& out) const
 	return out;
 }
 
-//Validate method for Order base class
-bool Order::validate()
+//Method to access the player associated with an order
+Player* Order::getPlayer()
 {
-	return false;// A1
-}
-
-//Execute method for Order base class
-void Order::execute()
-{
-	if (!validate()) {
-		cout << "Order invalid. Will not execute." << endl;
-		return;
-	}
-	executed = true;
-	//TODO: Insert execution behaviour
-	cout << "Order executed." << endl;
+	return player;
 }
 
 //----Deploy Class----
@@ -133,8 +123,8 @@ ostream& Deploy::print(ostream& out) const
 //Method to return whether deploy order is valid
 bool Deploy::validate()
 {
-	// TODO: Check that the address of targetTerritory's player is the same address of this player
-	return false; //Temporary for A1 testing
+	// Check that targetTerritory belongs to player issuing order
+	return(targetTerritory->getOwnedBy() == this->getPlayer());
 }
 
 //Method to validate and execute deploy order
@@ -144,9 +134,12 @@ void Deploy::execute()
 		cout << "Deploy order invalid. Will not execute." << endl;
 		return;
 	}
+	// Remove numOfArmyUnits from reinforcement pool
+	// Add numOfArmyUnits to targetTerritory
+	player->removeReinforcements(numOfArmyUnits);
+	targetTerritory->addArmies(numOfArmyUnits);
+	cout << "Deploy order executed. Deployed " << numOfArmyUnits << " armies to " << targetTerritory->getName() << "." << endl;
 	executed = true;
-	//TODO: Insert execution behaviour
-	cout << "Deploy order executed." << endl;
 }
 
 //----Advance Class----
@@ -210,10 +203,11 @@ ostream& Advance::print(ostream& out) const
 //Validate method for Advance class
 bool Advance::validate()
 {
-	//TODO: Check if source territory belongs to player and that territories are adjacent
-	//TODO: isAdjacent method in territory
-	return true; //Temporary for A1 testing
-
+	// Check if source territory belongs to player and that territories are adjacent
+	//Check if players are in negotiation
+	vector<Territory*> adjacent = sourceTerritory->getAdjacentTerritories();
+	std::list<Player*> negotiating = this->getPlayer()->getNegotiatorList();
+	return((sourceTerritory->getOwnedBy() == this->getPlayer()) && (std::find(adjacent.begin(), adjacent.end(), targetTerritory) != adjacent.end()) && std::find(negotiating.begin(), negotiating.end(), targetTerritory->getOwnedBy()) == negotiating.end());
 }
 
 //Execute method for Advance class
@@ -223,9 +217,38 @@ void Advance::execute()
 		cout << "Advance order invalid. Will not execute" << endl;
 		return;
 	}
-	executed = true;
-	//TODO: Insert execution behaviour
-	cout << "Advance order executed." << endl;
+	if (targetTerritory->getOwnedBy() == this->getPlayer()) {
+		sourceTerritory->removeArmies(numOfArmyUnits);
+		targetTerritory->addArmies(numOfArmyUnits);
+		cout << "Defensive Advance Order Executed. Player advanced " << numOfArmyUnits << " armies from " << sourceTerritory->getName() << " to " << targetTerritory->getName() << "." << endl;
+	}
+	else {
+		while (numOfArmyUnits > 0 && targetTerritory->getNumberOfArmies() > 0) {
+			srand(time(nullptr));
+			if (rand() % 10 < 6)
+				targetTerritory->removeArmies(1);
+			else if (rand() % 10 < 7)
+				sourceTerritory->removeArmies(1);
+				numOfArmyUnits--;
+		}
+		if (targetTerritory->getNumberOfArmies() == 0) {//all defender units elimated
+			targetTerritory->getOwnedBy()->removeTerritory(targetTerritory); //Remove territory from defender
+			sourceTerritory->getOwnedBy()->addTerritory(targetTerritory); //Add territory to attacker
+			targetTerritory->setOwnedBy(sourceTerritory->getOwnedBy(), numOfArmyUnits); //Set territory owner and num armies to attacker
+			cout << "Attacking Advance Order Executed. Attacking player " << " won " << targetTerritory->getName() << " territory." << endl;
+		}
+		else {//attacking player loses
+			cout << "Attacking Advance Order Executed. Attacking player " << " lost " << numOfArmyUnits << " and now has " << sourceTerritory->getNumberOfArmies() << "armies on " << sourceTerritory->getName() << " territory." << endl;
+		}
+		/*
+		* TO DO: A player receives a card at the end of his turn if they successfully conquered at least one 
+		territory during their turn, i.e. a player cannot receive more than one card per turn. 
+		I can set a flag to have a player know when they successfully conquered >1 territories but the implementation
+		of the receiving a card should be in another class
+		*/
+
+	}
+	executed = true;	
 }
 
 
@@ -281,9 +304,22 @@ ostream& Bomb::print(ostream& out) const
 //Validate method for Bomb class
 bool Bomb::validate()
 {
-	//TODO: Check that player has bomb card,target Territory does not belong to player and is adjacent to one of the player's current territories
-	//TODO: Player checkHand() method, Territory getPlayer method and adjacentToPlayer method
-	return true; //Temporary for A1 testing
+	//TODO: Check that player has bomb card
+	//How to check that bomb card was played??
+	// 
+	//Check that target territory is adjacent to one of player's current territories
+	Player* player = this->getPlayer();
+	vector<Territory*> playerTerritories = player->getOwnedTerritories();
+	std::list<Player*> negotiating = this->getPlayer()->getNegotiatorList();
+	bool isAdjacent = false;
+	for (auto& territory : playerTerritories) {
+		vector<Territory*> adjacent = territory->getAdjacentTerritories();
+		isAdjacent = std::find(adjacent.begin(), adjacent.end(), targetTerritory) != adjacent.end();
+		if (isAdjacent) break;
+	}
+
+	//Check that target territory does not belong to player as well and players not in negotiation
+	return(targetTerritory->getOwnedBy() != this->getPlayer() && isAdjacent && std::find(negotiating.begin(), negotiating.end(), targetTerritory->getOwnedBy()) == negotiating.end());
 }
 
 void Bomb::execute()
@@ -292,9 +328,9 @@ void Bomb::execute()
 		cout << "Bomb order invalid. Will not execute" << endl;
 		return;
 	}
+	targetTerritory->setNumberOfArmies(targetTerritory->getNumberOfArmies() / 2);
 	executed = true;
-	//TODO: Insert execution behaviour
-	cout << "Bomb order executed." << endl;
+	cout << "Bomb order executed. Half of the army units removed from territory" << targetTerritory->getName() << ". " << endl;
 }
 
 //----Blockade Class----
@@ -349,9 +385,8 @@ ostream& Blockade::print(ostream& out) const
 //Validate method for Blockade class
 bool Blockade::validate()
 {
-	//TODO: Check that player has blockade card and territory belongs to player
-	//TODO: Player checkHand(), Territory getPlayer method and adjacentToPlayer method
-	return true; //Temporary for A1 testing
+	//TODO: Check that player has blockade card 
+	return(targetTerritory->getOwnedBy() == this->getPlayer());
 }
 
 void Blockade::execute()
@@ -360,9 +395,12 @@ void Blockade::execute()
 		cout << "Blockade order invalid. Will not execute" << endl;
 		return;
 	}
+	//Set ownership to the neutral players and double armies
+	//What is the neutral player???
+	targetTerritory->setOwnedBy(new Player(), targetTerritory->getNumberOfArmies() * 2);
+	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
 	executed = true;
-	//TODO: Insert execution behaviour
-	cout << "Blockade order executed." << endl;
+	cout << "Blockade order executed. Territory" << targetTerritory->getName() << " has doubled its army units and is now owned by the neutral player" << endl;
 }
 
 
@@ -427,9 +465,8 @@ ostream& Airlift::print(ostream& out) const
 //Validate method for Airlift class
 bool Airlift::validate()
 {
-	//TODO: Check if player has airlift card and source territory belongs to player
-	//TODO: Player checkHand() and Territory getPlayer()
-	return true; //Temporary for A1 testing
+	//TODO: Check if player has airlift card 
+	return (sourceTerritory->getOwnedBy() == this->getPlayer() && targetTerritory->getOwnedBy() == this->getPlayer());
 }
 
 void Airlift::execute()
@@ -438,9 +475,10 @@ void Airlift::execute()
 		cout << "Airlift order invalid. Will not execute" << endl;
 		return;
 	}
+	sourceTerritory->removeArmies(numOfArmyUnits);
+	targetTerritory->addArmies(numOfArmyUnits);
 	executed = true;
-	//TODO: Insert execution behaviour
-	cout << "Airlift order executed." << endl;
+	cout << "Airlift Order executed. " << numOfArmyUnits << " moved from " << sourceTerritory->getName() << " to " << targetTerritory->getName() << ". " << endl;
 }
 
 //----Negotiate Class----
@@ -495,9 +533,8 @@ ostream& Negotiate::print(ostream& out) const
 //Validate method for Negotiate class
 bool Negotiate::validate()
 {
-	//TODO: Check that player has Negotiate card and current and target player are not the same
-	//TODO: Player checkHand() method
-	return true; //Temporary for A1 testing
+	//TODO: Check that player has Negotiate card
+	return(targetPlayer != this->getPlayer());
 }
 
 void Negotiate::execute()
@@ -506,8 +543,10 @@ void Negotiate::execute()
 		cout << "Negotiate order invalid. Will not execute" << endl;
 		return;
 	}
+	//Add players to each others' negotiating lists
+	this->getPlayer()->addNegotiator(targetPlayer);
+	targetPlayer->addNegotiator(this->getPlayer());
 	executed = true;
-	//TODO: Insert execution behaviour
 	cout << "Negotiate order executed." << endl;
 }
 

@@ -6,7 +6,8 @@
     using std::string;
 #include <vector>
     using std::vector;
-#include <ostream>
+#include <iostream>
+    using std::cout;
     using std::endl;
 
 #include "../include/GameEngine.h"
@@ -175,7 +176,64 @@ void GameEngine::executeCurrentStateAction()
 
 void GameEngine::startupPhase()
 {
-    
+    //Used as a flag to be true if the command is valid to allow going to the next state
+    bool validCommand = false;
+    string userCommand;
+
+    cout << endl
+        << "**********************************" << endl
+        << "*                                *" << endl
+        << "*      Team DN08 - Warzone       *" << endl
+        << "*                                *" << endl
+        << "**********************************" << endl << endl << endl;
+
+
+    cout << this->_state[this->_currentStateIndex] << endl
+        << "What is your command?" << endl
+        << "......................." << endl
+        << ">> ";
+
+
+    getline(std::cin, userCommand);
+    while (std::cin) {
+        // Check the user command against the valid commands at the current state
+        // and set the current state index to the next state.
+        for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition()) {
+            if (userCommand == transition->getCommand()) {
+                this->_currentStateIndex = transition->getNextStateIndex();
+                this->executeCurrentStateAction();
+                validCommand = true;
+            }
+        }
+
+        //If the next index is -1, the game will terminate.
+        if (this->_currentStateIndex == -1) break;
+
+        //If the user command is invalid, print an error message
+        if (!validCommand)
+            cout << "\n-_- Your command: \"" + userCommand + "\" is invalid for the \"" +
+                    this->_state[this->_currentStateIndex]->getName() + "\" state. -_-\n" << endl;
+            //Print successful message if the transition was made.
+        else
+            cout << "\n" << (char) 1 << " Yay that was a valid transition " << (char) 1 << "\n" << endl;
+
+        //keep ask the user to enter the new command if the command was invalid
+        // or to make another transition.
+        cout << this->_state[this->_currentStateIndex] << endl;
+        cout << "Please enter a new command!" << endl;
+        cout << "............................" << endl;
+        cout << ">> ";
+        getline(std::cin, userCommand);
+        validCommand = false;
+    }
+
+    cout << endl
+        << "**********************************" << endl
+        << "*                                *" << endl
+        << "*            Bye bye!            *" << endl
+        << "*                                *" << endl
+        << "**********************************" << endl
+        << endl;
 }
 
 //Print a list of all states with their valid transitions

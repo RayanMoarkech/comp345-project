@@ -78,6 +78,7 @@ public:
     vector<State*> getState();
     int getCurrentStateIndex();
     void setCurrentStateIndex(int currentStateIndex);
+    void startupPhase();
 
 private:
     vector<State*> _state;

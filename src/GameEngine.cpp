@@ -168,6 +168,11 @@ void GameEngine::setCurrentStateIndex(int currentStateIndex) {
     _currentStateIndex = currentStateIndex;
 }
 
+void GameEngine::startupPhase()
+{
+    
+}
+
 //Print a list of all states with their valid transitions
 ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
     for (auto const &state: gameEngine._state) {

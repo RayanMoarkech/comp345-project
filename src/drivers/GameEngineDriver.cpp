@@ -77,3 +77,10 @@ void testGameStates()
 
     delete gameEngine;
 }
+
+void testStartupPhase()
+{
+    GameEngine *gameEngine = new GameEngine();
+    gameEngine->startupPhase();
+    delete gameEngine;
+}

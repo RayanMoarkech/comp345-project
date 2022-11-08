@@ -168,6 +168,11 @@ void GameEngine::setCurrentStateIndex(int currentStateIndex) {
     _currentStateIndex = currentStateIndex;
 }
 
+void GameEngine::executeCurrentStateAction()
+{
+
+}
+
 void GameEngine::startupPhase()
 {
     

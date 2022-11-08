@@ -80,6 +80,12 @@ void testGameStates()
 
 void testStartupPhase()
 {
+    cout << endl
+         << "------------------------------------------------------" << endl
+         << "Test Startup Phase" << endl
+         << "------------------------------------------------------" << endl
+         << endl;
+
     GameEngine *gameEngine = new GameEngine();
     gameEngine->startupPhase();
     delete gameEngine;

@@ -190,43 +190,115 @@ void GameEngine::setCurrentStateIndex(int currentStateIndex) {
 
 bool GameEngine::executeCurrentStateAction(string option)
 {
-
+    string currentStateName = this->_state[this->_currentStateIndex]->getName();
+    // mapLoaded
+    if (currentStateName == stateName[1])
+    {
+        this->_map = MapLoader::load(option);
+        return true;
+    }
+    // mapValidated
+    if (currentStateName == stateName[2])
+    {
+        this->_map->validate();
+        return true;
+    }
+    // playersAdded
+    if (currentStateName == stateName[3])
+    {
+        Player* player;
+        if (option.empty())
+        {
+            player = new Player();
+        }
+        else
+        {
+            player = new Player(option, {}, new Hand(), new OrdersList());
+        }
+        cout << "Player " << player->getName() << " has been added." << endl;
+        this->_players.push_back(player);
+        return true;
+    }
+    return false;
 }
 
 void GameEngine::startupPhase()
 {
-    //Used as a flag to be true if the command is valid to allow going to the next state
-    bool validCommand = false;
-    string userCommand;
+    // The states that should be entered in order
+//    vector<string> statesToEnter = {"loadmap", "validatemap", "addplayer", "gamestart"};
+//
+//    for (auto & stateToEnter : statesToEnter) {
+//
+//        //If the next index is -1, the game will terminate.
+//        if (this->_currentStateIndex == -1) break;
+//
+//        cout << * this->_state[this->_currentStateIndex] << endl;
+//
+//        cout << "Auto-Command used: " << stateToEnter << endl;
+//
+//        // Set the current state index to the next state
+//        // Based on the current state
+//        for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition())
+//        {
+//            if (stateToEnter == transition->getCommand())
+//            {
+//                this->_currentStateIndex = transition->getNextStateIndex();
+//                this->executeCurrentStateAction();
+//            }
+//        }
+//
+//        cout << endl << endl;
+//    }
 
-    cout << endl
+    // The defined phases
+    vector<string> phases = {"loadmap", "validatemap", "addplayer", "gamestart"};
+
+    cout << "***************************************" << endl
+        << "The following commands can be inserted:" << endl
+        << "      1- loadmap <filename>            " << endl
+        << "      2- validatemap                   " << endl
+        << "      2- addplayer <playername>        " << endl
+        << "      2- gamestart                     " << endl
         << "**********************************" << endl
-        << "*                                *" << endl
-        << "*      Team DN08 - Warzone       *" << endl
-        << "*                                *" << endl
-        << "**********************************" << endl << endl << endl;
+        << endl;
 
-
-    cout << this->_state[this->_currentStateIndex] << endl
-        << "What is your command?" << endl
+    cout << "What is your command?" << endl
         << "......................." << endl
-        << ">> ";
+        << endl;
 
+    //If the next index is -1, the game will terminate.
+    while (this->_currentStateIndex != -1)
+    {
+        // Used as a flag to be true if the command is valid to allow going to the next state
+        bool validCommand = false;
 
-    getline(std::cin, userCommand);
-    while (std::cin) {
-        // Check the user command against the valid commands at the current state
-        // and set the current state index to the next state.
-        for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition()) {
-            if (userCommand == transition->getCommand()) {
-                this->_currentStateIndex = transition->getNextStateIndex();
-                this->executeCurrentStateAction();
-                validCommand = true;
-            }
+        cout << "Current state: " << this->_state[this->_currentStateIndex]->getName() << endl;
+        cout << ">> ";
+
+        // Get the userCommand
+        string userCommand;
+        getline(std::cin, userCommand);
+
+        // Command
+        string command = userCommand.substr(0, userCommand.find(' '));
+        bool hasCommandOption = userCommand.find(' ') != string::npos;
+        string commandOption = userCommand.substr(userCommand.find(' ') + 1);
+
+        if (command == "gamestart")
+        {
+            vector<string> gamePhases = {};
         }
 
-        //If the next index is -1, the game will terminate.
-        if (this->_currentStateIndex == -1) break;
+        // Check the user command against the valid commands at the current state
+        // and set the current state index to the next state.
+        for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition())
+        {
+            if (command == transition->getCommand())
+            {
+                this->_currentStateIndex = transition->getNextStateIndex();
+                validCommand = this->executeCurrentStateAction(hasCommandOption ? commandOption : "");
+            }
+        }
 
         //If the user command is invalid, print an error message
         if (!validCommand)
@@ -235,24 +307,7 @@ void GameEngine::startupPhase()
             //Print successful message if the transition was made.
         else
             cout << "\n" << (char) 1 << " Yay that was a valid transition " << (char) 1 << "\n" << endl;
-
-        //keep ask the user to enter the new command if the command was invalid
-        // or to make another transition.
-        cout << this->_state[this->_currentStateIndex] << endl;
-        cout << "Please enter a new command!" << endl;
-        cout << "............................" << endl;
-        cout << ">> ";
-        getline(std::cin, userCommand);
-        validCommand = false;
     }
-
-    cout << endl
-        << "**********************************" << endl
-        << "*                                *" << endl
-        << "*            Bye bye!            *" << endl
-        << "*                                *" << endl
-        << "**********************************" << endl
-        << endl;
 }
 
 //Print a list of all states with their valid transitions

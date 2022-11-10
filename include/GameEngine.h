@@ -82,7 +82,7 @@ public:
     int getCurrentStateIndex();
     void setCurrentStateIndex(int currentStateIndex);
 
-    void executeCurrentStateAction();
+    bool executeCurrentStateAction(string option);
     void startupPhase();
 
 private:

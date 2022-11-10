@@ -190,6 +190,17 @@ void GameEngine::setCurrentStateIndex(int currentStateIndex) {
     _currentStateIndex = currentStateIndex;
 }
 
+bool GameEngine::nextState(string command, string commandOption)
+{
+    for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition()) {
+        if (command == transition->getCommand()) {
+            this->_currentStateIndex = transition->getNextStateIndex();
+            return executeCurrentStateAction(commandOption);
+        }
+    }
+    return false;
+}
+
 bool GameEngine::executeCurrentStateAction(string option)
 {
     string currentStateName = this->_state[this->_currentStateIndex]->getName();
@@ -220,6 +231,44 @@ bool GameEngine::executeCurrentStateAction(string option)
         cout << "Player " << player->getName() << " has been added." << endl;
         this->_players.push_back(player);
         return true;
+    }
+    // assignReinforcement: Distribute Territories and Reinforcements
+    if (currentStateName == stateName[4])
+    {
+        cout << "Fairly distributing the territories to the players" << endl;
+
+        // Shuffling the territories
+        vector<Territory*> shuffledTerritories = this->_map->getTerritories();
+        auto rng = std::default_random_engine {};
+        std::shuffle(std::begin(shuffledTerritories), std::end(shuffledTerritories), rng);
+        int numberOfPlayer = this->_players.size();
+        int count = 0;
+
+        // Loop through players and add territories
+        for (auto const &territory: shuffledTerritories)
+        {
+            Player* player = this->_players[count++];
+            player->addOwnedTerritory(territory);
+            territory->setOwnedBy(player, 0);
+            // When reaching the end, repeat
+            if (count == numberOfPlayer) { count = 0; }
+        }
+        return true;
+    }
+    // issueOrders
+    if (currentStateName == stateName[5])
+    {
+        return true;
+    }
+    // executeOrders
+    if (currentStateName == stateName[6])
+    {
+        return true;
+    }
+    // win
+    if (currentStateName == stateName[7])
+    {
+
     }
     return false;
 }
@@ -262,14 +311,13 @@ void GameEngine::startupPhase()
 
         if (command == "gamestart")
         {
-            validCommand = true;
-            vector<string> gamePhases = {};
-
             // 4-a fairly distribute all the territories to the players
+            command = "assigncountries";
+            this->nextState(command, "");
 
             // 4-b determine randomly the order of play of the players in the game
             cout << "Shuffling players..." << endl;
-            auto rng = std::default_random_engine {};
+            auto rng = std::default_random_engine { std::random_device{}() };
             std::shuffle(std::begin(this->_players), std::end(this->_players), rng);
             cout << "Shuffled player order:" << endl;
             int count = 0;
@@ -279,22 +327,29 @@ void GameEngine::startupPhase()
             }
 
             // 4-c give 50 initial army units to the players, which are placed in their respective reinforcement pool
+            command = "issueorder";
+            this->nextState(command, "");
+
+            command = "endissueorders";
+            this->nextState(command, "");
 
             // 4-d let each player draw 2 initial cards from the deck using the deck’s draw() method
+            command = "execorder";
+            this->nextState(command, "");
+
+            command = "endexecorders";
+            this->nextState(command, "");
+
 
             // 4-e switch the game to the play phase
+            command = "play";
+            this->nextState(command, "");
 
+            break;
         }
         else
         {
-            // Check the user command against the valid commands at the current state
-            // and set the current state index to the next state.
-            for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition()) {
-                if (command == transition->getCommand()) {
-                    this->_currentStateIndex = transition->getNextStateIndex();
-                    validCommand = this->executeCurrentStateAction(hasCommandOption ? commandOption : "");
-                }
-            }
+            validCommand = this->nextState(command, hasCommandOption ? commandOption : "");
         }
 
         // If the user command is invalid, print an error message

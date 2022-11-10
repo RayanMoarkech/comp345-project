@@ -185,3 +185,8 @@ OrdersList* Player::getPlayerOrders()
 	return this->playerOrders;
 }
 
+void Player::addOwnedTerritory(Territory *territory)
+{
+    this->ownedTerritories.push_back(territory);
+}
+

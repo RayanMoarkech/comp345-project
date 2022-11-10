@@ -82,7 +82,6 @@ public:
     int getCurrentStateIndex();
     void setCurrentStateIndex(int currentStateIndex);
 
-    bool executeCurrentStateAction(string option);
     void startupPhase();
 
 private:
@@ -91,6 +90,9 @@ private:
 
     Map* _map;
     vector<Player*> _players;
+
+    bool executeCurrentStateAction(string option);
+    bool nextState(string command, string commandOption);
 
     friend ostream &operator<<(ostream &, const GameEngine &);
 };

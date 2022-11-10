@@ -40,6 +40,7 @@ public:
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
     string getName();
+    void addOwnedTerritory(Territory* territory);
 };
 
 #endif //Player_H

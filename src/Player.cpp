@@ -3,6 +3,7 @@
 //
 
 #include <cstdlib>     /* srand, rand */
+#include <utility>
 #include <vector>
     using std::vector;
 #include <iostream>
@@ -14,8 +15,12 @@
 #include "../include/Orders.h"
 #include "../include/Cards.h"
 
+int Player::idCounter = 1;
+
 //Default constructor
 Player::Player() {
+    this->id = idCounter++;
+    this->name = "Player " + std::to_string(this->id);
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
@@ -24,6 +29,8 @@ Player::Player() {
 //Copy constructor (Deep)
 Player::Player(const Player& player) {
 	//Deep copy all territories
+    this->id = idCounter++;
+    this->name = player.name;
 	this->ownedTerritories = {};
 	for (Territory* t : player.ownedTerritories)
 	{
@@ -36,8 +43,10 @@ Player::Player(const Player& player) {
 }
 
 //Parametrized constructor
-Player::Player(vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
+Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
 {
+    this->id = idCounter++;
+    this->name = std::move(name);
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
@@ -65,6 +74,11 @@ Player& Player::operator=(const Player& player)
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
 	return *this;
+}
+
+string Player::getName()
+{
+    return this->name;
 }
 
 //Stream Insertion Operator for Player class

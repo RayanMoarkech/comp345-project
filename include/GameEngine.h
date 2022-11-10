@@ -12,6 +12,9 @@
 #include <ostream>
     using std::ostream;
 
+class Map;
+class Player;
+
 
 // ---------------------------------------------
 // ------------ Transition Section -------------
@@ -85,6 +88,10 @@ public:
 private:
     vector<State*> _state;
     int _currentStateIndex;
+
+    Map* _map;
+    vector<Player*> _players;
+
     friend ostream &operator<<(ostream &, const GameEngine &);
 };
 

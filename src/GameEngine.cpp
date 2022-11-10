@@ -11,6 +11,10 @@
     using std::endl;
 
 #include "../include/GameEngine.h"
+#include "../include/Map.h"
+#include "../include/Cards.h"
+#include "../include/Orders.h"
+#include "../include/Player.h"
 
 
 // Holds the state names to be used across class
@@ -134,6 +138,8 @@ GameEngine::GameEngine() {
                                       new Transition("end", -1)}),
     };
     _currentStateIndex = 0;
+    _map = nullptr;
+    _players = {};
 }
 
 GameEngine::GameEngine(const GameEngine &gameEngine) {
@@ -142,15 +148,28 @@ GameEngine::GameEngine(const GameEngine &gameEngine) {
         _state.push_back(new State(*state));
     }
     _currentStateIndex = gameEngine._currentStateIndex;
+    _map = new Map(*gameEngine._map);
+    _players = {};
+    for (auto const &player: gameEngine._players) {
+        _players.push_back(new Player(*player));
+    }
 }
+
 GameEngine::~GameEngine() {
     for (State* state: _state)
     {
         delete state;
-        state = nullptr;
     }
     _state.clear();
+    delete _map;
+    for (Player* player: _players)
+    {
+        delete player;
+    }
+    _players.clear();
 }
+
+// TODO update
 GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
     _state = gameEngine._state;
     return *this;
@@ -169,7 +188,7 @@ void GameEngine::setCurrentStateIndex(int currentStateIndex) {
     _currentStateIndex = currentStateIndex;
 }
 
-void GameEngine::executeCurrentStateAction()
+bool GameEngine::executeCurrentStateAction(string option)
 {
 
 }

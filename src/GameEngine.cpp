@@ -9,6 +9,8 @@
 #include <iostream>
     using std::cout;
     using std::endl;
+#include <algorithm>
+#include <random>
 
 #include "../include/GameEngine.h"
 #include "../include/Map.h"
@@ -224,32 +226,6 @@ bool GameEngine::executeCurrentStateAction(string option)
 
 void GameEngine::startupPhase()
 {
-    // The states that should be entered in order
-//    vector<string> statesToEnter = {"loadmap", "validatemap", "addplayer", "gamestart"};
-//
-//    for (auto & stateToEnter : statesToEnter) {
-//
-//        //If the next index is -1, the game will terminate.
-//        if (this->_currentStateIndex == -1) break;
-//
-//        cout << * this->_state[this->_currentStateIndex] << endl;
-//
-//        cout << "Auto-Command used: " << stateToEnter << endl;
-//
-//        // Set the current state index to the next state
-//        // Based on the current state
-//        for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition())
-//        {
-//            if (stateToEnter == transition->getCommand())
-//            {
-//                this->_currentStateIndex = transition->getNextStateIndex();
-//                this->executeCurrentStateAction();
-//            }
-//        }
-//
-//        cout << endl << endl;
-//    }
-
     // The defined phases
     vector<string> phases = {"loadmap", "validatemap", "addplayer", "gamestart"};
 
@@ -286,21 +262,42 @@ void GameEngine::startupPhase()
 
         if (command == "gamestart")
         {
+            validCommand = true;
             vector<string> gamePhases = {};
-        }
 
-        // Check the user command against the valid commands at the current state
-        // and set the current state index to the next state.
-        for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition())
-        {
-            if (command == transition->getCommand())
+            // 4-a fairly distribute all the territories to the players
+
+            // 4-b determine randomly the order of play of the players in the game
+            cout << "Shuffling players..." << endl;
+            auto rng = std::default_random_engine {};
+            std::shuffle(std::begin(this->_players), std::end(this->_players), rng);
+            cout << "Shuffled player order:" << endl;
+            int count = 0;
+            for (auto const &player: this->_players)
             {
-                this->_currentStateIndex = transition->getNextStateIndex();
-                validCommand = this->executeCurrentStateAction(hasCommandOption ? commandOption : "");
+                cout << "\t\t" << std::to_string(count++) << ": " << player->getName() << endl;
+            }
+
+            // 4-c give 50 initial army units to the players, which are placed in their respective reinforcement pool
+
+            // 4-d let each player draw 2 initial cards from the deck using the deck’s draw() method
+
+            // 4-e switch the game to the play phase
+
+        }
+        else
+        {
+            // Check the user command against the valid commands at the current state
+            // and set the current state index to the next state.
+            for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition()) {
+                if (command == transition->getCommand()) {
+                    this->_currentStateIndex = transition->getNextStateIndex();
+                    validCommand = this->executeCurrentStateAction(hasCommandOption ? commandOption : "");
+                }
             }
         }
 
-        //If the user command is invalid, print an error message
+        // If the user command is invalid, print an error message
         if (!validCommand)
             cout << "\n-_- Your command: \"" + userCommand + "\" is invalid for the \"" +
                     this->_state[this->_currentStateIndex]->getName() + "\" state. -_-\n" << endl;

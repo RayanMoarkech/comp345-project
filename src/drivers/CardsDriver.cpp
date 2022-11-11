@@ -5,7 +5,14 @@
 
 using namespace std;
 
-void testCards() {
+void testCards()
+{
+    cout << endl
+         << "------------------------------------------------------" << endl
+         << "Test Cards" << endl
+         << "------------------------------------------------------" << endl
+         << endl;
+
     // change seed to get random numbers every run
     srand(time(NULL));
 
@@ -38,9 +45,9 @@ void testCards() {
     cout << endl << "Playing each Card...\n" << endl;
 
     while (!player->getPlayerHand()->cards.empty()) {
-            Card* card = player->getPlayerHand()->cards.front();
-            card->play(player, deck);
-        }
+        Card* card = player->getPlayerHand()->cards.front();
+        card->play(player, deck);
+    }
 
     cout << endl << "\nAll cards have been played in the hand!\n" << endl;
     cout << "Player Hand Size: " << player->getPlayerHand()->cards.size() << endl;

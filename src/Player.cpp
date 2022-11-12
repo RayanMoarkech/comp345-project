@@ -70,15 +70,25 @@ Player::~Player()
 //Assignment Operator
 Player& Player::operator=(const Player& player)
 {
-	this->ownedTerritories = ownedTerritories;
-	this->playerHand = playerHand;
-	this->playerOrders = playerOrders;
+	this->ownedTerritories = player.ownedTerritories;
+	this->playerHand = player.playerHand;
+	this->playerOrders = player.playerOrders;
 	return *this;
 }
 
 string Player::getName()
 {
     return this->name;
+}
+
+void Player::setArmyUnits(int armyUnits)
+{
+    this->armyUnits = armyUnits;
+}
+
+int Player::getArmyUnits()
+{
+    return this->armyUnits;
 }
 
 //Stream Insertion Operator for Player class

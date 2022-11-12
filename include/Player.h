@@ -25,6 +25,7 @@ private:
 	vector<Territory*> ownedTerritories;
 	Hand* playerHand;
 	OrdersList* playerOrders;
+    int armyUnits = 0;
 
 public:
 	Player();
@@ -40,6 +41,8 @@ public:
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
     string getName();
+    void setArmyUnits(int armyUnits);
+    int getArmyUnits();
     void addOwnedTerritory(Territory* territory);
 };
 

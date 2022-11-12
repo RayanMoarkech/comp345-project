@@ -10,7 +10,9 @@
 #include <vector>
     using std::vector;
 #include <ostream>
-    using std::ostream;
+#include "Cards.h"
+
+using std::ostream;
 
 class Map;
 class Player;
@@ -90,8 +92,9 @@ private:
 
     Map* _map;
     vector<Player*> _players;
+    Deck* deck;
 
-    bool executeCurrentStateAction(string option);
+    bool executeCurrentStateAction(int nextStateIndex, const string& option);
     bool nextState(string command, string commandOption);
 
     friend ostream &operator<<(ostream &, const GameEngine &);

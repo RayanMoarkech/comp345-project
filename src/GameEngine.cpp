@@ -55,9 +55,9 @@ string Transition::getCommand() {
 	return _command;
 }
 
-//Print the current satate
+// Print the current state
 ostream &operator<<(ostream &strm, const Transition &transition) {
-    return strm << "-Use the \"" + transition._command + "\" command to go to the \"" +
+    return strm << "- Use the \"" + transition._command + "\" command to go to the \"" +
             stateName[transition._nextStateIndex] + "\" state.";
 }
 
@@ -142,6 +142,7 @@ GameEngine::GameEngine() {
     _currentStateIndex = 0;
     _map = nullptr;
     _players = {};
+    deck = nullptr;
 }
 
 GameEngine::GameEngine(const GameEngine &gameEngine) {
@@ -155,21 +156,10 @@ GameEngine::GameEngine(const GameEngine &gameEngine) {
     for (auto const &player: gameEngine._players) {
         _players.push_back(new Player(*player));
     }
+    deck = new Deck(*gameEngine.deck);
 }
 
-GameEngine::~GameEngine() {
-    for (State* state: _state)
-    {
-        delete state;
-    }
-    _state.clear();
-    delete _map;
-    for (Player* player: _players)
-    {
-        delete player;
-    }
-    _players.clear();
-}
+GameEngine::~GameEngine() = default;
 
 // TODO update
 GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
@@ -194,30 +184,42 @@ bool GameEngine::nextState(string command, string commandOption)
 {
     for (auto const &transition: this->_state[this->_currentStateIndex]->getTransition()) {
         if (command == transition->getCommand()) {
-            this->_currentStateIndex = transition->getNextStateIndex();
-            return executeCurrentStateAction(commandOption);
+            const int nextStateIndex = transition->getNextStateIndex();
+            const bool valid = executeCurrentStateAction(nextStateIndex, commandOption);
+            if (valid)
+                this->_currentStateIndex = nextStateIndex;
+            else
+                cout << "Invalid. Staying in the same state." << endl;
+            return true;
         }
     }
     return false;
 }
 
-bool GameEngine::executeCurrentStateAction(string option)
+bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string& option)
 {
     string currentStateName = this->_state[this->_currentStateIndex]->getName();
-    // mapLoaded
-    if (currentStateName == stateName[1])
+    // Going to mapLoaded
+    if (nextStateIndex == 1)
     {
+        delete this->_map;
         this->_map = MapLoader::load(option);
         return true;
     }
-    // mapValidated
-    if (currentStateName == stateName[2])
+    // Going to mapValidated
+    if (nextStateIndex == 2)
     {
-        this->_map->validate();
+        const bool validMap = this->_map->validate();
+        if (!validMap)
+        {
+            cout << "Map is not valid. Please try loading another one." << endl;
+            return false;
+        }
+        cout << "Map is valid!" << endl;
         return true;
     }
-    // playersAdded
-    if (currentStateName == stateName[3])
+    // Going to playersAdded
+    if (nextStateIndex == 3)
     {
         Player* player;
         if (option.empty())
@@ -232,8 +234,8 @@ bool GameEngine::executeCurrentStateAction(string option)
         this->_players.push_back(player);
         return true;
     }
-    // assignReinforcement: Distribute Territories and Reinforcements
-    if (currentStateName == stateName[4])
+    // Going to assignReinforcement: Distribute Territories and Reinforcements
+    if (nextStateIndex == 4)
     {
         cout << "Fairly distributing the territories to the players" << endl;
 
@@ -255,18 +257,18 @@ bool GameEngine::executeCurrentStateAction(string option)
         }
         return true;
     }
-    // issueOrders
-    if (currentStateName == stateName[5])
+    // Going to issueOrders
+    if (nextStateIndex == 5)
     {
         return true;
     }
-    // executeOrders
-    if (currentStateName == stateName[6])
+    // Going to executeOrders
+    if (nextStateIndex == 6)
     {
         return true;
     }
-    // win
-    if (currentStateName == stateName[7])
+    // Going to win
+    if (nextStateIndex == 7)
     {
 
     }
@@ -275,15 +277,15 @@ bool GameEngine::executeCurrentStateAction(string option)
 
 void GameEngine::startupPhase()
 {
-    // The defined phases
-    vector<string> phases = {"loadmap", "validatemap", "addplayer", "gamestart"};
+    // The defined commands
+    vector<string> commands = {"loadmap", "validatemap", "addplayer", "gamestart"};
 
     cout << "***************************************" << endl
         << "The following commands can be inserted:" << endl
         << "      1- loadmap <filename>            " << endl
         << "      2- validatemap                   " << endl
-        << "      2- addplayer <playername>        " << endl
-        << "      2- gamestart                     " << endl
+        << "      3- addplayer <playername>        " << endl
+        << "      4- gamestart                     " << endl
         << "**********************************" << endl
         << endl;
 
@@ -297,7 +299,7 @@ void GameEngine::startupPhase()
         // Used as a flag to be true if the command is valid to allow going to the next state
         bool validCommand = false;
 
-        cout << "Current state: " << this->_state[this->_currentStateIndex]->getName() << endl;
+        cout << *this->getState()[this->getCurrentStateIndex()];
         cout << ">> ";
 
         // Get the userCommand
@@ -309,9 +311,19 @@ void GameEngine::startupPhase()
         bool hasCommandOption = userCommand.find(' ') != string::npos;
         string commandOption = userCommand.substr(userCommand.find(' ') + 1);
 
-        if (command == "gamestart")
+        // Check if command allowed
+        for (const string allowedCommand: commands)
         {
+            if (command == allowedCommand)
+                validCommand = true;
+        }
+
+        if (validCommand && command == "gamestart" && this->_currentStateIndex == 3)
+        {
+            this->deck = new Deck();
+
             // 4-a fairly distribute all the territories to the players
+            // 4-e switch the game to the play phase
             command = "assigncountries";
             this->nextState(command, "");
 
@@ -321,44 +333,54 @@ void GameEngine::startupPhase()
             std::shuffle(std::begin(this->_players), std::end(this->_players), rng);
             cout << "Shuffled player order:" << endl;
             int count = 0;
-            for (auto const &player: this->_players)
+            for (auto const player: this->_players)
             {
-                cout << "\t\t" << std::to_string(count++) << ": " << player->getName() << endl;
+                cout << "\t" << std::to_string(count++) << ": " << player->getName() << endl;
+
+                // 4-c give 50 initial army units to the players, which are placed in their respective reinforcement pool
+                player->setArmyUnits(50);
+                cout << "\t\tSetting " << player->getArmyUnits() << " army units." << endl;
+
+                // 4-d let each player draw 2 initial cards from the deck using the deck’s draw() method
+                Card *card1 = this->deck->draw();
+                player->getPlayerHand()->addCard(card1);
+                cout << "\t\tDraw Card 1: " << card1->getCardType() << endl;
+                Card *card2 = this->deck->draw();
+                player->getPlayerHand()->addCard(card2);
+                cout << "\t\tDraw Card 2: " << card2->getCardType() << endl;
             }
 
-            // 4-c give 50 initial army units to the players, which are placed in their respective reinforcement pool
-            command = "issueorder";
-            this->nextState(command, "");
+            cout << endl
+                << "Play phase..." << endl;
 
-            command = "endissueorders";
-            this->nextState(command, "");
-
-            // 4-d let each player draw 2 initial cards from the deck using the deck’s draw() method
-            command = "execorder";
-            this->nextState(command, "");
-
-            command = "endexecorders";
-            this->nextState(command, "");
-
-
-            // 4-e switch the game to the play phase
-            command = "play";
-            this->nextState(command, "");
+            //TODO: use in the play phase
+//            command = "issueorder";
+//            this->nextState(command, "");
+//
+//            command = "endissueorders";
+//
+//            this->nextState(command, "");
+//            command = "execorder";
+//            this->nextState(command, "");
+//
+//            command = "endexecorders";
+//            this->nextState(command, "");
 
             break;
         }
-        else
+        else if (validCommand)
         {
             validCommand = this->nextState(command, hasCommandOption ? commandOption : "");
         }
 
         // If the user command is invalid, print an error message
         if (!validCommand)
-            cout << "\n-_- Your command: \"" + userCommand + "\" is invalid for the \"" +
-                    this->_state[this->_currentStateIndex]->getName() + "\" state. -_-\n" << endl;
-            //Print successful message if the transition was made.
-        else
-            cout << "\n" << (char) 1 << " Yay that was a valid transition " << (char) 1 << "\n" << endl;
+            cout << endl
+                << "-_- Your command: \"" << userCommand << "\" is invalid for the \""
+                << this->_state[this->_currentStateIndex]->getName() + "\" state. -_-"
+                << endl;
+
+        cout << endl;
     }
 }
 

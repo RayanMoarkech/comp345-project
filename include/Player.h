@@ -25,7 +25,7 @@ private:
 	vector<Territory*> ownedTerritories;
 	Hand* playerHand;
 	OrdersList* playerOrders;
-    int armyUnits = 0;
+    int armyUnits;
 
 public:
 	Player();

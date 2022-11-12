@@ -10,9 +10,9 @@
 #include <vector>
     using std::vector;
 #include <ostream>
-#include "Cards.h"
+    using std::ostream;
 
-using std::ostream;
+#include "Cards.h"
 
 class Map;
 class Player;

@@ -24,6 +24,7 @@ Player::Player() {
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
+    this->armyUnits = 0;
 }
 
 //Copy constructor (Deep)
@@ -40,6 +41,7 @@ Player::Player(const Player& player) {
 	}
 	this->playerHand = new Hand(*player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
+    this->armyUnits = player.armyUnits;
 }
 
 //Parametrized constructor
@@ -50,6 +52,7 @@ Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHan
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
+    this->armyUnits = 0;
 }
 
 //Destructor
@@ -64,15 +67,16 @@ Player::~Player()
 	this->playerHand = nullptr;
 	delete this->playerOrders;
 	this->playerOrders = nullptr;
-
 }
 
 //Assignment Operator
 Player& Player::operator=(const Player& player)
 {
+    this->id = player.id;
 	this->ownedTerritories = player.ownedTerritories;
 	this->playerHand = player.playerHand;
 	this->playerOrders = player.playerOrders;
+    this->armyUnits = player.armyUnits;
 	return *this;
 }
 
@@ -94,6 +98,7 @@ int Player::getArmyUnits()
 //Stream Insertion Operator for Player class
 ostream& operator<<(ostream& os, const Player& player)
 {
+    os << "Player " << player.name << " with id " << player.id << "." << endl;
 	vector<Territory*> ownedTerritories = player.ownedTerritories;
 	os << "Player owns territories: " << endl;
 	//print all territory names

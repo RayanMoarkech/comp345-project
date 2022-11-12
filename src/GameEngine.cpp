@@ -161,9 +161,12 @@ GameEngine::GameEngine(const GameEngine &gameEngine) {
 
 GameEngine::~GameEngine() = default;
 
-// TODO update
 GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
-    _state = gameEngine._state;
+    this->_state = gameEngine._state;
+    this->_currentStateIndex = gameEngine._currentStateIndex;
+    this->_map = gameEngine._map;
+    this->_players = gameEngine._players;
+    this->deck = gameEngine.deck;
     return *this;
 }
 

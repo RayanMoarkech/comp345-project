@@ -19,13 +19,17 @@ class Hand;
 class Player
 {
 private:
+    static int idCounter;
+    int id;
+    string name;
 	vector<Territory*> ownedTerritories;
 	Hand* playerHand;
 	OrdersList* playerOrders;
+    int armyUnits;
 
 public:
 	Player();
-	Player(vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders);
+	Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders);
 	Player(const Player& player);
 	~Player();
 	Player& operator=(const Player& player);
@@ -36,6 +40,10 @@ public:
 	vector<Territory*> getOwnedTerritories();
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
+    string getName();
+    void setArmyUnits(int armyUnits);
+    int getArmyUnits();
+    void addOwnedTerritory(Territory* territory);
 };
 
 #endif //Player_H

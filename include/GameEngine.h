@@ -12,6 +12,11 @@
 #include <ostream>
     using std::ostream;
 
+#include "Cards.h"
+
+class Map;
+class Player;
+
 
 // ---------------------------------------------
 // ------------ Transition Section -------------
@@ -79,9 +84,19 @@ public:
     int getCurrentStateIndex();
     void setCurrentStateIndex(int currentStateIndex);
 
+    void startupPhase();
+
 private:
     vector<State*> _state;
     int _currentStateIndex;
+
+    Map* _map;
+    vector<Player*> _players;
+    Deck* deck;
+
+    bool executeCurrentStateAction(int nextStateIndex, const string& option);
+    bool nextState(string command, string commandOption);
+
     friend ostream &operator<<(ostream &, const GameEngine &);
 };
 

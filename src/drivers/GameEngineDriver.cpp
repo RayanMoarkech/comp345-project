@@ -126,9 +126,12 @@ void testMainGameLoop()
             player2->addOwnedTerritory(t);
         }
     }
-    player1->toAttack();
-    cout << "Defend" << endl;
-    player1->toDefend();
+    gameEngine->reinforcementPhase(*map, players);
+    while(player1->getArmyUnits() !=0 && player2->getArmyUnits() != 0)
+    for (Player* p : players)
+    {
+        p->issueOrder();
+    }
     //gameEngine->mainGameLoop(*map, players);
 
 }

@@ -138,6 +138,10 @@ static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 //returns owned territories in random order
 vector<Territory*> Player::toDefend()
 {
+	cout << endl;
+	cout << this->getName() << " 's Territories to Defend in Prioritized Order" << endl;
+	cout << endl;
+
 	vector<Territory*> territoriesToDefend = this->ownedTerritories;
 	std::random_shuffle(territoriesToDefend.begin(), territoriesToDefend.end());
 	for (Territory* t : territoriesToDefend)
@@ -150,6 +154,10 @@ vector<Territory*> Player::toDefend()
 //returns adjacent territories not belong to player in random order
 vector<Territory*> Player::toAttack()
 {
+	cout << endl;
+	cout << this->getName() << " 's Territories to Attack in Prioritized Order" << endl;
+	cout << endl;
+
 	vector<Territory*> territoriesToAttack = this->getNeighbouringTerritories();
 	std::random_shuffle(territoriesToAttack.begin(), territoriesToAttack.end());
 	for (Territory* t : territoriesToAttack)
@@ -176,260 +184,243 @@ vector<Territory*> Player::getNeighbouringTerritories()
 	return neighbouringTerritories;
 }
 
-Order* Player::issueOrder(string orderType)
+Order* Player::issueOrder()
 {
 	cout << "----------------------------------" << endl;
 	cout << this->name << "'s Turn" << endl;
 	cout << "----------------------------------" << endl;
 
 	//To Attack
-	//vector<Territory*> toAttack = this->toAttack();
-	if (orderType == "toAttack")
+	if (this->toAttackList.size() == 0)
 	{
 		this->toAttackList = this->toAttack();
 		return NULL;
 	}
 	//To Defend
-	//vector<Territory*> toDefend = this->toDefend();
-	if (orderType == "toDefend")
+	if (this->toDefendList.size() == 0)
 	{
 		this->toDefendList = this->toDefend();
 		return NULL;
 	}
 
 	//Deploy on toDefend territories
-	if (orderType == "Deploy")
+	if (this->armyUnits != 0)
 	{
-		cout << "Choose territory and how many many army units to deploy." << endl;
-		int counter = 1;
+		int index = -1;
 		for (Territory* t : this->toDefendList)
 		{
-			cout << counter << " - " << t->getName() << endl;
-			counter++;
-		}
-		int territoryToDefend = -1;
-		int armyUnitsToDeploy;
-
-		cout << "Total remaining of army units to deploy: " << this->armyUnits << endl;
-		cout << "Choose territory: ";
-		cin >> territoryToDefend;
-
-		if (territoryToDefend <= 0 || territoryToDefend > this->toDefendList.size())
-		{
-			cout << "Not a valid number." << endl;
-			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
-		}
-		else
-		{
-			cout << "Number of army units to deploy to " << this->toDefendList.at(territoryToDefend - 1)->getName() << ": ";
-			cin >> armyUnitsToDeploy;
-			while (armyUnitsToDeploy > this->armyUnits || armyUnitsToDeploy <= 0)
+			index++;
+			if (t->getNumberOfArmies() == 0)
 			{
-				cout << "Not a valid number of army units" << endl;
-				cout << "Number of army units to deploy to " << this->toDefendList.at(territoryToDefend - 1)->getName() << ": ";
-				cin >> armyUnitsToDeploy;
+				break;
 			}
-			this->armyUnits -= armyUnitsToDeploy;
-			return new Deploy(this, this->toDefendList.at(territoryToDefend - 1), armyUnitsToDeploy);
 		}
+		srand(time(0));
+		int armiesToDeploy = 1 + (rand() % this->armyUnits);
+		cout << endl;
+		cout << this->getName() << " deploys " << armiesToDeploy << " to " << this->toDefendList.at(index)->getName() << endl;
+		cout << endl;
+		this->armyUnits -= armiesToDeploy;
+		return new Deploy(this, this->toDefendList.at(index), armiesToDeploy);
 	}
+	return NULL;
 
-	//List of the rest of kind of orders
-	if (orderType == "AdvanceOrPlayCard")
-	{
-		cout << "1 - Defend: Advance armies to your own territory" << endl;
-		cout << "2 - Attack: Advance armies to an enemy territory" << endl;
-		cout << "3 - Bomb Card" << endl;
-		cout << "4 - Blockade Card" << endl;
-		cout << "5 - Airlift Card" << endl;
-		cout << "6 - Negociate Card" << endl;
-		cout << "0 - End Issuing Orders" << endl;
-		int orderType = -1;
-		cin >> orderType;
-		while (orderType < 0 && orderType > 6)
-		{
-			cout << "Not a valid option" << endl;
-			cout << "1 - Defend: Advance armies to your own territory" << endl;
-			cout << "2 - Attack: Advance armies to an enemy territory" << endl;
-			cout << "3 - Bomb Card" << endl;
-			cout << "4 - Blockade Card" << endl;
-			cout << "5 - Airlift Card" << endl;
-			cout << "6 - Negociate Card" << endl;
-			cout << "0 - Not issuing one more order" << endl;
-			cin >> orderType;
-		}
+	////List of the rest of kind of orders
+	//if (orderType == "AdvanceOrPlayCard")
+	//{
+	//	cout << "1 - Defend: Advance armies to your own territory" << endl;
+	//	cout << "2 - Attack: Advance armies to an enemy territory" << endl;
+	//	cout << "3 - Bomb Card" << endl;
+	//	cout << "4 - Blockade Card" << endl;
+	//	cout << "5 - Airlift Card" << endl;
+	//	cout << "6 - Negociate Card" << endl;
+	//	cout << "0 - End Issuing Orders" << endl;
+	//	int orderType = -1;
+	//	cin >> orderType;
+	//	while (orderType < 0 && orderType > 6)
+	//	{
+	//		cout << "Not a valid option" << endl;
+	//		cout << "1 - Defend: Advance armies to your own territory" << endl;
+	//		cout << "2 - Attack: Advance armies to an enemy territory" << endl;
+	//		cout << "3 - Bomb Card" << endl;
+	//		cout << "4 - Blockade Card" << endl;
+	//		cout << "5 - Airlift Card" << endl;
+	//		cout << "6 - Negociate Card" << endl;
+	//		cout << "0 - Not issuing one more order" << endl;
+	//		cin >> orderType;
+	//	}
 
-		if (orderType == 1)
-		{
-			cout << "What territory do you want to defend?" << endl;
-			int counter = 1;
-			for (Territory* t : this->toDefendList)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int territoryToDefend;
-			cin >> territoryToDefend;
-			while (territoryToDefend < 0 || territoryToDefend > this->toDefendList.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What territory do you want to defend?" << endl;
-				cin >> territoryToDefend;
-			}
-			cout << "What territory is the source of armies?" << endl;
-			counter = 1;
-			for (Territory* t : this->ownedTerritories)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int sourceTerritory;
-			cin >> sourceTerritory;
-			while (sourceTerritory < 0 || sourceTerritory > this->ownedTerritories.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What territory is the source of armies?" << endl;
-				cin >> sourceTerritory;
-			}
-			int armiesToAdvance;
-			cout << "How many armies to advance?" << endl;
-			cin >> armiesToAdvance;
-			return new Advance(this, this->ownedTerritories.at(sourceTerritory - 1),
-				this->toDefendList.at(territoryToDefend - 1), armiesToAdvance);
-		}
+	//	if (orderType == 1)
+	//	{
+	//		cout << "What territory do you want to defend?" << endl;
+	//		int counter = 1;
+	//		for (Territory* t : this->toDefendList)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int territoryToDefend;
+	//		cin >> territoryToDefend;
+	//		while (territoryToDefend < 0 || territoryToDefend > this->toDefendList.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What territory do you want to defend?" << endl;
+	//			cin >> territoryToDefend;
+	//		}
+	//		cout << "What territory is the source of armies?" << endl;
+	//		counter = 1;
+	//		for (Territory* t : this->ownedTerritories)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int sourceTerritory;
+	//		cin >> sourceTerritory;
+	//		while (sourceTerritory < 0 || sourceTerritory > this->ownedTerritories.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What territory is the source of armies?" << endl;
+	//			cin >> sourceTerritory;
+	//		}
+	//		int armiesToAdvance;
+	//		cout << "How many armies to advance?" << endl;
+	//		cin >> armiesToAdvance;
+	//		return new Advance(this, this->ownedTerritories.at(sourceTerritory - 1),
+	//			this->toDefendList.at(territoryToDefend - 1), armiesToAdvance);
+	//	}
 
-		if (orderType == 2)
-		{
-			cout << "What territory do you want to attack?" << endl;
-			int counter = 1;
-			for (Territory* t : this->toAttackList)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int territoryToAttack;
-			cin >> territoryToAttack;
-			while (territoryToAttack < 0 || territoryToAttack > this->toAttackList.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What territory do you want to attack?" << endl;
-				cin >> territoryToAttack;
-			}
-			cout << "What territory is the source of armies?" << endl;
-			counter = 1;
-			for (Territory* t : this->ownedTerritories)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int sourceTerritory;
-			cin >> sourceTerritory;
-			while (sourceTerritory < 0 || sourceTerritory > this->ownedTerritories.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What territory is the source of armies?" << endl;
-				cin >> sourceTerritory;
-			}
-			int armiesToAdvance;
-			cout << "How many armies to advance?" << endl;
-			cin >> armiesToAdvance;
-			return new Advance(this, this->ownedTerritories.at(sourceTerritory - 1),
-				this->toAttackList.at(territoryToAttack - 1), armiesToAdvance);
-		}
+	//	if (orderType == 2)
+	//	{
+	//		cout << "What territory do you want to attack?" << endl;
+	//		int counter = 1;
+	//		for (Territory* t : this->toAttackList)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int territoryToAttack;
+	//		cin >> territoryToAttack;
+	//		while (territoryToAttack < 0 || territoryToAttack > this->toAttackList.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What territory do you want to attack?" << endl;
+	//			cin >> territoryToAttack;
+	//		}
+	//		cout << "What territory is the source of armies?" << endl;
+	//		counter = 1;
+	//		for (Territory* t : this->ownedTerritories)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int sourceTerritory;
+	//		cin >> sourceTerritory;
+	//		while (sourceTerritory < 0 || sourceTerritory > this->ownedTerritories.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What territory is the source of armies?" << endl;
+	//			cin >> sourceTerritory;
+	//		}
+	//		int armiesToAdvance;
+	//		cout << "How many armies to advance?" << endl;
+	//		cin >> armiesToAdvance;
+	//		return new Advance(this, this->ownedTerritories.at(sourceTerritory - 1),
+	//			this->toAttackList.at(territoryToAttack - 1), armiesToAdvance);
+	//	}
 
-		if (orderType == 3)
-		{
-			cout << "What territory do you want to bomb?" << endl;
-			int counter = 1;
-			for (Territory* t : this->toAttackList)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int territoryToBomb;
-			cin >> territoryToBomb;
-			while (territoryToBomb < 0 || territoryToBomb > this->toAttackList.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What territory do you want to bomb?" << endl;
-				cin >> territoryToBomb;
-			}
-			return new Bomb(this, this->toAttackList.at(territoryToBomb - 1));
-		}
+	//	if (orderType == 3)
+	//	{
+	//		cout << "What territory do you want to bomb?" << endl;
+	//		int counter = 1;
+	//		for (Territory* t : this->toAttackList)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int territoryToBomb;
+	//		cin >> territoryToBomb;
+	//		while (territoryToBomb < 0 || territoryToBomb > this->toAttackList.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What territory do you want to bomb?" << endl;
+	//			cin >> territoryToBomb;
+	//		}
+	//		return new Bomb(this, this->toAttackList.at(territoryToBomb - 1));
+	//	}
 
-		if (orderType == 4)
-		{
-			cout << "What territory do you want to block?" << endl;
-			int counter = 1;
-			for (Territory* t : this->toAttackList)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int territoryToBlock;
-			cin >> territoryToBlock;
-			while (territoryToBlock < 0 || territoryToBlock > this->toAttackList.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What territory do you want to block?" << endl;
-				cin >> territoryToBlock;
-			}
-			return new Bomb(this, this->toAttackList.at(territoryToBlock - 1));
-		}
+	//	if (orderType == 4)
+	//	{
+	//		cout << "What territory do you want to block?" << endl;
+	//		int counter = 1;
+	//		for (Territory* t : this->toAttackList)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int territoryToBlock;
+	//		cin >> territoryToBlock;
+	//		while (territoryToBlock < 0 || territoryToBlock > this->toAttackList.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What territory do you want to block?" << endl;
+	//			cin >> territoryToBlock;
+	//		}
+	//		return new Bomb(this, this->toAttackList.at(territoryToBlock - 1));
+	//	}
 
-		if (orderType == 5)
-		{
-			cout << "What is the target territory to airlift?" << endl;
-			int counter = 1;
-			for (Territory* t : this->ownedTerritories)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int airliftTarget;
-			cin >> airliftTarget;
-			while (airliftTarget < 0 || airliftTarget > this->ownedTerritories.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What is the target territory to airlift?" << endl;
-				cin >> airliftTarget;
-			}
+	//	if (orderType == 5)
+	//	{
+	//		cout << "What is the target territory to airlift?" << endl;
+	//		int counter = 1;
+	//		for (Territory* t : this->ownedTerritories)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int airliftTarget;
+	//		cin >> airliftTarget;
+	//		while (airliftTarget < 0 || airliftTarget > this->ownedTerritories.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What is the target territory to airlift?" << endl;
+	//			cin >> airliftTarget;
+	//		}
 
-			cout << "What is the source territory to airlift?" << endl;
-			counter = 1;
-			for (Territory* t : this->ownedTerritories)
-			{
-				cout << counter << " - " << t->getName() << endl;
-				counter++;
-			}
-			int airliftSource;
-			cin >> airliftSource;
-			while (airliftSource < 0 || airliftSource > this->ownedTerritories.size())
-			{
-				cout << "Not a valid number." << endl;
-				cout << "What is the source territory to airlift?" << endl;
-				cin >> airliftSource;
-			}
+	//		cout << "What is the source territory to airlift?" << endl;
+	//		counter = 1;
+	//		for (Territory* t : this->ownedTerritories)
+	//		{
+	//			cout << counter << " - " << t->getName() << endl;
+	//			counter++;
+	//		}
+	//		int airliftSource;
+	//		cin >> airliftSource;
+	//		while (airliftSource < 0 || airliftSource > this->ownedTerritories.size())
+	//		{
+	//			cout << "Not a valid number." << endl;
+	//			cout << "What is the source territory to airlift?" << endl;
+	//			cin >> airliftSource;
+	//		}
 
-			int armiesToAirlift;
-			cout << "How many armies to airlift?" << endl;
-			cin >> armiesToAirlift;
+	//		int armiesToAirlift;
+	//		cout << "How many armies to airlift?" << endl;
+	//		cin >> armiesToAirlift;
 
-			return new Airlift(this, this->ownedTerritories.at(airliftSource - 1),
-				this->ownedTerritories.at(airliftTarget - 1), armiesToAirlift);
-		}
+	//		return new Airlift(this, this->ownedTerritories.at(airliftSource - 1),
+	//			this->ownedTerritories.at(airliftTarget - 1), armiesToAirlift);
+	//	}
 
-		if (orderType == 6)
-		{
-			cout << "Which player do you want to negociate with?" << endl;
-			//TO DO
-		}
+	//	if (orderType == 6)
+	//	{
+	//		cout << "Which player do you want to negociate with?" << endl;
+	//		//TO DO
+	//	}
 
-		if (orderType == 0)
-		{
-			return NULL;
-		}
-	}
+	//	if (orderType == 0)
+	//	{
+	//		return NULL;
+	//	}
+	//}
 }
 
 vector<Territory*> Player::getOwnedTerritories()

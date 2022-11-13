@@ -38,7 +38,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Player& p);
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
-	Order* issueOrder(string orderType);
+	Order* issueOrder();
 	vector<Territory*> getOwnedTerritories();
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();

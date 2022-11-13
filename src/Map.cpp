@@ -317,6 +317,11 @@ void Territory::setOwnedBy(Player* ownedBy, int numberOfArmies)
    this->numberOfArmies = numberOfArmies;
 }
 
+int Territory::getNumberOfArmies()
+{
+    return this->numberOfArmies;
+}
+
 ostream& operator<<(ostream& os, Territory& territory)
 {
     return os << "Territory " << territory.name

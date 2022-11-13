@@ -92,6 +92,7 @@ public:
     void setOwnedBy(Player* ownedBy, int numberOfArmies);
     friend ostream& operator<<(ostream& os, Territory& territory);
     Territory& operator=(const Territory& territory);
+    int getNumberOfArmies();
 };
 
 

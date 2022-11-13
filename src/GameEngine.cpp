@@ -433,79 +433,79 @@ void GameEngine::reinforcementPhase(Map& map, vector<Player*> players)
     }
 }
 
-OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
-{
-    OrdersList* allIssuedOrders = new OrdersList();
-
-    vector<string> orderTypes = { "toAttack", "toDefend", "Deploy", "AdvanceOrPlayCard" };
-    
-    //First all players need to choose the territories to Attack
-    for (Player* p : players)
-    {
-        p->issueOrder("toAttack");
-    }
-    //Then all players need to choose the territories to Defend
-    for (Player* p : players)
-    {
-        p->issueOrder("toDefend");
-    }
-    //Deploy
-    for (Player* p : players)
-    {
-        while (p->getArmyUnits() != 0)
-        {
-            allIssuedOrders->addOrder(p->issueOrder("Deploy"));
-        }
-    }
-    //Advance and Card Orders
-    int noMoreOrders = 0;
-    while (players.size() != noMoreOrders)
-    {
-        noMoreOrders = 0;
-
-        for (Player* p : players)
-        {
-            Order* advanceOrCardOrder = p->issueOrder("AdvanceOrPlayCard");
-            if (advanceOrCardOrder == NULL)
-            {
-                //all players must stop orders in the same turn
-                noMoreOrders++;
-            }
-            else {
-                allIssuedOrders->addOrder(advanceOrCardOrder);
-            }
-        }
-    }
-
-    return allIssuedOrders;
-}
-
-void GameEngine::executeOrdersPhase(OrdersList* allOrders)
-{
-    for (Order* o : allOrders->getOrdersList())
-    {
-        o->execute();
-    }
-}
-
-void GameEngine::mainGameLoop(Map& map, vector<Player*> players)
-{
-    cout << endl
-        << "------------------------------------------------------" << endl
-        << "Test Reinforcement Phase" << endl
-        << "------------------------------------------------------" << endl
-        << endl;
-    this->reinforcementPhase(map, players);
-    cout << endl
-        << "------------------------------------------------------" << endl
-        << "Issue Orders Phase" << endl
-        << "------------------------------------------------------" << endl
-        << endl;
-    OrdersList* allOrders = this->issueOrdersPhase(players);
-    //TO DO when merging with Part 4
-    //this->executeOrdersPhase(allOrders);
-
-}
+//OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
+//{
+//    OrdersList* allIssuedOrders = new OrdersList();
+//
+//    vector<string> orderTypes = { "toAttack", "toDefend", "Deploy", "AdvanceOrPlayCard" };
+//    
+//    //First all players need to choose the territories to Attack
+//    for (Player* p : players)
+//    {
+//        p->issueOrder("toAttack");
+//    }
+//    //Then all players need to choose the territories to Defend
+//    for (Player* p : players)
+//    {
+//        p->issueOrder("toDefend");
+//    }
+//    //Deploy
+//    for (Player* p : players)
+//    {
+//        while (p->getArmyUnits() != 0)
+//        {
+//            allIssuedOrders->addOrder(p->issueOrder("Deploy"));
+//        }
+//    }
+//    //Advance and Card Orders
+//    int noMoreOrders = 0;
+//    while (players.size() != noMoreOrders)
+//    {
+//        noMoreOrders = 0;
+//
+//        for (Player* p : players)
+//        {
+//            Order* advanceOrCardOrder = p->issueOrder("AdvanceOrPlayCard");
+//            if (advanceOrCardOrder == NULL)
+//            {
+//                //all players must stop orders in the same turn
+//                noMoreOrders++;
+//            }
+//            else {
+//                allIssuedOrders->addOrder(advanceOrCardOrder);
+//            }
+//        }
+//    }
+//
+//    return allIssuedOrders;
+//}
+//
+//void GameEngine::executeOrdersPhase(OrdersList* allOrders)
+//{
+//    for (Order* o : allOrders->getOrdersList())
+//    {
+//        o->execute();
+//    }
+//}
+//
+//void GameEngine::mainGameLoop(Map& map, vector<Player*> players)
+//{
+//    cout << endl
+//        << "------------------------------------------------------" << endl
+//        << "Test Reinforcement Phase" << endl
+//        << "------------------------------------------------------" << endl
+//        << endl;
+//    this->reinforcementPhase(map, players);
+//    cout << endl
+//        << "------------------------------------------------------" << endl
+//        << "Issue Orders Phase" << endl
+//        << "------------------------------------------------------" << endl
+//        << endl;
+//    OrdersList* allOrders = this->issueOrdersPhase(players);
+//    //TO DO when merging with Part 4
+//    //this->executeOrdersPhase(allOrders);
+//
+//}
 
 //Print a list of all states with their valid transitions
 ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {

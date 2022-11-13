@@ -102,6 +102,16 @@ int Player::getArmyUnits()
     return this->armyUnits;
 }
 
+vector<Territory*> Player::getAttackList()
+{
+	return this->toAttackList;
+}
+
+vector<Territory*> Player::getDefendList()
+{
+	return this->toDefendList;
+}
+
 //Stream Insertion Operator for Player class
 ostream& operator<<(ostream& os, const Player& player)
 {
@@ -203,7 +213,8 @@ Order* Player::issueOrder()
 		return NULL;
 	}
 
-	//Deploy on toDefend territories
+	//Deploy on toDefend territories, will not be able to issue other orders until
+	//all armies are deployed
 	if (this->armyUnits != 0)
 	{
 		int index = -1;
@@ -223,6 +234,37 @@ Order* Player::issueOrder()
 		this->armyUnits -= armiesToDeploy;
 		return new Deploy(this, this->toDefendList.at(index), armiesToDeploy);
 	}
+
+	//Advance (Defend)
+	if (this->toDefendList.size() != 0)
+	{
+		Territory* targetTerritory = this->toDefendList.at(0);
+		this->toDefendList.erase(this->toDefendList.begin());
+		int index = 1 + (rand() % this->toDefendList.size());
+		Territory *sourceTerritory = this->toDefendList.at(index);
+		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
+		cout << endl;
+		cout << "Defense: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
+			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
+		cout << endl;
+		return new Advance(this, sourceTerritory,targetTerritory, armiesToAdvance);
+	}
+	if (this->toAttackList.size() != 0)
+	{
+		Territory* targetTerritory = this->toAttackList.at(0);
+		this->toAttackList.erase(this->toAttackList.begin());
+		int index = 1 + (rand() % this->ownedTerritories.size());
+		Territory* sourceTerritory = this->ownedTerritories.at(index);
+		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
+		cout << endl;
+		cout << "Attack: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
+			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
+		cout << endl;
+		return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
+	}
+
 	return NULL;
 
 	////List of the rest of kind of orders

@@ -127,7 +127,8 @@ void testMainGameLoop()
         }
     }
     gameEngine->reinforcementPhase(*map, players);
-    while(player1->getArmyUnits() !=0 && player2->getArmyUnits() != 0)
+    
+    while(true)
     for (Player* p : players)
     {
         p->issueOrder();

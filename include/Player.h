@@ -48,6 +48,8 @@ public:
     int getArmyUnits();
     void addOwnedTerritory(Territory* territory);
 	vector<Territory*> getNeighbouringTerritories();
+	vector<Territory*> getAttackList();
+	vector<Territory*> getDefendList();
 };
 
 #endif //Player_H

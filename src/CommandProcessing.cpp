@@ -21,6 +21,7 @@ using std::endl;
 using std::for_each;
 
 #include "../include/CommandProcessing.h"
+#include "../include/GameEngine.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",
@@ -31,6 +32,23 @@ static const string stateName[]{"start",
                                 "issueOrders",
                                 "executeOrders",
                                 "win"};
+
+vector<State *> stateList = {
+    new State(stateName[0], {new Transition("loadmap", 1)}),
+    new State(stateName[1],
+              {new Transition("loadmap", 1), new Transition("validatemap", 2)}),
+    new State(stateName[2], {new Transition("addplayer", 3)}),
+    new State(stateName[3], {new Transition("addplayer", 3),
+                             new Transition("gamestart", 4)}),
+    new State(stateName[4], {new Transition("issueorder", 5)}),
+    new State(stateName[5], {new Transition("issueorder", 5),
+                             new Transition("endissueorders", 6)}),
+    new State(stateName[6],
+              {new Transition("execorder", 6),
+               new Transition("endexecorders", 4), new Transition("win", 7)}),
+    new State(stateName[7],
+              {new Transition("play", 0), new Transition("end", -1)}),
+};
 
 // ---------------------------------------------
 // -------------- Command Section --------------
@@ -60,6 +78,7 @@ ostream &operator<<(ostream &strm, const Command &command) {
 
 void Command::saveEffect(string effect) { _effect = effect; }
 void Command::setCommand(string command) { _command = command; }
+string Command::getUserCommand() { return _command; }
 
 // ---------------------------------------------
 // ----------- FileLineReader Section ----------
@@ -132,13 +151,16 @@ bool FileLineReader::readLineFromFile() {
   }
   return false;
 }
-string FileLineReader::getCurrentLine() { return currentLine; }
+string FileLineReader::getCurrentLine() { return _currentLine; }
 
 // ---------------------------------------------
 // ---------- CommandProcessor Section ---------
 // ---------------------------------------------
 
-CommandProcessor::CommandProcessor() { vector<Command *> _commandList; }
+CommandProcessor::CommandProcessor() {
+  _stateList = stateList;
+  vector<Command *> _commandList;
+}
 
 CommandProcessor::~CommandProcessor() {
   for (Command *command : _commandList) {
@@ -189,15 +211,20 @@ Command *CommandProcessor::getCommand() {
   return command;
 }
 
-bool CommandProcessor::validate(Command *command) {
+bool CommandProcessor::validate(Command *command, int &currentStateIndex) {
   bool validCommand = false;
 
-  return false;
-
-
-
+  // Check the user command against the valid commands at the current state
+  //  and set the current state index to the next state.
+  for (auto const &transition :
+       _stateList[currentStateIndex]->getTransition()) {
+    if (command->getUserCommand() == transition->getCommand()) {
+      currentStateIndex = transition->getNextStateIndex();
+      validCommand = true;
+    }
+  }
+  return validCommand;
 }
-
 
 vector<Command *> CommandProcessor::getCommandList() { return _commandList; }
 

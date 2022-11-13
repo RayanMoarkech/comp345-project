@@ -11,6 +11,7 @@ using std::string;
 using std::vector;
 #include <ostream>
 using std::ostream;
+#include "GameEngine.h"
 #include <fstream>
 using std::fstream;
 
@@ -24,6 +25,7 @@ public:
   Command(const Command &command);
   Command &operator=(const Command &command);
   void setCommand(string command);
+  string getUserCommand();
   void saveEffect(string effect);
 
 private:
@@ -69,7 +71,7 @@ public:
   string readCommand();
   Command *saveCommand(string command);
   Command *getCommand();
-  bool validate(Command *command);
+  bool validate(Command *command, int &currentStateIndex);
   vector<Command *> getCommandList();
 
 private:
@@ -77,6 +79,7 @@ private:
                              const CommandProcessor &commandProcessor);
 
 protected:
+  static vector<State *> _stateList;
   vector<Command *> _commandList;
 };
 

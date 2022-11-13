@@ -387,47 +387,50 @@ void GameEngine::startupPhase()
     }
 }
 
-void GameEngine::reinforcementPhase(Map& map, Player &player)
+void GameEngine::reinforcementPhase(Map& map, vector<Player*> players)
 {
-    cout << "Player owns " << player.getOwnedTerritories().size() << " territories." << endl;
-
-    int armyUnits = (player.getOwnedTerritories().size() / 3);
-
-    if (armyUnits < 3)
+    for (Player* player : players)
     {
-        player.setArmyUnits(3);
-    }
-    else
-    {
-        for (Continent* c : map.getContinents())
+        cout << player->getName() << " owns " << player->getOwnedTerritories().size() << " territories." << endl;
+
+        int armyUnits = (player->getOwnedTerritories().size() / 3);
+
+        if (armyUnits < 3)
         {
-            bool ownsContinent = false;
-            for (Territory* t : map.getTerritories())
+            player->setArmyUnits(3);
+        }
+        else
+        {
+            for (Continent* c : map.getContinents())
             {
-                if (c->getName() == t->getContinent()->getName())
+                bool ownsContinent = false;
+                for (Territory* t : map.getTerritories())
                 {
-                    for (Territory* ownedTerritory : player.getOwnedTerritories())
+                    if (c->getName() == t->getContinent()->getName())
                     {
-                        ownsContinent = ownedTerritory->getName() == t->getName();
-                        if (ownsContinent)
+                        for (Territory* ownedTerritory : player->getOwnedTerritories())
                         {
-                            break;
+                            ownsContinent = ownedTerritory->getName() == t->getName();
+                            if (ownsContinent)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
+                if (ownsContinent) {
+                    cout << player->getName() << " owns continent " << c->getName() << " and gained " << c->getScore() << " army units." << endl;
+                    armyUnits = +armyUnits + c->getScore();
+                }
+                else
+                {
+                    cout << player->getName() << " does not own continent " << c->getName() << "." << endl;
+                }
             }
-            if (ownsContinent) {
-                cout << "Player owns continent " << c->getName() << " and gained " << c->getScore() << " army units." << endl;
-                armyUnits = +armyUnits + c->getScore();
-            }
-            else
-            {
-                cout << "Player does not own continent " << c->getName() << "." << endl;
-            }
+            player->setArmyUnits(armyUnits);
         }
-        player.setArmyUnits(armyUnits);
+        cout << player->getName() << " has " << player->getArmyUnits() << " army units this turn." << endl;
     }
-    cout << "Player has " << player.getArmyUnits() << " army units this turn." << endl;
 }
 
 OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
@@ -475,6 +478,23 @@ OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
     }
 
     return allIssuedOrders;
+}
+
+void GameEngine::executeOrdersPhase(OrdersList* allOrders)
+{
+    for (Order* o : allOrders->getOrdersList())
+    {
+        o->execute();
+    }
+}
+
+void GameEngine::mainGameLoop(Map& map, vector<Player*> players)
+{
+    this->reinforcementPhase(map, players);
+    OrdersList* allOrders = this->issueOrdersPhase(players);
+    //TO DO when merging with Part 4
+    //this->executeOrdersPhase(allOrders);
+
 }
 
 //Print a list of all states with their valid transitions

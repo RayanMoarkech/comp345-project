@@ -131,10 +131,8 @@ void testMainGameLoop()
         << "Test Reinforcement Phase" << endl
         << "------------------------------------------------------" << endl
         << endl;
-    gameEngine->reinforcementPhase(*map, *player1);
-    gameEngine->reinforcementPhase(*map, *player2);
+    /*gameEngine->reinforcementPhase(*map, players);
+    gameEngine->issueOrdersPhase(players);*/
+    gameEngine->mainGameLoop(*map, players);
 
-
-    //player1->issueOrder();
-    gameEngine->issueOrdersPhase(players);
 }

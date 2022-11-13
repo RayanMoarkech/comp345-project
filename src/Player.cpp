@@ -246,6 +246,10 @@ vector<Territory*> Player::getNeighbouringTerritories()
 
 Order* Player::issueOrder(string orderType)
 {
+	cout << "----------------------------------" << endl;
+	cout << this->name << "'s Turn" << endl;
+	cout << "----------------------------------" << endl;
+
 	//To Attack
 	//vector<Territory*> toAttack = this->toAttack();
 	if (orderType == "toAttack")
@@ -272,32 +276,29 @@ Order* Player::issueOrder(string orderType)
 			counter++;
 		}
 		int territoryToDefend = -1;
-		int playerArmyUnits = this->armyUnits;
 		int armyUnitsToDeploy;
-		while (playerArmyUnits != 0)
-		{
-			cout << "Total remaining of army units to deploy: " << playerArmyUnits << endl;
-			cout << "Choose territory: ";
-			cin >> territoryToDefend;
 
-			if (territoryToDefend <= 0 || territoryToDefend > this->toDefendList.size())
+		cout << "Total remaining of army units to deploy: " << this->armyUnits << endl;
+		cout << "Choose territory: ";
+		cin >> territoryToDefend;
+
+		if (territoryToDefend <= 0 || territoryToDefend > this->toDefendList.size())
+		{
+			cout << "Not a valid number." << endl;
+			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
+		}
+		else
+		{
+			cout << "Number of army units to deploy to " << this->toDefendList.at(territoryToDefend - 1)->getName() << ": ";
+			cin >> armyUnitsToDeploy;
+			while (armyUnitsToDeploy > this->armyUnits || armyUnitsToDeploy <= 0)
 			{
-				cout << "Not a valid number." << endl;
-				cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
-			}
-			else
-			{
+				cout << "Not a valid number of army units" << endl;
 				cout << "Number of army units to deploy to " << this->toDefendList.at(territoryToDefend - 1)->getName() << ": ";
 				cin >> armyUnitsToDeploy;
-				while (armyUnitsToDeploy > playerArmyUnits || armyUnitsToDeploy <= 0)
-				{
-					cout << "Not a valid number of army units" << endl;
-					cout << "Number of army units to deploy to " << this->toDefendList.at(territoryToDefend - 1)->getName() << ": ";
-					cin >> armyUnitsToDeploy;
-				}
-				playerArmyUnits -= armyUnitsToDeploy;
-				return new Deploy(this, this->toDefendList.at(territoryToDefend - 1), armyUnitsToDeploy);
 			}
+			this->armyUnits -= armyUnitsToDeploy;
+			return new Deploy(this, this->toDefendList.at(territoryToDefend - 1), armyUnitsToDeploy);
 		}
 	}
 

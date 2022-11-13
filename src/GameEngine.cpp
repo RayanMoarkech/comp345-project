@@ -449,12 +449,17 @@ OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
     //Deploy
     for (Player* p : players)
     {
-        allIssuedOrders->addOrder(p->issueOrder("Deploy"));
+        while (p->getArmyUnits() != 0)
+        {
+            allIssuedOrders->addOrder(p->issueOrder("Deploy"));
+        }
     }
     //Advance and Card Orders
     int noMoreOrders = 0;
     while (players.size() != noMoreOrders)
     {
+        noMoreOrders = 0;
+
         for (Player* p : players)
         {
             Order* advanceOrCardOrder = p->issueOrder("AdvanceOrPlayCard");
@@ -465,7 +470,6 @@ OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
             }
             else {
                 allIssuedOrders->addOrder(advanceOrCardOrder);
-                int noMoreOrders = 0;
             }
         }
     }

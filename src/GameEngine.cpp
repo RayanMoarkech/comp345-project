@@ -387,6 +387,92 @@ void GameEngine::startupPhase()
     }
 }
 
+void GameEngine::reinforcementPhase(Map& map, Player &player)
+{
+    cout << "Player owns " << player.getOwnedTerritories().size() << " territories." << endl;
+
+    int armyUnits = (player.getOwnedTerritories().size() / 3);
+
+    if (armyUnits < 3)
+    {
+        player.setArmyUnits(3);
+    }
+    else
+    {
+        for (Continent* c : map.getContinents())
+        {
+            bool ownsContinent = false;
+            for (Territory* t : map.getTerritories())
+            {
+                if (c->getName() == t->getContinent()->getName())
+                {
+                    for (Territory* ownedTerritory : player.getOwnedTerritories())
+                    {
+                        ownsContinent = ownedTerritory->getName() == t->getName();
+                        if (ownsContinent)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            if (ownsContinent) {
+                cout << "Player owns continent " << c->getName() << " and gained " << c->getScore() << " army units." << endl;
+                armyUnits = +armyUnits + c->getScore();
+            }
+            else
+            {
+                cout << "Player does not own continent " << c->getName() << "." << endl;
+            }
+        }
+        player.setArmyUnits(armyUnits);
+    }
+    cout << "Player has " << player.getArmyUnits() << " army units this turn." << endl;
+}
+
+OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
+{
+    OrdersList* allIssuedOrders = new OrdersList();
+
+    vector<string> orderTypes = { "toAttack", "toDefend", "Deploy", "AdvanceOrPlayCard" };
+    
+    //First all players need to choose the territories to Attack
+    for (Player* p : players)
+    {
+        p->issueOrder("toAttack");
+    }
+    //Then all players need to choose the territories to Defend
+    for (Player* p : players)
+    {
+        p->issueOrder("toDefend");
+    }
+    //Deploy
+    for (Player* p : players)
+    {
+        allIssuedOrders->addOrder(p->issueOrder("Deploy"));
+    }
+    //Advance and Card Orders
+    int noMoreOrders = 0;
+    while (players.size() != noMoreOrders)
+    {
+        for (Player* p : players)
+        {
+            Order* advanceOrCardOrder = p->issueOrder("AdvanceOrPlayCard");
+            if (advanceOrCardOrder == NULL)
+            {
+                //all players must stop orders in the same turn
+                noMoreOrders++;
+            }
+            else {
+                allIssuedOrders->addOrder(advanceOrCardOrder);
+                int noMoreOrders = 0;
+            }
+        }
+    }
+
+    return allIssuedOrders;
+}
+
 //Print a list of all states with their valid transitions
 ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
     for (auto const &state: gameEngine._state) {

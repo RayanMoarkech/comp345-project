@@ -9,6 +9,9 @@
     using std::endl;
 
 #include "../../include/GameEngine.h"
+#include "../../include/Map.h"
+#include "../../include/Player.h"
+
 
 void testGameStates()
 {
@@ -89,4 +92,49 @@ void testStartupPhase()
     GameEngine *gameEngine = new GameEngine();
     gameEngine->startupPhase();
     delete gameEngine;
+}
+
+void testMainGameLoop()
+{
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Test Main Game Loop" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+
+    GameEngine* gameEngine = new GameEngine();
+    Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
+    Player* player1 = new Player();
+    Player* player2 = new Player();
+
+    vector<Player*> players = { player1, player2 };
+
+    player1->setName("Player 1");
+    player2->setName("Player 2");
+
+    player1->addOwnedTerritory(map->getTerritory("Cockpit01"));
+    player1->addOwnedTerritory(map->getTerritory("Cockpit02"));
+
+    for (Territory* t : map->getTerritories())
+    {
+        if (t->getContinent()->getName() == "hyperdrive")
+        {
+            player1->addOwnedTerritory(t);
+        }
+        if (t->getContinent()->getName() == "cockpit")
+        {
+            player2->addOwnedTerritory(t);
+        }
+    }
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Test Reinforcement Phase" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+    gameEngine->reinforcementPhase(*map, *player1);
+    gameEngine->reinforcementPhase(*map, *player2);
+
+
+    //player1->issueOrder();
+    gameEngine->issueOrdersPhase(players);
 }

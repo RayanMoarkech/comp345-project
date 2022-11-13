@@ -26,6 +26,8 @@ private:
 	Hand* playerHand;
 	OrdersList* playerOrders;
     int armyUnits;
+	vector<Territory*> toDefendList;
+	vector<Territory*> toAttackList;
 
 public:
 	Player();
@@ -36,14 +38,16 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Player& p);
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
-	void issueOrder();
+	Order* issueOrder(string orderType);
 	vector<Territory*> getOwnedTerritories();
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
     string getName();
+	void setName(string name);
     void setArmyUnits(int armyUnits);
     int getArmyUnits();
     void addOwnedTerritory(Territory* territory);
+	vector<Territory*> getNeighbouringTerritories();
 };
 
 #endif //Player_H

@@ -102,7 +102,7 @@ void Card::play(Player* player, Deck* deck)
             cout << "Card played: DIPLOMACY\n";
             break;
     }
-    player->issueOrder();
+    //player->issueOrder();
     deck->returnCard(this);
     player->getPlayerHand()->cards.erase(player->getPlayerHand()->cards.begin());
 }

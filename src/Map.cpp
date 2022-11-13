@@ -129,6 +129,11 @@ vector<Territory*> Map::getTerritories()
     return this->territories;
 }
 
+vector<Continent*> Map::getContinents()
+{
+    return this->continents;
+}
+
 void Map::setValidFalse()
 {
     this->isValid = false;

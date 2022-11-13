@@ -11,6 +11,7 @@ void testGameStates();
 
 // Phase 2
 void testStartupPhase();
+void testMainGameLoop();
 
 int main()
 {
@@ -22,6 +23,7 @@ int main()
 //    testGameStates();
 
     // Phase 2
-    testStartupPhase();
+    //testStartupPhase();
+    testMainGameLoop();
     return 0;
 }

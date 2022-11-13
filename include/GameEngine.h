@@ -16,6 +16,7 @@
 
 class Map;
 class Player;
+class OrdersList;
 
 
 // ---------------------------------------------
@@ -85,6 +86,9 @@ public:
     void setCurrentStateIndex(int currentStateIndex);
 
     void startupPhase();
+
+    void reinforcementPhase(Map& map, Player& player);
+    OrdersList* issueOrdersPhase(vector<Player*> players);
 
 private:
     vector<State*> _state;

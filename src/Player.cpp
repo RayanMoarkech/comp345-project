@@ -3,6 +3,7 @@
 //
 
 #include <cstdlib>     /* srand, rand */
+#include <utility>
 #include <vector>
     using std::vector;
 #include <iostream>
@@ -14,16 +15,23 @@
 #include "../include/Orders.h"
 #include "../include/Cards.h"
 
+int Player::idCounter = 1;
+
 //Default constructor
 Player::Player() {
+    this->id = idCounter++;
+    this->name = "Player " + std::to_string(this->id);
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
+    this->armyUnits = 0;
 }
 
 //Copy constructor (Deep)
 Player::Player(const Player& player) {
 	//Deep copy all territories
+    this->id = idCounter++;
+    this->name = player.name;
 	this->ownedTerritories = {};
 	for (Territory* t : player.ownedTerritories)
 	{
@@ -33,14 +41,18 @@ Player::Player(const Player& player) {
 	}
 	this->playerHand = new Hand(*player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
+    this->armyUnits = player.armyUnits;
 }
 
 //Parametrized constructor
-Player::Player(vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
+Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
 {
+    this->id = idCounter++;
+    this->name = std::move(name);
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
+    this->armyUnits = 0;
 }
 
 //Destructor
@@ -55,21 +67,38 @@ Player::~Player()
 	this->playerHand = nullptr;
 	delete this->playerOrders;
 	this->playerOrders = nullptr;
-
 }
 
 //Assignment Operator
 Player& Player::operator=(const Player& player)
 {
-	this->ownedTerritories = ownedTerritories;
-	this->playerHand = playerHand;
-	this->playerOrders = playerOrders;
+    this->id = player.id;
+	this->ownedTerritories = player.ownedTerritories;
+	this->playerHand = player.playerHand;
+	this->playerOrders = player.playerOrders;
+    this->armyUnits = player.armyUnits;
 	return *this;
+}
+
+string Player::getName()
+{
+    return this->name;
+}
+
+void Player::setArmyUnits(int armyUnits)
+{
+    this->armyUnits = armyUnits;
+}
+
+int Player::getArmyUnits()
+{
+    return this->armyUnits;
 }
 
 //Stream Insertion Operator for Player class
 ostream& operator<<(ostream& os, const Player& player)
 {
+    os << "Player " << player.name << " with id " << player.id << "." << endl;
 	vector<Territory*> ownedTerritories = player.ownedTerritories;
 	os << "Player owns territories: " << endl;
 	//print all territory names
@@ -169,5 +198,10 @@ Hand* Player::getPlayerHand()
 OrdersList* Player::getPlayerOrders()
 {
 	return this->playerOrders;
+}
+
+void Player::addOwnedTerritory(Territory *territory)
+{
+    this->ownedTerritories.push_back(territory);
 }
 

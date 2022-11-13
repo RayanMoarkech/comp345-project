@@ -489,7 +489,8 @@ Order* Player::issueOrder(string orderType)
 
 		if (orderType == 6)
 		{
-			//To Do negotiation
+			cout << "Which player do you want to negociate with?" << endl;
+			//TO DO
 		}
 
 		if (orderType == 0)

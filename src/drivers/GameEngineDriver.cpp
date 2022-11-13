@@ -126,11 +126,7 @@ void testMainGameLoop()
             player2->addOwnedTerritory(t);
         }
     }
-    cout << endl
-        << "------------------------------------------------------" << endl
-        << "Test Reinforcement Phase" << endl
-        << "------------------------------------------------------" << endl
-        << endl;
+
     /*gameEngine->reinforcementPhase(*map, players);
     gameEngine->issueOrdersPhase(players);*/
     gameEngine->mainGameLoop(*map, players);

@@ -19,6 +19,8 @@ Player::Player() {
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
 }
 
 //Copy constructor (Deep)
@@ -33,6 +35,9 @@ Player::Player(const Player& player) {
 	}
 	this->playerHand = new Hand(*player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
+	this->negotiatingWith = std::list<Player*>(player.negotiatingWith);
+	this->isNeutral = player.isNeutral;
+	this->conqueredTerritory = player.conqueredTerritory;
 }
 
 //Parametrized constructor
@@ -41,6 +46,18 @@ Player::Player(vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
+}
+
+Player::Player(bool isNeutral)
+{
+	this->ownedTerritories = {};
+	this->playerHand = new Hand();
+	this->playerOrders = new OrdersList();
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = false;
+
 }
 
 //Destructor
@@ -64,6 +81,9 @@ Player& Player::operator=(const Player& player)
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
+	this->negotiatingWith = negotiatingWith;
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = conqueredTerritory;
 	return *this;
 }
 
@@ -184,5 +204,15 @@ void Player::addNegotiator(Player* p)
 std::list<Player*> Player::getNegotiatorList()
 {
 	return this->negotiatingWith;
+}
+
+void Player::setConqueredTerritory(bool conqueredTerritory)
+{
+	this->conqueredTerritory = conqueredTerritory;
+}
+
+bool Player::getConqueredTerriotry()
+{
+	return conqueredTerritory;
 }
 

@@ -236,17 +236,11 @@ void Advance::execute()
 			sourceTerritory->getOwnedBy()->addTerritory(targetTerritory); //Add territory to attacker
 			targetTerritory->setOwnedBy(sourceTerritory->getOwnedBy(), numOfArmyUnits); //Set territory owner and num armies to attacker
 			cout << "Attacking Advance Order Executed. Attacking player " << " won " << targetTerritory->getName() << " territory." << endl;
+			sourceTerritory->getOwnedBy()->setConqueredTerritory(true);
 		}
 		else {//attacking player loses
 			cout << "Attacking Advance Order Executed. Attacking player " << " lost " << numOfArmyUnits << " and now has " << sourceTerritory->getNumberOfArmies() << "armies on " << sourceTerritory->getName() << " territory." << endl;
 		}
-		/*
-		* TO DO: A player receives a card at the end of his turn if they successfully conquered at least one 
-		territory during their turn, i.e. a player cannot receive more than one card per turn. 
-		I can set a flag to have a player know when they successfully conquered >1 territories but the implementation
-		of the receiving a card should be in another class
-		*/
-
 	}
 	executed = true;	
 }
@@ -396,8 +390,7 @@ void Blockade::execute()
 		return;
 	}
 	//Set ownership to the neutral players and double armies
-	//What is the neutral player???
-	targetTerritory->setOwnedBy(new Player(), targetTerritory->getNumberOfArmies() * 2);
+	targetTerritory->setOwnedBy(new Player(true), targetTerritory->getNumberOfArmies() * 2);
 	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
 	executed = true;
 	cout << "Blockade order executed. Territory" << targetTerritory->getName() << " has doubled its army units and is now owned by the neutral player" << endl;

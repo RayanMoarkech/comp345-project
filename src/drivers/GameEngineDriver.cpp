@@ -126,9 +126,9 @@ void testMainGameLoop()
             player2->addOwnedTerritory(t);
         }
     }
-
-    /*gameEngine->reinforcementPhase(*map, players);
-    gameEngine->issueOrdersPhase(players);*/
-    gameEngine->mainGameLoop(*map, players);
+    player1->toAttack();
+    cout << "Defend" << endl;
+    player1->toDefend();
+    //gameEngine->mainGameLoop(*map, players);
 
 }

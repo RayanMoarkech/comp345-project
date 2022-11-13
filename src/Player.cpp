@@ -135,99 +135,31 @@ static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 	return false;
 }
 
+//returns owned territories in random order
 vector<Territory*> Player::toDefend()
 {
-	vector<Territory*> territoriesToDefend;
-	cout << "Which territories should be defended in priority?" << endl;
-	int counter = 1;
-	for (Territory* t : this->ownedTerritories)
-	{
-		cout << counter << " - " << t->getName() << endl;
-		counter++;
-	}
-	cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
-	int territoryToDefend = -1;
-	while (territoryToDefend != 0)
-	{
-		cin >> territoryToDefend;
-		if (territoryToDefend == 0)
-		{
-			break;
-		}
-		else if (territoryToDefend < 0 || territoryToDefend > this->ownedTerritories.size())
-		{
-			cout << "Not a valid number." << endl;
-			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
-		}
-		else
-		{
-			if (!isIn(territoriesToDefend, this->ownedTerritories.at(territoryToDefend - 1)))
-			{
-				territoriesToDefend.push_back(this->ownedTerritories.at(territoryToDefend - 1));
-			}
-			else
-			{
-				cout << "This territory is already in the to defend list." << endl;
-			}
-		}
-	}
-	cout << "prioritized list of territories to defend: " << endl;
-	counter = 1;
+	vector<Territory*> territoriesToDefend = this->ownedTerritories;
+	std::random_shuffle(territoriesToDefend.begin(), territoriesToDefend.end());
 	for (Territory* t : territoriesToDefend)
 	{
-		cout << counter << " - " << t->getName() << endl;
-		counter++;
+		cout << t->getName() << endl;
 	}
 	return territoriesToDefend;
 }
 
+//returns adjacent territories not belong to player in random order
 vector<Territory*> Player::toAttack()
 {
-	vector<Territory*> territoriesToAttack;
-	cout << "Which neighbouring territories should be attacked in priority?" << endl;
-	vector<Territory*> neighbouringTerritories = this->getNeighbouringTerritories();
-	int counter = 1;
-	for (Territory* t : neighbouringTerritories)
-	{
-		cout << counter << " - " << t->getName() << endl;
-		counter++;
-	}
-	cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
-	int territoryToAttack = -1;
-	while (territoryToAttack != 0)
-	{
-		cin >> territoryToAttack;
-		if (territoryToAttack == 0)
-		{
-			break;
-		}
-		else if (territoryToAttack < 0 || territoryToAttack > neighbouringTerritories.size())
-		{
-			cout << "Not a valid number." << endl;
-			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
-		}
-		else
-		{
-			if (!isIn(territoriesToAttack, neighbouringTerritories.at(territoryToAttack - 1)))
-			{
-				territoriesToAttack.push_back(neighbouringTerritories.at(territoryToAttack - 1));
-			}
-			else
-			{
-				cout << "This territory is already in the to attack list." << endl;
-			}
-		}
-	}
-	cout << "prioritized list of territories to attack: " << endl;
-	counter = 1;
+	vector<Territory*> territoriesToAttack = this->getNeighbouringTerritories();
+	std::random_shuffle(territoriesToAttack.begin(), territoriesToAttack.end());
 	for (Territory* t : territoriesToAttack)
 	{
-		cout << counter << " - " << t->getName() << endl;
-		counter++;
+		cout << t->getName() << endl;
 	}
 	return territoriesToAttack;
 }
 
+//This method gets all adjacent territories of owned territories and excludes territories that are owned by player
 vector<Territory*> Player::getNeighbouringTerritories()
 {
 	vector<Territory*> neighbouringTerritories;

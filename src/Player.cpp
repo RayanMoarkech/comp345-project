@@ -8,8 +8,10 @@
     using std::vector;
 #include <iostream>
     using std::cout;
+	using std::cin;
     using std::endl;
 #include <ostream>
+#include <algorithm>
 
 #include "../include/Player.h"
 #include "../include/Orders.h"
@@ -24,6 +26,8 @@ Player::Player() {
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
     this->armyUnits = 0;
 }
 
@@ -41,6 +45,9 @@ Player::Player(const Player& player) {
 	}
 	this->playerHand = new Hand(*player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
+	this->negotiatingWith = std::list<Player*>(player.negotiatingWith);
+	this->isNeutral = player.isNeutral;
+	this->conqueredTerritory = player.conqueredTerritory;
     this->armyUnits = player.armyUnits;
 }
 
@@ -52,6 +59,18 @@ Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHan
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
+    this->armyUnits = 0;
+}
+
+Player::Player(bool isNeutral)
+{
+	this->ownedTerritories = {};
+	this->playerHand = new Hand();
+	this->playerOrders = new OrdersList();
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = false;
     this->armyUnits = 0;
 }
 
@@ -72,6 +91,12 @@ Player::~Player()
 //Assignment Operator
 Player& Player::operator=(const Player& player)
 {
+	this->ownedTerritories = ownedTerritories;
+	this->playerHand = playerHand;
+	this->playerOrders = playerOrders;
+	this->negotiatingWith = negotiatingWith;
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = conqueredTerritory;
     this->id = player.id;
 	this->ownedTerritories = player.ownedTerritories;
 	this->playerHand = player.playerHand;
@@ -85,6 +110,11 @@ string Player::getName()
     return this->name;
 }
 
+void Player::setName(string name)
+{
+	this->name = name;
+}
+
 void Player::setArmyUnits(int armyUnits)
 {
     this->armyUnits = armyUnits;
@@ -93,6 +123,16 @@ void Player::setArmyUnits(int armyUnits)
 int Player::getArmyUnits()
 {
     return this->armyUnits;
+}
+
+vector<Territory*> Player::getAttackList()
+{
+	return this->toAttackList;
+}
+
+vector<Territory*> Player::getDefendList()
+{
+	return this->toDefendList;
 }
 
 //Stream Insertion Operator for Player class
@@ -116,73 +156,185 @@ ostream& operator<<(ostream& os, const Player& player)
 	return os;
 }
 
-vector<Territory*> Player::toDefend()
+static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 {
-	//Load map
-	Map *map = MapLoader::load("./001_I72_Ghtroc720.map");
-
-	//Get number of total territories in the map
-	int nbOfTerritories = map->getTerritories().size();
-	cout << "Number Of Total Territories in Map: " << nbOfTerritories << endl;
-
-	//Get arbitrary and random number of territories to defend
-	int nbOfTerritoriesToDefend = rand() % nbOfTerritories;
-	cout << "Arbitrary Number Of Territories To Defend: " << nbOfTerritoriesToDefend << endl;
-
-	//Empty vector of Territory pointers
-	vector<Territory*> territoriesToDefend;
-
-	//Add random territory from map to the territories to defend vector
-	for (int i = 0; i < nbOfTerritoriesToDefend; i++) {
-		territoriesToDefend.push_back(map->getTerritories().at(rand() % nbOfTerritories));
+	for (Territory* t : territoryVector)
+	{
+		if (t == territory)
+		{
+			return true;
+		}
 	}
-
-	//Print the territory names to console as part of the test
-	for (int i = 0; i < nbOfTerritoriesToDefend; i++) {
-		cout << territoriesToDefend.at(i)->getName() << endl;
-	}
-
-	return territoriesToDefend;
+	return false;
 }
 
-vector<Territory*> Player::toAttack()
+//returns owned territories in random order
+void Player::toDefend()
 {
+	cout << endl;
+	cout << this->getName() << " 's Territories to Defend in Prioritized Order" << endl;
+	cout << endl;
 
-	//Load map
-	Map *map = MapLoader::load("./001_I72_Ghtroc720.map");
-
-	//Get number of total territories in the map
-	int nbOfTerritories = map->getTerritories().size();
-	cout << "Number Of Total Territories in Map: " << nbOfTerritories << endl;
-
-	//Get arbitrary and random number of territories to attack
-	int nbOfTerritoriesToAttack = rand() % nbOfTerritories;
-	cout << "Arbitrary Number Of Territories To Attack: " << nbOfTerritoriesToAttack << endl;
-
-	//Empty vector of Territory pointers
-	vector<Territory*> territoriesToAttack;
-
-	//Add random territory from map to the territories to attack vector
-	for (int i = 0; i < nbOfTerritoriesToAttack; i++) {
-		territoriesToAttack.push_back(map->getTerritories().at(rand() % nbOfTerritories));
+	vector<Territory*> territoriesToDefend = this->ownedTerritories;
+	std::random_shuffle(territoriesToDefend.begin(), territoriesToDefend.end());
+	for (Territory* t : territoriesToDefend)
+	{
+		cout << t->getName() << endl;
 	}
-
-	//Print the territory names to console as part of the test
-	for (int i = 0; i < nbOfTerritoriesToAttack; i++) {
-		cout << territoriesToAttack.at(i)->getName() << endl;
-	}
-
-	return territoriesToAttack;
+	this->toDefendList = territoriesToDefend;
 }
 
-void Player::issueOrder()
+//returns adjacent territories not belong to player in random order
+void Player::toAttack()
 {
-	// Create new order
-	Order* newOrder = new Order();
-	// Add it to the player's orders list
-	this->playerOrders->addOrder(newOrder);
-	cout << "New Order Issued!" << endl;
-	cout << "playerOrders is now of size " << this->playerOrders->getOrdersList().size() << endl;
+	cout << endl;
+	cout << this->getName() << " 's Territories to Attack in Prioritized Order" << endl;
+	cout << endl;
+
+	vector<Territory*> territoriesToAttack = this->getNeighbouringTerritories();
+	std::random_shuffle(territoriesToAttack.begin(), territoriesToAttack.end());
+	for (Territory* t : territoriesToAttack)
+	{
+		cout << t->getName() << endl;
+	}
+	this->toAttackList = territoriesToAttack;
+}
+
+//This method gets all adjacent territories of owned territories and excludes territories that are owned by player
+vector<Territory*> Player::getNeighbouringTerritories()
+{
+	vector<Territory*> neighbouringTerritories;
+	for (Territory* t : this->ownedTerritories)
+	{
+		for (Territory* adjTerritory : t->getAdjacentTerritories())
+		{
+			if (!isIn(neighbouringTerritories, adjTerritory) && !isIn(ownedTerritories, adjTerritory)) 
+			{
+				neighbouringTerritories.push_back(adjTerritory);
+			}
+		}
+	}
+	return neighbouringTerritories;
+}
+
+Order* Player::issueOrder()
+{
+	cout << "----------------------------------" << endl;
+	cout << this->name << "'s Turn" << endl;
+	cout << "----------------------------------" << endl;
+
+	//To Attack
+	if (this->toAttackList.size() == 0)
+	{
+		this->toAttack();
+		return NULL;
+	}
+	//To Defend
+	if (this->toDefendList.size() == 0)
+	{
+		this->toDefend();
+		return NULL;
+	}
+
+	//Deploy on toDefend territories, will not be able to issue other orders until
+	//all armies are deployed
+	if (this->armyUnits != 0)
+	{
+		int index = -1;
+		for (Territory* t : this->toDefendList)
+		{
+			index++;
+			if (t->getNumberOfArmies() == 0)
+			{
+				break;
+			}
+		}
+		srand(time(0));
+		int armiesToDeploy = 1 + (rand() % this->armyUnits);
+		cout << endl;
+		cout << this->getName() << " deploys " << armiesToDeploy << " to " << this->toDefendList.at(index)->getName() << endl;
+		this->armyUnits -= armiesToDeploy;
+		cout << this->getName() << " has " << this->armyUnits << " armies remaining to deploy." << endl;
+		cout << endl;
+		return new Deploy(this, this->toDefendList.at(index), armiesToDeploy);
+	}
+
+	//Advance (Defend)
+	if (this->toDefendList.size() != 5)
+	{
+		Territory* targetTerritory = this->toDefendList.at(0);
+		this->toDefendList.erase(this->toDefendList.begin());
+		int index = (rand() % this->toDefendList.size());
+		Territory *sourceTerritory = this->toDefendList.at(index);
+		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
+
+		cout << endl;
+		cout << "Defense: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
+			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
+		cout << endl;
+		return new Advance(this, sourceTerritory,targetTerritory, armiesToAdvance);
+	}
+	if (this->toAttackList.size() != 5)
+	{
+		Territory* targetTerritory = this->toAttackList.at(0);
+		this->toAttackList.erase(this->toAttackList.begin());
+		int index = (rand() % this->ownedTerritories.size());
+		Territory* sourceTerritory = this->ownedTerritories.at(index);
+		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
+		cout << endl;
+		cout << "Attack: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
+			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
+		cout << endl;
+		return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
+	}
+	if (this->getPlayerHand()->cards.size() != 0)
+	{
+		string cardType = this->getPlayerHand()->cards.at(0)->getCardType();
+		cout << endl;
+		cout << "Player played card: " << cardType << endl;
+		if (cardType == "Bomb")
+		{
+			int index = (rand() % this->toAttackList.size());
+			Territory* toBomb = this->toAttackList.at(index);
+			cout << this->getName() << " will bomb " << toBomb->getName() << endl;
+			cout << endl;
+			return new Bomb(this, toBomb);
+		}
+		if (cardType == "Blockade")
+		{
+			int index = (rand() % this->toDefendList.size());
+			Territory* toBlockade = this->toDefendList.at(index);
+			cout << this->getName() << " will blockade " << toBlockade->getName() << endl;
+			cout << endl;
+			return new Blockade(this, toBlockade);
+		}
+		if (cardType == "Blockade")
+		{
+			int index = (rand() % this->toDefendList.size());
+			Territory* toBlockade = this->toDefendList.at(index);
+			cout << this->getName() << " will blockade " << this->toDefendList.at(index)->getName() << endl;
+			cout << endl;
+			return new Blockade(this, toBlockade);
+		}
+		if (cardType == "Airlift")
+		{
+			int index1 = (rand() % this->toDefendList.size());
+			Territory* target = this->toDefendList.at(index1);
+			int index2 = (rand() % this->toDefendList.size());
+			Territory* source = this->toDefendList.at(index2);
+			cout << this->getName() << " will airlift 5 armies from " << source->getName() <<
+				" to " << target->getName() << endl;
+			cout << endl;
+			return new Airlift(this, source, target, 5);
+		}
+		return NULL;
+	}
+	cout << endl;
+	cout << this->getName() << " has no more orders." << endl;
+	cout << endl;
+	return NULL;
 }
 
 vector<Territory*> Player::getOwnedTerritories()
@@ -198,6 +350,30 @@ Hand* Player::getPlayerHand()
 OrdersList* Player::getPlayerOrders()
 {
 	return this->playerOrders;
+}
+
+void Player::addTerritory(Territory* t)
+{
+	this->ownedTerritories.push_back(t);
+}
+
+void Player::addNegotiator(Player* p)
+{
+	negotiatingWith.push_back(p);
+}
+
+std::list<Player*> Player::getNegotiatorList()
+{
+	return this->negotiatingWith;
+}
+
+void Player::setConqueredTerritory(bool conqueredTerritory)
+{
+	this->conqueredTerritory = conqueredTerritory;
+}
+
+bool Player::getConqueredTerriotry() {
+    return conqueredTerritory;
 }
 
 void Player::addOwnedTerritory(Territory *territory)

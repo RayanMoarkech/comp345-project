@@ -300,11 +300,119 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
   return false;
 }
 
-void GameEngine::startupPhase() {
-  // The defined commands
-  vector<string> commands = {"loadmap", "validatemap", "addplayer",
-                             "gamestart"};
+void GameEngine::reinforcementPhase(Map& map, vector<Player*> players)
+{
+    for (Player* player : players)
+    {
+        cout << player->getName() << " owns " << player->getOwnedTerritories().size() << " territories." << endl;
 
+        int armyUnits = (player->getOwnedTerritories().size() / 3);
+
+        if (armyUnits < 3)
+        {
+            player->setArmyUnits(3);
+        }
+        else
+        {
+            for (Continent* c : map.getContinents())
+            {
+                bool ownsContinent = false;
+                for (Territory* t : map.getTerritories())
+                {
+                    if (c->getName() == t->getContinent()->getName())
+                    {
+                        for (Territory* ownedTerritory : player->getOwnedTerritories())
+                        {
+                            ownsContinent = ownedTerritory->getName() == t->getName();
+                            if (ownsContinent)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (ownsContinent) {
+                    cout << player->getName() << " owns continent " << c->getName() << " and gained " << c->getScore() << " army units." << endl;
+                    armyUnits = +armyUnits + c->getScore();
+                }
+                else
+                {
+                    cout << player->getName() << " does not own continent " << c->getName() << "." << endl;
+                }
+            }
+            player->setArmyUnits(armyUnits);
+        }
+        cout << player->getName() << " has " << player->getArmyUnits() << " army units this turn." << endl;
+        cout << endl;
+    }
+}
+
+static bool allPlayerCardsPlayed(vector<Player*> players)
+{
+    bool allCardsPlayed = false;
+    for (Player* p : players)
+    {
+        allCardsPlayed = allCardsPlayed = p->getPlayerHand()->cards.size() != 0;
+        if (!allCardsPlayed) {
+            break;
+        }
+    }
+    return allCardsPlayed;
+}
+
+OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players, Deck* gameDeck)
+{
+    OrdersList* allIssuedOrders = new OrdersList();
+    while (allPlayerCardsPlayed(players))
+    {
+        for (Player* p : players)
+        {
+            //5 is used here to keep a few territories to attack to be used by Cards
+            if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
+            {
+                Order* o = p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
+                allIssuedOrders->addOrder(o);
+            }
+            else
+            {
+                Order* o = p->issueOrder();
+                allIssuedOrders->addOrder(o);
+            }
+        }
+    }
+    return allIssuedOrders;
+}
+
+
+void GameEngine::executeOrdersPhase(OrdersList* allOrders)
+{
+    for (Order* o : allOrders->getOrdersList())
+    {
+        o->execute();
+    }
+}
+
+void GameEngine::mainGameLoop(Map& map, vector<Player*> players, Deck* gameDeck)
+{
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Test Reinforcement Phase" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+    this->reinforcementPhase(map, players);
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Issue Orders Phase" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+    OrdersList* allOrders = this->issueOrdersPhase(players, gameDeck);
+    //TO DO when merging with Part 4
+    //this->executeOrdersPhase(allOrders);
+}
+
+//Print a list of all states with their valid transitions
+void GameEngine::startupPhase()
+{
   cout << "***************************************" << endl
        << "The following commands can be inserted:" << endl
        << "      1- loadmap <filename>            " << endl

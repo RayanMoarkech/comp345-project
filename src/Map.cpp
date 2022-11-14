@@ -129,6 +129,11 @@ vector<Territory*> Map::getTerritories()
     return this->territories;
 }
 
+vector<Continent*> Map::getContinents()
+{
+    return this->continents;
+}
+
 void Map::setValidFalse()
 {
     this->isValid = false;
@@ -296,9 +301,29 @@ Continent *Territory::getContinent()
     return this->continent;
 }
 
+Player* Territory::getOwnedBy()
+{
+    return this->ownedBy;
+}
+
+int Territory::getNumberOfArmies()
+{
+    return this->numberOfArmies;
+}
+
 void Territory::addAdjacentTerritory(Territory *territory)
 {
     this->adjacentTerritories.push_back(territory);
+}
+
+void Territory::addArmies(int numArmies)
+{
+    this->numberOfArmies = numberOfArmies + numArmies;
+}
+
+void Territory::removeArmies(int numArmies)
+{
+    this->numberOfArmies = numberOfArmies - numArmies;
 }
 
 vector<Territory*> Territory::getAdjacentTerritories() {
@@ -310,6 +335,11 @@ void Territory::setOwnedBy(Player* ownedBy, int numberOfArmies)
 {
    this->ownedBy = ownedBy;
    this->numberOfArmies = numberOfArmies;
+}
+
+void Territory::setNumberOfArmies(int numberOfArmies)
+{
+    this->numberOfArmies = numberOfArmies;
 }
 
 ostream& operator<<(ostream& os, Territory& territory)

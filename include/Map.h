@@ -37,6 +37,7 @@ public:
     void addTerritory(Territory* territory);
     Territory* getTerritory(const string& name);
     vector<Territory*> getTerritories();
+    vector<Continent*> getContinents();
     void setValidFalse();
     bool validate();
     friend ostream& operator<<(ostream& os, Map& map);
@@ -86,9 +87,14 @@ public:
     ~Territory();
     string getName();
     Continent* getContinent();
+    Player* getOwnedBy();
+    int getNumberOfArmies();
     void addAdjacentTerritory(Territory* territory);
+    void addArmies(int numArmies);
+    void removeArmies(int numArmies);
     vector<Territory*> getAdjacentTerritories();
     void setOwnedBy(Player* ownedBy, int numberOfArmies);
+    void setNumberOfArmies(int numberOfArmies);
     friend ostream& operator<<(ostream& os, Territory& territory);
     Territory& operator=(const Territory& territory);
 };

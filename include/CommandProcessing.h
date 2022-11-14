@@ -52,7 +52,7 @@ public:
 private:
   string _filename;
   string _currentLine;
-  fstream _fStr;
+  fstream *_fStr;
   friend ostream &operator<<(ostream &strm,
                              const FileLineReader &fileLineReader);
 };

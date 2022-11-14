@@ -270,9 +270,6 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
 }
 
 vector<Command *> CommandProcessor::getCommandList() { return _commandList; }
-void CommandProcessor::setStateList(const vector<State *> &stateList) {
-  _stateList = stateList;
-}
 
 // ---------------------------------------------
 // ---- FileCommandProcessorAdapter Section ----

@@ -11,7 +11,8 @@ using std::string;
 using std::vector;
 #include <ostream>
 using std::ostream;
-#include <fstream> n
+#include "GameEngine.h"
+#include <fstream>
 using std::fstream;
 
 // ---------------------------------------------
@@ -80,9 +81,6 @@ private:
 
 protected:
   vector<State *> _stateList;
-
-public:
-  void setStateList(const vector<State *> &stateList);
 
 protected:
   vector<Command *> _commandList;

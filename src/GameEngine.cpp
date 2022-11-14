@@ -372,12 +372,16 @@ OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players, Deck* gameDeck
             if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
             {
                 Order* o = p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
-                allIssuedOrders->addOrder(o);
+                if (o != NULL) {
+                    allIssuedOrders->addOrder(o);
+                }
             }
             else
             {
                 Order* o = p->issueOrder();
-                allIssuedOrders->addOrder(o);
+                if (o != NULL) {
+                    allIssuedOrders->addOrder(o);
+                }
             }
         }
     }
@@ -407,8 +411,12 @@ void GameEngine::mainGameLoop(Map& map, vector<Player*> players, Deck* gameDeck)
         << "------------------------------------------------------" << endl
         << endl;
     OrdersList* allOrders = this->issueOrdersPhase(players, gameDeck);
-    //TO DO when merging with Part 4
-    //this->executeOrdersPhase(allOrders);
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Execute Orders Phase" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+    this->executeOrdersPhase(allOrders);
 }
 
 //Print a list of all states with their valid transitions

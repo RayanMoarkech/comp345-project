@@ -1,14 +1,12 @@
 loadmap APKomp.map
 validatemap
+addplayer
 addplayer p1
 gamestart
 issueorder
+bad command
 endissueorders
+
 win
-loadmap APKomp.map
-validatemap
-addplayer p1
-gamestart
-issueorder
-endissueorders
-win
+bad command
+quit

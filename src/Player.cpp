@@ -296,11 +296,12 @@ Order* Player::issueOrder()
 		cout << "Player played card: " << cardType << endl;
 		if (cardType == "Bomb")
 		{
-			int index = (rand() % this->toAttackList.size());
+			/*int index = (rand() % this->toAttackList.size());
 			Territory* toBomb = this->toAttackList.at(index);
 			cout << this->getName() << " will bomb " << toBomb->getName() << endl;
 			cout << endl;
-			return new Bomb(this, toBomb);
+			return new Bomb(this, toBomb);*/
+			return new Bomb();
 		}
 		if (cardType == "Blockade")
 		{

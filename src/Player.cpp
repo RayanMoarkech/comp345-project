@@ -204,13 +204,13 @@ Order* Player::issueOrder()
 	if (this->toAttackList.size() == 0)
 	{
 		this->toAttack();
-		return new Order();
+		return NULL;
 	}
 	//To Defend
 	if (this->toDefendList.size() == 0)
 	{
 		this->toDefend();
-		return new Order();
+		return NULL;
 	}
 
 	//Deploy on toDefend territories, will not be able to issue other orders until
@@ -265,6 +265,14 @@ Order* Player::issueOrder()
 			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
 		cout << endl;
 		return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
+	}
+	if (this->getPlayerHand()->cards.size() != 0)
+	{
+		string cardType = this->getPlayerHand()->cards.at(0)->getCardType();
+		cout << endl;
+		cout << "Player played card: " << cardType << endl;
+		cout << endl;
+		return NULL;
 	}
 	cout << endl;
 	cout << this->getName() << " has no more orders." << endl;

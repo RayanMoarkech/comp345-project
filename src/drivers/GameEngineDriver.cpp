@@ -7,10 +7,14 @@
     using std::cout;
     using std::cin;
     using std::endl;
+#include <string>
+    using std::string;
 
 #include "../../include/GameEngine.h"
 #include "../../include/Map.h"
 #include "../../include/Player.h"
+#include "../../include/Cards.h"
+
 
 
 void testGameStates()
@@ -104,13 +108,32 @@ void testMainGameLoop()
 
     GameEngine* gameEngine = new GameEngine();
     Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
-    Player* player1 = new Player();
-    Player* player2 = new Player();
 
+    Deck* gameDeck = new Deck();
+    Hand* playerOneHand = new Hand();
+    Hand* playerTwoHand = new Hand();
+
+    Card* bombCard = new Card(BOMB);
+    Card* blockadeCard = new Card(BLOCKADE);
+    Card* airliftCard = new Card(AIRLIFT);
+
+    playerOneHand->addCard(bombCard);
+    playerOneHand->addCard(blockadeCard);
+
+    playerTwoHand->addCard(airliftCard);
+
+    string playerOneName = "Player 1";
+    vector<Territory*> playerOneTerritories;
+
+    string playerTwoName = "Player 2";
+    vector<Territory*> playerTwoTerritories;
+
+    Player* player1 = new Player(playerOneName, playerOneTerritories, playerOneHand, new OrdersList());
+
+    Player* player2 = new Player(playerTwoName, playerTwoTerritories, playerTwoHand, new OrdersList());;
+
+    //Populate owned territories 
     vector<Player*> players = { player1, player2 };
-
-    player1->setName("Player 1");
-    player2->setName("Player 2");
 
     player1->addOwnedTerritory(map->getTerritory("Cockpit01"));
     player1->addOwnedTerritory(map->getTerritory("Cockpit02"));
@@ -133,12 +156,20 @@ void testMainGameLoop()
     player2->toAttack();
     cout << player2->getAttackList().size() << endl;
 
-    Order* o = new Order();
-    while(player1->getAttackList().size() != 1 || player2->getAttackList().size() != 1)
-    //while (o != NULL)
+    //while(player1->getAttackList().size() != 1 || player2->getAttackList().size() != 1)
+    while (player1->getPlayerHand()->cards.size() != 0 || player2->getPlayerHand()->cards.size() != 0)
     for (Player* p : players)
     {
-        o = p->issueOrder();
+        
+        if (p->getAttackList().size() == 1 && p->getPlayerHand()->cards.size() != 0)
+        {
+            p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
+        }
+        else
+        {
+            p->issueOrder();
+        }
+
     }
     //gameEngine->mainGameLoop(*map, players);
 

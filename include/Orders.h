@@ -25,20 +25,20 @@ public:
 
 	/*
 	* Destrcutor for Order Class
-	* //Declared as virtual so that both base class and derived class destructors called
+	* Declared as virtual so that both base class and derived class destructors called
 	*/
 	virtual ~Order();
 
 
 	Order& operator=(const Order& o); //Assignment 
 	friend std::ostream& operator<<(std::ostream& out, const Order& toOutput); //Stream insertion operator
+	Player* getPlayer(); // Get the player that an order belongs too 
 
 	/*
-	* Method to check if order is valid
-	* Virtual specifies that it will be overidden in derived classe
+	* Pure virtuak methods that will be overidden in derived classes
 	*/
-	virtual bool validate();
-	virtual void execute(); //Method to check if order is valid and then execute if it is
+	virtual bool validate() = 0; // Method to check if order is valid
+	virtual void execute() = 0; // Method to check if order is valid and then execute if it is
 };
 
 //Deploy Class Definition

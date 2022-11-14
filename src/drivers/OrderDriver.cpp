@@ -6,6 +6,7 @@
     using std::cout;
 
 #include "../../include/Orders.h"
+#include "../../include/Player.h"
 
 void testOrdersList()
 {
@@ -58,5 +59,20 @@ void testOrdersList()
 
 	cout << "\nTesting stream insertion operator of unexecuted order:" << endl;
 	cout << deployOrder << endl;
+
+}
+
+void testOrderExecution() 
+{
+	cout << endl
+		<< "------------------------------------------------------"
+		<< endl
+		<< "Test Order Execution" << endl
+		<< "------------------------------------------------------" << endl
+		<< endl;
+
+	Player* player = new Player();
+	Player* opponent = new Player();
+
 
 }

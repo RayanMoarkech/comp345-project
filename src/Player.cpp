@@ -24,7 +24,9 @@ Player::Player() {
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
-    this->armyUnits = 0;
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
+  this->armyUnits = 0;
 }
 
 //Copy constructor (Deep)
@@ -41,7 +43,10 @@ Player::Player(const Player& player) {
 	}
 	this->playerHand = new Hand(*player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
-    this->armyUnits = player.armyUnits;
+	this->negotiatingWith = std::list<Player*>(player.negotiatingWith);
+	this->isNeutral = player.isNeutral;
+	this->conqueredTerritory = player.conqueredTerritory;
+  this->armyUnits = player.armyUnits;
 }
 
 //Parametrized constructor
@@ -52,7 +57,19 @@ Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHan
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
-    this->armyUnits = 0;
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
+  this->armyUnits = 0;
+}
+
+Player::Player(bool isNeutral)
+{
+	this->ownedTerritories = {};
+	this->playerHand = new Hand();
+	this->playerOrders = new OrdersList();
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = false;
+  this->armyUnits = 0;
 }
 
 //Destructor
@@ -72,11 +89,17 @@ Player::~Player()
 //Assignment Operator
 Player& Player::operator=(const Player& player)
 {
-    this->id = player.id;
+	this->ownedTerritories = ownedTerritories;
+	this->playerHand = playerHand;
+	this->playerOrders = playerOrders;
+	this->negotiatingWith = negotiatingWith;
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = conqueredTerritory;
+  this->id = player.id;
 	this->ownedTerritories = player.ownedTerritories;
 	this->playerHand = player.playerHand;
 	this->playerOrders = player.playerOrders;
-    this->armyUnits = player.armyUnits;
+  this->armyUnits = player.armyUnits;
 	return *this;
 }
 
@@ -178,7 +201,7 @@ vector<Territory*> Player::toAttack()
 void Player::issueOrder()
 {
 	// Create new order
-	Order* newOrder = new Order();
+	Order* newOrder = new Deploy(); //**TEMP CHANGE FOR PART 4 Testing**//
 	// Add it to the player's orders list
 	this->playerOrders->addOrder(newOrder);
 	cout << "New Order Issued!" << endl;
@@ -200,6 +223,29 @@ OrdersList* Player::getPlayerOrders()
 	return this->playerOrders;
 }
 
+void Player::addTerritory(Territory* t)
+{
+	this->ownedTerritories.push_back(t);
+}
+
+void Player::addNegotiator(Player* p)
+{
+	negotiatingWith.push_back(p);
+}
+
+std::list<Player*> Player::getNegotiatorList()
+{
+	return this->negotiatingWith;
+}
+
+void Player::setConqueredTerritory(bool conqueredTerritory)
+{
+	this->conqueredTerritory = conqueredTerritory;
+}
+
+bool Player::getConqueredTerriotry()
+{
+	return conqueredTerritory;
 void Player::addOwnedTerritory(Territory *territory)
 {
     this->ownedTerritories.push_back(territory);

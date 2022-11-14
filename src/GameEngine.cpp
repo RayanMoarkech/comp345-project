@@ -333,7 +333,7 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
     string effect = "Going to win";
     _commandProcessor->getLastCommand()->saveEffect(effect);
   }
-  string effect = "Someting went wrong!";
+  string effect = "Something went wrong!";
   _commandProcessor->getLastCommand()->saveEffect(effect);
   return false;
 }

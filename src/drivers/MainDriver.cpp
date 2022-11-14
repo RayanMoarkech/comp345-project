@@ -17,6 +17,7 @@ void testGameStates();
 void testStartupPhase(string fileName = "");
 void TestCommandProcessor();
 void testMainGameLoop();
+void testOrderExecution();
 
 int main(int argc, char *argv[]) {
   // Phase 1
@@ -27,6 +28,7 @@ int main(int argc, char *argv[]) {
   //    testGameStates();
 
   // Phase 2
+    
   if (argv[1] != NULL && (strcmp(argv[1], "-file") == 0)) {
     if (argv[2] != NULL) {
       string fileName = argv[2];
@@ -45,5 +47,6 @@ int main(int argc, char *argv[]) {
 
   testMainGameLoop();
   TestCommandProcessor();
+  testOrderExecution();
   return 0;
 }

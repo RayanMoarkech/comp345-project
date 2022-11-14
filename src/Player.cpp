@@ -372,8 +372,9 @@ void Player::setConqueredTerritory(bool conqueredTerritory)
 	this->conqueredTerritory = conqueredTerritory;
 }
 
-bool Player::getConqueredTerriotry() {
-    return conqueredTerritory;
+bool Player::getConqueredTerriotry()
+{
+	return conqueredTerritory;
 }
 
 void Player::addOwnedTerritory(Territory *territory)
@@ -381,3 +382,7 @@ void Player::addOwnedTerritory(Territory *territory)
     this->ownedTerritories.push_back(territory);
 }
 
+void Player::removeTerritory(Territory* t)
+{
+	this->ownedTerritories.erase(std::remove(this->ownedTerritories.begin(), this->ownedTerritories.end(), t), this->ownedTerritories.end());
+}

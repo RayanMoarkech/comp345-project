@@ -576,7 +576,6 @@ std::string Negotiate::stringToLog() {
 //Default constructor for OrdersList class
 OrdersList::OrdersList()
 {
-	cout << "Created an ordersList object." << endl;
 }
 
 OrdersList::OrdersList(std::list<Order*> order_list)

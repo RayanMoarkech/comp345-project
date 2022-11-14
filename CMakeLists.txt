@@ -12,6 +12,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config/duplicate_continent.map DESTINATION
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config/duplicate_territory.map DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config/missing_continent.map DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config/missing_territory.map DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config/commandFile.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(
         comp345_project
@@ -20,4 +21,5 @@ add_executable(
         src/drivers/OrderDriver.cpp src/Orders.cpp include/Orders.h
         src/drivers/GameEngineDriver.cpp src/GameEngine.cpp include/GameEngine.h
         src/drivers/MainDriver.cpp
-        include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp include/CommandProcessing.h src/CommandProcessing.cpp)
+        include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp
+        include/CommandProcessing.h src/CommandProcessing.cpp src/drivers/CommandProcessingDriver.cpp)

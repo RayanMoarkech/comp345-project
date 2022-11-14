@@ -11,8 +11,7 @@ using std::string;
 using std::vector;
 #include <ostream>
 using std::ostream;
-#include "GameEngine.h"
-#include <fstream>
+#include <fstream> n
 using std::fstream;
 
 // ---------------------------------------------
@@ -71,7 +70,8 @@ public:
   string readCommand();
   Command *saveCommand(string command);
   Command *getCommand();
-  bool validate(Command *command, int &currentStateIndex);
+  bool validate(Command *command, int currentStateIndex, int &nextStateIndex,
+                string &commandOption);
   vector<Command *> getCommandList();
 
 private:
@@ -79,7 +79,12 @@ private:
                              const CommandProcessor &commandProcessor);
 
 protected:
-  static vector<State *> _stateList;
+  vector<State *> _stateList;
+
+public:
+  void setStateList(const vector<State *> &stateList);
+
+protected:
   vector<Command *> _commandList;
 };
 

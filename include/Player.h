@@ -20,16 +20,20 @@ class Hand;
 class Player
 {
 private:
+    static int idCounter;
+    int id;
+    string name;
 	vector<Territory*> ownedTerritories;
 	std::list<Player*> negotiatingWith;
 	Hand* playerHand;
 	OrdersList* playerOrders;
 	bool conqueredTerritory;
 	bool isNeutral;
+  int armyUnits;
 
 public:
 	Player();
-	Player(vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders);
+	Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders);
 	Player(const Player& player);
 	Player(bool isNeutral);
 	~Player();
@@ -48,6 +52,10 @@ public:
 	std::list<Player*> getNegotiatorList();
 	void setConqueredTerritory(bool conqueredTerritory);
 	bool getConqueredTerriotry();
+  string getName();
+  void setArmyUnits(int armyUnits);
+  int getArmyUnits();
+  void addOwnedTerritory(Territory* territory);
 };
 
 #endif //Player_H

@@ -371,6 +371,13 @@ Map* MapLoader::load(const std::string& mapFileDir)
         ifstream input(mapFileDir);
         string line;
 
+        // Check if map file exists
+        if (!input.good())
+        {
+            cout << "Map file not found: " << mapFileDir << endl
+                << "Map will be set as empty" << endl;
+        }
+
         // Loop through the lines of the map config
         while (getline(input, line))
         {

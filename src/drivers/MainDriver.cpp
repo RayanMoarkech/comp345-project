@@ -26,20 +26,20 @@ int main(int argc, char *argv[]) {
   //    testGameStates();
 
   // Phase 2
-  //if (argv[1] != NULL && (strcmp(argv[1], "-file") == 0)) {
-  //  if (argv[2] != NULL) {
-  //    string fileName = argv[2];
-  //    testStartupPhase(fileName);
-  //  } else {
-  //    std::cout << "You did not enter the file name. Please rerun the program "
-  //                 "and provide the file name";
-  //  }
-  //} else if (argv[1] != NULL && (strcmp(argv[1], "-console") == 0)) {
-  //  testStartupPhase();
-  //} else {
-  //  std::cout << "Reading from console by default";
-  //  testStartupPhase();
-  //}
+  if (argv[1] != NULL && (strcmp(argv[1], "-file") == 0)) {
+    if (argv[2] != NULL) {
+      string fileName = argv[2];
+      testStartupPhase(fileName);
+    } else {
+      std::cout << "You did not enter the file name. Please rerun the program "
+                   "and provide the file name";
+    }
+  } else if (argv[1] != NULL && (strcmp(argv[1], "-console") == 0)) {
+    testStartupPhase();
+  } else {
+    std::cout << "Reading from console by default";
+    testStartupPhase();
+  }
 
   testMainGameLoop();
 

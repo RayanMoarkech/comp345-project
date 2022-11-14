@@ -193,6 +193,7 @@ int &GameEngine::getNextStateIndex() { return _nextStateIndex; }
 
 void GameEngine::setCurrentStateIndex(int currentStateIndex) {
   _currentStateIndex = currentStateIndex;
+  notify();
 }
 
 void GameEngine::setNextStateIndex(int nextStateIndex) {
@@ -395,6 +396,9 @@ void GameEngine::startupPhase() {
 
     cout << endl;
   }
+}
+std::string GameEngine::stringToLog() {
+    return "GameEngine::transition(): " + this->_state[this->_currentStateIndex]->getName() + "\n";
 }
 
 // Print a list of all states with their valid transitions

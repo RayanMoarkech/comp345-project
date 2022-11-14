@@ -13,6 +13,8 @@ using std::vector;
 #include <ostream>
 using std::ostream;
 
+#include "LoggingObserver.h"
+
 class Map;
 class Player;
 class CommandProcessor;
@@ -69,7 +71,7 @@ private:
 // navigate between them.
 // ---------------------------------------------
 
-class GameEngine {
+class GameEngine: public ILoggable, public Subject {
 public:
   GameEngine(string fileName);
   ~GameEngine();
@@ -83,6 +85,8 @@ public:
   void setNextStateIndex(int nextStateIndex);
 
   void startupPhase();
+
+  std::string stringToLog();
 
 private:
   vector<State *> _state;

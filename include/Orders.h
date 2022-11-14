@@ -57,7 +57,7 @@ public:
 private:
 	Territory* targetTerritory;
 	unsigned int numOfArmyUnits;
-	std::ostream& print(std::ostream& out) const override;
+	virtual std::ostream& print(std::ostream& out) const override;
 };
 
 //Advance class defintiion
@@ -75,7 +75,7 @@ private:
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
 	unsigned int numOfArmyUnits;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 };
 
 class Bomb : public Order {
@@ -88,7 +88,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Bomb& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 private:
 	Territory* targetTerritory;
 };
@@ -103,7 +103,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Blockade& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 private:
 	Territory* targetTerritory;
 };
@@ -122,7 +122,7 @@ private:
 	unsigned int numOfArmyUnits;
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 };
 
 class Negotiate : public Order {
@@ -135,7 +135,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Negotiate& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 private:
 	Player* targetPlayer;
 };

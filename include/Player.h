@@ -52,10 +52,10 @@ public:
 	std::list<Player*> getNegotiatorList();
 	void setConqueredTerritory(bool conqueredTerritory);
 	bool getConqueredTerriotry();
-  string getName();
-  void setArmyUnits(int armyUnits);
-  int getArmyUnits();
-  void addOwnedTerritory(Territory* territory);
+    string getName();
+    void setArmyUnits(int armyUnits);
+    int getArmyUnits();
+    void addOwnedTerritory(Territory* territory);
 };
 
 #endif //Player_H

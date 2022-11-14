@@ -15,10 +15,12 @@ using std::ostream;
 #include <fstream>
 using std::fstream;
 
+#include "LoggingObserver.h"
+
 // ---------------------------------------------
 // -------------- Command Section --------------
 // ---------------------------------------------
-class Command {
+class Command: public ILoggable, public Subject {
 public:
   Command();
   ~Command();
@@ -27,6 +29,7 @@ public:
   void setCommand(string command);
   string getUserCommand();
   void saveEffect(string effect);
+  std::string stringToLog();
 
 private:
   string _command;
@@ -75,6 +78,8 @@ public:
                 string &commandOption);
   vector<Command *> getCommandList();
   Command *getLastCommand();
+//  std::string stringToLog();
+
 
 private:
   vector<State *> _stateList;

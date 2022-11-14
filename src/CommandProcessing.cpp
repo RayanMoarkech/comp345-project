@@ -71,7 +71,15 @@ ostream &operator<<(ostream &strm, const Command &command) {
                      "\" and its effect is \"" + command._effect + "\"";
 }
 
-void Command::saveEffect(string effect) { _effect = effect; }
+void Command::saveEffect(string effect) {
+    _effect = effect;
+    notify();
+}
+
+std::string Command::stringToLog() {
+    return "COMMAND::\"" + _effect + "\"";
+}
+
 void Command::setCommand(string command) { _command = command; }
 string Command::getUserCommand() { return _command; }
 
@@ -202,6 +210,7 @@ Command *CommandProcessor::saveCommand(string userCommand) {
   Command *command = new Command();
   command->setCommand(userCommand);
   _commandList.push_back(command);
+//  notify();
   return _commandList.back();
 }
 

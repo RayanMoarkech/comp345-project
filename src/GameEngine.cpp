@@ -103,6 +103,10 @@ string State::getName() {
     return _name;
 }
 
+std::string& State::toString() {
+    return _name;
+}
+
 vector<Transition *> State::getTransition() {
     return _transition;
 }
@@ -181,6 +185,11 @@ int GameEngine::getCurrentStateIndex() {
 
 void GameEngine::setCurrentStateIndex(int currentStateIndex) {
     _currentStateIndex = currentStateIndex;
+    notify();
+}
+
+std::string GameEngine::stringToLog() {
+    return "GameEngine::transition(): " + this->_state[this->_currentStateIndex]->getName() + "\n";
 }
 
 bool GameEngine::nextState(string command, string commandOption)
@@ -385,6 +394,7 @@ void GameEngine::startupPhase()
 
         cout << endl;
     }
+    notify();
 }
 
 //Print a list of all states with their valid transitions

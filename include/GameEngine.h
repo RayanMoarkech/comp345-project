@@ -14,6 +14,8 @@
 
 #include "Cards.h"
 
+#include "LoggingObserver.h"
+
 class Map;
 class Player;
 
@@ -58,7 +60,7 @@ public:
 
     string getName();
     vector<Transition*> getTransition();
-
+    std::string& toString();
 private:
     string _name;
     vector<Transition*> _transition;
@@ -73,17 +75,17 @@ private:
 // navigate between them.
 // ---------------------------------------------
 
-class GameEngine {
+class GameEngine: public Subject, public ILoggable {
 public:
     GameEngine();
     ~GameEngine();
     GameEngine(const GameEngine &);
     GameEngine &operator=(const GameEngine &);
 
+    std::string stringToLog();
     vector<State*> getState();
     int getCurrentStateIndex();
     void setCurrentStateIndex(int currentStateIndex);
-
     void startupPhase();
 
 private:

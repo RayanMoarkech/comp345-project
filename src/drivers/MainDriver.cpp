@@ -11,6 +11,7 @@ void testGameStates();
 
 // Phase 2
 void testStartupPhase();
+void testLoggingObserver();
 
 int main()
 {
@@ -19,9 +20,10 @@ int main()
 //    testPlayers();
 //    testOrdersList();
 //    testCards();
-//    testGameStates();
+    testGameStates();
 
     // Phase 2
-    testStartupPhase();
+//    testStartupPhase();
+//    testLoggingObserver();
     return 0;
 }

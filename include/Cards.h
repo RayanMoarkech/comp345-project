@@ -16,7 +16,7 @@ using std::vector;
 class Deck;
 class Hand;
 class Player;
-
+class Order;
 
 // ---------------------------------------------
 // ---------------- Card Section ---------------
@@ -42,7 +42,7 @@ public:
 
     friend ostream &operator<<(ostream &out, const Card &card); // Stream insertion operator overloading
 
-    void play(Player *player, Deck *deck); // Play a card
+    Order* play(Player *player, Deck *deck); // Play a card
 };
 
 // ---------------------------------------------

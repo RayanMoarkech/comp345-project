@@ -17,8 +17,11 @@ using std::ostream;
 
 class Map;
 class Player;
+class OrdersList;
 class CommandProcessor;
 class Command;
+
+
 // ---------------------------------------------
 // ------------ Transition Section -------------
 // Transaction defines the valid command to
@@ -87,6 +90,11 @@ public:
   void startupPhase();
 
   std::string stringToLog();
+
+    void reinforcementPhase(Map& map, vector<Player*> players);
+    OrdersList* issueOrdersPhase(vector<Player*> players, Deck* gameDeck);
+    void executeOrdersPhase(OrdersList* allOrders);
+    void mainGameLoop(Map& map, vector<Player*> players, Deck* gameDeck);
 
 private:
   vector<State *> _state;

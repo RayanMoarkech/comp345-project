@@ -83,28 +83,12 @@ ostream& operator << (ostream& out, const Card& card) {
 }
 
 // Play a card
-void Card::play(Player* player, Deck* deck)
+Order* Card::play(Player* player, Deck* deck)
 {
-    switch (this->type) {
-        case BOMB:
-            cout << "Card played: BOMB\n";
-            break;
-        case REINFORCEMENT:
-            cout << "Card played: REINFORCEMENT\n";
-            break;
-        case BLOCKADE:
-            cout << "Card played: BLOCKADE\n";
-            break;
-        case AIRLIFT:
-            cout << "Card played: AIRLIFT\n";
-            break;
-        case DIPLOMACY:
-            cout << "Card played: DIPLOMACY\n";
-            break;
-    }
-    player->issueOrder();
+    Order* cardOrder = player->issueOrder();
     deck->returnCard(this);
     player->getPlayerHand()->cards.erase(player->getPlayerHand()->cards.begin());
+    return cardOrder;
 }
 
 // ---------------------------------------------

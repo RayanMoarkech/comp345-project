@@ -210,7 +210,7 @@ bool GameEngine::nextState(Command *command, string &commandOption) {
       this->_currentStateIndex = _nextStateIndex;
     else
       cout << "Invalid. Staying in the same state." << endl;
-    return true;
+    return valid;
   }
   return false;
 }
@@ -252,11 +252,24 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
     this->_players.push_back(player);
     return true;
   }
-  // Going to assignReinforcement: Distribute Territories and Reinforcements
+  // Going to assignReinforcement: Distribute Territories and Reinforcements: gamestart
   if (nextStateIndex == 4) {
     string effect = "Fairly distributing the territories to the players";
     cout << effect << endl;
     _commandProcessor->getLastCommand()->saveEffect(effect);
+
+    // Check if there are 2 to 6 players
+    if (this->_players.size() < 2 || this->_players.size() > 6)
+    {
+        cout << "The players are not in the specified range: 2-6." << endl;
+        return false;
+    }
+
+    // Create a new deck
+    delete this->deck;
+    this->deck = new Deck();
+
+    // 4-a fairly distribute all the territories to the players
 
     // Shuffling the territories
     vector<Territory *> shuffledTerritories = this->_map->getTerritories();
@@ -276,6 +289,31 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
         count = 0;
       }
     }
+    // 4-b determine randomly the order of play of the players in the game
+    cout << "Shuffling players..." << endl;
+    rng = std::default_random_engine{std::random_device{}()};
+    std::shuffle(std::begin(this->_players), std::end(this->_players), rng);
+    cout << "Shuffled player order:" << endl;
+    count = 0;
+    for (auto const player : this->_players) {
+      cout << "\t" << std::to_string(count++) << ": " << player->getName()
+           << endl;
+
+      // 4-c give 50 initial army units to the players, which are placed in
+      // their respective reinforcement pool
+      player->setArmyUnits(50);
+      cout << "\t\tSetting " << player->getArmyUnits() << " army units."
+           << endl;
+
+      // 4-d let each player draw 2 initial cards from the deck using the
+      // deck’s draw() method
+      Card *card1 = this->deck->draw();
+      player->getPlayerHand()->addCard(card1);
+      cout << "\t\tDraw Card 1: " << card1->getCardType() << endl;
+      Card *card2 = this->deck->draw();
+      player->getPlayerHand()->addCard(card2);
+      cout << "\t\tDraw Card 2: " << card2->getCardType() << endl;
+    }
     return true;
   }
   // Going to issueOrders
@@ -294,9 +332,8 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
   if (nextStateIndex == 7) {
     string effect = "Going to win";
     _commandProcessor->getLastCommand()->saveEffect(effect);
-      return true;
   }
-  string effect = "Something went wrong!";
+  string effect = "Someting went wrong!";
   _commandProcessor->getLastCommand()->saveEffect(effect);
   return false;
 }
@@ -437,51 +474,12 @@ void GameEngine::startupPhase()
 
   // If the next index is -1, the game will terminate.
   while (this->_currentStateIndex != -1) {
-    // Used as a flag to be true if the command is valid to allow going to the
-    // next state
-    bool validCommand = false;
 
     cout << *this->getState()[this->getCurrentStateIndex()];
     cout << ">> ";
 
     Command *commandObj = _commandProcessor->getCommand();
     string commandOption = "";
-
-    if (commandObj->getUserCommand() == "gamestart" &&
-        this->_currentStateIndex == 3) {
-      this->deck = new Deck();
-
-      // 4-a fairly distribute all the territories to the players
-      // 4-e switch the game to the play phase
-      this->nextState(commandObj, commandOption);
-
-      // 4-b determine randomly the order of play of the players in the game
-      cout << "Shuffling players..." << endl;
-      auto rng = std::default_random_engine{std::random_device{}()};
-      std::shuffle(std::begin(this->_players), std::end(this->_players), rng);
-      cout << "Shuffled player order:" << endl;
-      int count = 0;
-      for (auto const player : this->_players) {
-        cout << "\t" << std::to_string(count++) << ": " << player->getName()
-             << endl;
-
-        // 4-c give 50 initial army units to the players, which are placed in
-        // their respective reinforcement pool
-        player->setArmyUnits(50);
-        cout << "\t\tSetting " << player->getArmyUnits() << " army units."
-             << endl;
-
-        // 4-d let each player draw 2 initial cards from the deck using the
-        // deck’s draw() method
-        Card *card1 = this->deck->draw();
-        player->getPlayerHand()->addCard(card1);
-        cout << "\t\tDraw Card 1: " << card1->getCardType() << endl;
-        Card *card2 = this->deck->draw();
-        player->getPlayerHand()->addCard(card2);
-        cout << "\t\tDraw Card 2: " << card2->getCardType() << endl;
-      }
-
-      cout << endl << "Play phase..." << endl;
 
       // TODO: use in the play phase
       //            command = "issueorder";
@@ -496,10 +494,8 @@ void GameEngine::startupPhase()
       //            command = "endexecorders";
       //            this->nextState(command, "");
 
-      break;
-    } else {
-      validCommand = this->nextState(commandObj, commandOption);
-    }
+    // Used as a flag to be true if the command is valid to allow going to the next state
+    bool validCommand = this->nextState(commandObj, commandOption);
 
     // If the user command is invalid, print an error message
     if (!validCommand)
@@ -509,6 +505,13 @@ void GameEngine::startupPhase()
            << this->_state[this->_currentStateIndex]->getName() +
                   "\" state. -_-"
            << endl;
+
+    // 4-e switch the game to the play phase
+    if (validCommand && commandObj->getUserCommand() == "gamestart")
+    {
+        cout << endl << "Play phase..." << endl;
+        break;
+    }
 
     cout << endl;
   }

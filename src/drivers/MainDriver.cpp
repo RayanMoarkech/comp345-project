@@ -15,6 +15,7 @@ void testGameStates();
 
 // Phase 2
 void testStartupPhase(string fileName = "");
+void TestCommandProcessor();
 void testMainGameLoop();
 
 int main(int argc, char *argv[]) {
@@ -41,7 +42,8 @@ int main(int argc, char *argv[]) {
     testStartupPhase();
   }
 
-  testMainGameLoop();
 
+  testMainGameLoop();
+  TestCommandProcessor();
   return 0;
 }

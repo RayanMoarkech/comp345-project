@@ -79,38 +79,37 @@ string Command::getUserCommand() { return _command; }
 // ----------- FileLineReader Section ----------
 // ---------------------------------------------
 
-FileLineReader::FileLineReader() {
-  _filename = "";
-  _currentLine = "";
-  fstream _fStr;
-}
+FileLineReader::FileLineReader() {}
 
 FileLineReader::FileLineReader(const string filename) {
   _filename = filename;
   _currentLine = "";
-  fstream _fStr;
-  _fStr.open(filename, ios::in);
-  if (!_fStr.is_open()) {
+  _fStr = new fstream();
+  ;
+  _fStr->open(filename, ios::in);
+  if (!_fStr->is_open()) {
     cout << "File does not exist!" << endl;
     exit(0);
   }
 }
 
 FileLineReader::~FileLineReader() {
-  _fStr.close();
+  _fStr->close();
+  delete _fStr;
+  _fStr = nullptr;
 }
 
 FileLineReader::FileLineReader(const FileLineReader &fileLineReader) {
   _filename = fileLineReader._filename;
   _currentLine = fileLineReader._currentLine;
-  //  _fStr = fileLineReader._fStr;
+  _fStr = fileLineReader._fStr;
 }
 
 FileLineReader &
 FileLineReader::operator=(const FileLineReader &fileLineReader) {
   _filename = fileLineReader._filename;
   _currentLine = fileLineReader._currentLine;
-  //  _fStr = fileLineReader._fStr;
+  _fStr = fileLineReader._fStr;
   return *this;
 }
 
@@ -120,10 +119,10 @@ ostream &operator<<(ostream &strm, const FileLineReader &fileLineReader) {
 
 bool FileLineReader::readLineFromFile() {
   string currentLineNotTrimmed;
-  if (_fStr.eof()) {
+  if (_fStr->eof()) {
     return false;
   } else {
-    getline(_fStr, currentLineNotTrimmed);
+    getline(*_fStr, currentLineNotTrimmed);
     _currentLine = trim(currentLineNotTrimmed);
     return true;
   }
@@ -226,6 +225,7 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
       command->saveEffect("User did not enter the map file name.");
       return false;
     }
+    userCommand = commandText;
   } else if (commandText == "addplayer") {
     ss >> commandOption;
     if (commandOption == "") {
@@ -233,6 +233,7 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
       command->saveEffect("User did not enter the player name.");
       return false;
     }
+    userCommand = commandText;
   }
   // Check the user command against the valid commands at the current state
   //  and set the current state index to the next state.
@@ -284,6 +285,8 @@ FileCommandProcessorAdapter &FileCommandProcessorAdapter::operator=(
 string FileCommandProcessorAdapter::readCommand() {
   if (_flr->readLineFromFile()) {
     string userCommand = _flr->getCurrentLine();
+    cout << "The command from the file is \"" + userCommand + "\"" << endl;
+
     return userCommand;
   } else {
     cout << "End of file. There are no more commands" << endl;
@@ -301,4 +304,9 @@ operator<<(ostream &strm,
     strm << *command << endl;
   }
   return strm;
+}
+Command *FileCommandProcessorAdapter::getCommand() {
+  string userCommand = readCommand();
+  Command *command = saveCommand(userCommand);
+  return command;
 }

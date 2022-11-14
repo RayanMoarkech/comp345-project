@@ -26,7 +26,7 @@ Player::Player() {
 	this->playerOrders = new OrdersList();
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
-  this->armyUnits = 0;
+    this->armyUnits = 0;
 }
 
 //Copy constructor (Deep)
@@ -46,7 +46,7 @@ Player::Player(const Player& player) {
 	this->negotiatingWith = std::list<Player*>(player.negotiatingWith);
 	this->isNeutral = player.isNeutral;
 	this->conqueredTerritory = player.conqueredTerritory;
-  this->armyUnits = player.armyUnits;
+    this->armyUnits = player.armyUnits;
 }
 
 //Parametrized constructor
@@ -59,7 +59,7 @@ Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHan
 	this->playerOrders = playerOrders;
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
-  this->armyUnits = 0;
+    this->armyUnits = 0;
 }
 
 Player::Player(bool isNeutral)
@@ -69,7 +69,7 @@ Player::Player(bool isNeutral)
 	this->playerOrders = new OrdersList();
 	this->isNeutral = isNeutral;
 	this->conqueredTerritory = false;
-  this->armyUnits = 0;
+    this->armyUnits = 0;
 }
 
 //Destructor
@@ -95,11 +95,11 @@ Player& Player::operator=(const Player& player)
 	this->negotiatingWith = negotiatingWith;
 	this->isNeutral = isNeutral;
 	this->conqueredTerritory = conqueredTerritory;
-  this->id = player.id;
+    this->id = player.id;
 	this->ownedTerritories = player.ownedTerritories;
 	this->playerHand = player.playerHand;
 	this->playerOrders = player.playerOrders;
-  this->armyUnits = player.armyUnits;
+    this->armyUnits = player.armyUnits;
 	return *this;
 }
 
@@ -243,9 +243,10 @@ void Player::setConqueredTerritory(bool conqueredTerritory)
 	this->conqueredTerritory = conqueredTerritory;
 }
 
-bool Player::getConqueredTerriotry()
-{
-	return conqueredTerritory;
+bool Player::getConqueredTerriotry() {
+    return conqueredTerritory;
+}
+
 void Player::addOwnedTerritory(Territory *territory)
 {
     this->ownedTerritories.push_back(territory);

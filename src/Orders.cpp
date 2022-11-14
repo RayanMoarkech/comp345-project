@@ -136,7 +136,8 @@ void Deploy::execute()
 	}
 	// Remove numOfArmyUnits from reinforcement pool
 	// Add numOfArmyUnits to targetTerritory
-	player->removeReinforcements(numOfArmyUnits);
+    // TODO: fix when merged
+//	player->removeReinforcements(numOfArmyUnits);
 	targetTerritory->addArmies(numOfArmyUnits);
 	cout << "Deploy order executed. Deployed " << numOfArmyUnits << " armies to " << targetTerritory->getName() << "." << endl;
 	executed = true;
@@ -232,7 +233,8 @@ void Advance::execute()
 				numOfArmyUnits--;
 		}
 		if (targetTerritory->getNumberOfArmies() == 0) {//all defender units elimated
-			targetTerritory->getOwnedBy()->removeTerritory(targetTerritory); //Remove territory from defender
+            // TODO: fix
+//			targetTerritory->getOwnedBy()->removeTerritory(targetTerritory); //Remove territory from defender
 			sourceTerritory->getOwnedBy()->addTerritory(targetTerritory); //Add territory to attacker
 			targetTerritory->setOwnedBy(sourceTerritory->getOwnedBy(), numOfArmyUnits); //Set territory owner and num armies to attacker
 			cout << "Attacking Advance Order Executed. Attacking player " << " won " << targetTerritory->getName() << " territory." << endl;
@@ -391,7 +393,8 @@ void Blockade::execute()
 	}
 	//Set ownership to the neutral players and double armies
 	targetTerritory->setOwnedBy(new Player(true), targetTerritory->getNumberOfArmies() * 2);
-	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
+    // TODO: fix
+//	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
 	executed = true;
 	cout << "Blockade order executed. Territory" << targetTerritory->getName() << " has doubled its army units and is now owned by the neutral player" << endl;
 }

@@ -149,22 +149,10 @@ void testMainGameLoop()
             player2->addOwnedTerritory(t);
         }
     }
-    gameEngine->reinforcementPhase(*map, players);
-    gameEngine->issueOrdersPhase(players, gameDeck);
-    //while (player1->getPlayerHand()->cards.size() != 0 || player2->getPlayerHand()->cards.size() != 0)
-    //for (Player* p : players)
-    //{
-    //    //5 is used here to keep a few territories to attack to be used by Cards
-    //    if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
-    //    {
-    //        p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
-    //    }
-    //    else
-    //    {
-    //        p->issueOrder();
-    //    }
+    //gameEngine->reinforcementPhase(*map, players);
+    //gameEngine->issueOrdersPhase(players, gameDeck);
 
-    //}
-    //gameEngine->mainGameLoop(*map, players);
+
+    gameEngine->mainGameLoop(*map, players, gameDeck);
 
 }

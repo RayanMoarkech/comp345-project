@@ -471,33 +471,31 @@ OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players, Deck* gameDeck
 }
 
 
-//
-//void GameEngine::executeOrdersPhase(OrdersList* allOrders)
-//{
-//    for (Order* o : allOrders->getOrdersList())
-//    {
-//        o->execute();
-//    }
-//}
-//
-//void GameEngine::mainGameLoop(Map& map, vector<Player*> players)
-//{
-//    cout << endl
-//        << "------------------------------------------------------" << endl
-//        << "Test Reinforcement Phase" << endl
-//        << "------------------------------------------------------" << endl
-//        << endl;
-//    this->reinforcementPhase(map, players);
-//    cout << endl
-//        << "------------------------------------------------------" << endl
-//        << "Issue Orders Phase" << endl
-//        << "------------------------------------------------------" << endl
-//        << endl;
-//    OrdersList* allOrders = this->issueOrdersPhase(players);
-//    //TO DO when merging with Part 4
-//    //this->executeOrdersPhase(allOrders);
-//
-//}
+void GameEngine::executeOrdersPhase(OrdersList* allOrders)
+{
+    for (Order* o : allOrders->getOrdersList())
+    {
+        o->execute();
+    }
+}
+
+void GameEngine::mainGameLoop(Map& map, vector<Player*> players, Deck* gameDeck)
+{
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Test Reinforcement Phase" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+    this->reinforcementPhase(map, players);
+    cout << endl
+        << "------------------------------------------------------" << endl
+        << "Issue Orders Phase" << endl
+        << "------------------------------------------------------" << endl
+        << endl;
+    OrdersList* allOrders = this->issueOrdersPhase(players, gameDeck);
+    //TO DO when merging with Part 4
+    //this->executeOrdersPhase(allOrders);
+}
 
 //Print a list of all states with their valid transitions
 ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {

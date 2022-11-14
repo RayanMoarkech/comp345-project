@@ -210,8 +210,12 @@ Command *CommandProcessor::saveCommand(string userCommand) {
   Command *command = new Command();
   command->setCommand(userCommand);
   _commandList.push_back(command);
-//  notify();
+  notify();
   return _commandList.back();
+}
+
+std::string CommandProcessor::stringToLog() {
+    return "CommandProcessor::saveCommand::" + _commandList.back()->getUserCommand();
 }
 
 Command *CommandProcessor::getCommand() {

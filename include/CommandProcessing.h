@@ -64,7 +64,7 @@ private:
 // ---------- CommandProcessor Section ---------
 // ---------------------------------------------
 
-class CommandProcessor {
+class CommandProcessor: public ILoggable, public Subject {
 public:
   CommandProcessor();
   ~CommandProcessor();
@@ -78,7 +78,7 @@ public:
                 string &commandOption);
   vector<Command *> getCommandList();
   Command *getLastCommand();
-//  std::string stringToLog();
+  std::string stringToLog();
 
 
 private:

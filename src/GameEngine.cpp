@@ -294,8 +294,9 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
   if (nextStateIndex == 7) {
     string effect = "Going to win";
     _commandProcessor->getLastCommand()->saveEffect(effect);
+      return true;
   }
-  string effect = "Someting went wrong!";
+  string effect = "Something went wrong!";
   _commandProcessor->getLastCommand()->saveEffect(effect);
   return false;
 }

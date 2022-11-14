@@ -206,8 +206,10 @@ bool GameEngine::nextState(Command *command, string &commandOption) {
   if (isValidCommand) {
     const bool valid =
         executeCurrentStateAction(_nextStateIndex, commandOption);
-    if (valid)
-      this->_currentStateIndex = _nextStateIndex;
+    if (valid) {
+        this->_currentStateIndex = _nextStateIndex;
+        notify();
+    }
     else
       cout << "Invalid. Staying in the same state." << endl;
     return valid;
@@ -515,6 +517,9 @@ void GameEngine::startupPhase()
 
     cout << endl;
   }
+}
+std::string GameEngine::stringToLog() {
+    return "GameEngine::transition(): " + this->_state[this->_currentStateIndex]->getName() + "\n";
 }
 
 // Print a list of all states with their valid transitions

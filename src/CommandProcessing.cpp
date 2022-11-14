@@ -98,7 +98,6 @@ FileLineReader::FileLineReader(const string filename) {
 
 FileLineReader::~FileLineReader() {
   _fStr.close();
-  _fStr = nullptr;
 }
 
 FileLineReader::FileLineReader(const FileLineReader &fileLineReader) {

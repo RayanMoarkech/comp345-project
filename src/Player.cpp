@@ -146,7 +146,7 @@ static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 }
 
 //returns owned territories in random order
-vector<Territory*> Player::toDefend()
+void Player::toDefend()
 {
 	cout << endl;
 	cout << this->getName() << " 's Territories to Defend in Prioritized Order" << endl;
@@ -158,11 +158,11 @@ vector<Territory*> Player::toDefend()
 	{
 		cout << t->getName() << endl;
 	}
-	return territoriesToDefend;
+	this->toDefendList = territoriesToDefend;
 }
 
 //returns adjacent territories not belong to player in random order
-vector<Territory*> Player::toAttack()
+void Player::toAttack()
 {
 	cout << endl;
 	cout << this->getName() << " 's Territories to Attack in Prioritized Order" << endl;
@@ -174,7 +174,7 @@ vector<Territory*> Player::toAttack()
 	{
 		cout << t->getName() << endl;
 	}
-	return territoriesToAttack;
+	this->toAttackList = territoriesToAttack;
 }
 
 //This method gets all adjacent territories of owned territories and excludes territories that are owned by player
@@ -203,14 +203,14 @@ Order* Player::issueOrder()
 	//To Attack
 	if (this->toAttackList.size() == 0)
 	{
-		this->toAttackList = this->toAttack();
-		return NULL;
+		this->toAttack();
+		return new Order();
 	}
 	//To Defend
 	if (this->toDefendList.size() == 0)
 	{
-		this->toDefendList = this->toDefend();
-		return NULL;
+		this->toDefend();
+		return new Order();
 	}
 
 	//Deploy on toDefend territories, will not be able to issue other orders until
@@ -230,19 +230,21 @@ Order* Player::issueOrder()
 		int armiesToDeploy = 1 + (rand() % this->armyUnits);
 		cout << endl;
 		cout << this->getName() << " deploys " << armiesToDeploy << " to " << this->toDefendList.at(index)->getName() << endl;
-		cout << endl;
 		this->armyUnits -= armiesToDeploy;
+		cout << this->getName() << " has " << this->armyUnits << " armies remaining to deploy." << endl;
+		cout << endl;
 		return new Deploy(this, this->toDefendList.at(index), armiesToDeploy);
 	}
 
 	//Advance (Defend)
-	if (this->toDefendList.size() != 0)
+	if (this->toDefendList.size() != 1)
 	{
 		Territory* targetTerritory = this->toDefendList.at(0);
 		this->toDefendList.erase(this->toDefendList.begin());
-		int index = 1 + (rand() % this->toDefendList.size());
+		int index = (rand() % this->toDefendList.size());
 		Territory *sourceTerritory = this->toDefendList.at(index);
 		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
 
 		cout << endl;
 		cout << "Defense: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
@@ -250,11 +252,11 @@ Order* Player::issueOrder()
 		cout << endl;
 		return new Advance(this, sourceTerritory,targetTerritory, armiesToAdvance);
 	}
-	if (this->toAttackList.size() != 0)
+	if (this->toAttackList.size() != 1)
 	{
 		Territory* targetTerritory = this->toAttackList.at(0);
 		this->toAttackList.erase(this->toAttackList.begin());
-		int index = 1 + (rand() % this->ownedTerritories.size());
+		int index = (rand() % this->ownedTerritories.size());
 		Territory* sourceTerritory = this->ownedTerritories.at(index);
 		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
 
@@ -264,7 +266,9 @@ Order* Player::issueOrder()
 		cout << endl;
 		return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
 	}
-
+	cout << endl;
+	cout << this->getName() << " has no more orders." << endl;
+	cout << endl;
 	return NULL;
 
 	////List of the rest of kind of orders

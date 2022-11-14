@@ -36,8 +36,8 @@ public:
 	~Player();
 	Player& operator=(const Player& player);
 	friend std::ostream& operator<<(std::ostream& os, const Player& p);
-	vector<Territory*> toDefend();
-	vector<Territory*> toAttack();
+	void toDefend();
+	void toAttack();
 	Order* issueOrder();
 	vector<Territory*> getOwnedTerritories();
 	Hand* getPlayerHand();

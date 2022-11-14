@@ -430,6 +430,7 @@ void GameEngine::reinforcementPhase(Map& map, vector<Player*> players)
             player->setArmyUnits(armyUnits);
         }
         cout << player->getName() << " has " << player->getArmyUnits() << " army units this turn." << endl;
+        cout << endl;
     }
 }
 

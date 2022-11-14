@@ -127,11 +127,18 @@ void testMainGameLoop()
         }
     }
     gameEngine->reinforcementPhase(*map, players);
-    
-    while(true)
+
+    player1->toAttack();
+    cout << player1->getAttackList().size() << endl;
+    player2->toAttack();
+    cout << player2->getAttackList().size() << endl;
+
+    Order* o = new Order();
+    while(player1->getAttackList().size() != 1 || player2->getAttackList().size() != 1)
+    //while (o != NULL)
     for (Player* p : players)
     {
-        p->issueOrder();
+        o = p->issueOrder();
     }
     //gameEngine->mainGameLoop(*map, players);
 

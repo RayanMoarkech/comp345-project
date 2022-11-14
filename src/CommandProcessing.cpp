@@ -17,8 +17,6 @@ using std::stringstream;
 using std::cin;
 using std::cout;
 using std::endl;
-#include <algorithm>
-using std::for_each;
 
 #include "../include/CommandProcessing.h"
 
@@ -52,8 +50,8 @@ string trim(const string &originalString) {
 // ---------------------------------------------
 
 Command::Command() {
-  _command = nullptr;
-  _effect = nullptr;
+  _command = "";
+  _effect = "";
 }
 Command::~Command() {}
 
@@ -82,14 +80,14 @@ string Command::getUserCommand() { return _command; }
 // ---------------------------------------------
 
 FileLineReader::FileLineReader() {
-  _filename = nullptr;
-  _currentLine = nullptr;
+  _filename = "";
+  _currentLine = "";
   fstream *_fStr;
 }
 
 FileLineReader::FileLineReader(const string filename) {
   _filename = filename;
-  _currentLine = nullptr;
+  _currentLine = "";
   fstream *_fStr;
   _fStr->open(filename, ios::in);
   if (!_fStr->is_open()) {

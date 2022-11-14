@@ -82,37 +82,36 @@ string Command::getUserCommand() { return _command; }
 FileLineReader::FileLineReader() {
   _filename = "";
   _currentLine = "";
-  fstream *_fStr;
+  fstream _fStr;
 }
 
 FileLineReader::FileLineReader(const string filename) {
   _filename = filename;
   _currentLine = "";
-  fstream *_fStr;
-  _fStr->open(filename, ios::in);
-  if (!_fStr->is_open()) {
+  fstream _fStr;
+  _fStr.open(filename, ios::in);
+  if (!_fStr.is_open()) {
     cout << "File does not exist!" << endl;
     exit(0);
   }
 }
 
 FileLineReader::~FileLineReader() {
-  _fStr->close();
-  delete _fStr;
+  _fStr.close();
   _fStr = nullptr;
 }
 
 FileLineReader::FileLineReader(const FileLineReader &fileLineReader) {
   _filename = fileLineReader._filename;
   _currentLine = fileLineReader._currentLine;
-  _fStr = fileLineReader._fStr;
+  //  _fStr = fileLineReader._fStr;
 }
 
 FileLineReader &
 FileLineReader::operator=(const FileLineReader &fileLineReader) {
   _filename = fileLineReader._filename;
   _currentLine = fileLineReader._currentLine;
-  _fStr = fileLineReader._fStr;
+  //  _fStr = fileLineReader._fStr;
   return *this;
 }
 
@@ -122,10 +121,10 @@ ostream &operator<<(ostream &strm, const FileLineReader &fileLineReader) {
 
 bool FileLineReader::readLineFromFile() {
   string currentLineNotTrimmed;
-  if (_fStr->eof()) {
+  if (_fStr.eof()) {
     return false;
   } else {
-    getline(*_fStr, currentLineNotTrimmed);
+    getline(_fStr, currentLineNotTrimmed);
     _currentLine = trim(currentLineNotTrimmed);
     return true;
   }

@@ -88,7 +88,7 @@ public:
     void startupPhase();
 
     void reinforcementPhase(Map& map, vector<Player*> players);
-    //OrdersList* issueOrdersPhase(vector<Player*> players);
+    OrdersList* issueOrdersPhase(vector<Player*> players, Deck* gameDeck);
     //void executeOrdersPhase(OrdersList* allOrders);
     //void mainGameLoop(Map& map, vector<Player*> players);
 

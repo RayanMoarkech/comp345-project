@@ -434,52 +434,43 @@ void GameEngine::reinforcementPhase(Map& map, vector<Player*> players)
     }
 }
 
-//OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players)
-//{
-//    OrdersList* allIssuedOrders = new OrdersList();
-//
-//    vector<string> orderTypes = { "toAttack", "toDefend", "Deploy", "AdvanceOrPlayCard" };
-//    
-//    //First all players need to choose the territories to Attack
-//    for (Player* p : players)
-//    {
-//        p->issueOrder("toAttack");
-//    }
-//    //Then all players need to choose the territories to Defend
-//    for (Player* p : players)
-//    {
-//        p->issueOrder("toDefend");
-//    }
-//    //Deploy
-//    for (Player* p : players)
-//    {
-//        while (p->getArmyUnits() != 0)
-//        {
-//            allIssuedOrders->addOrder(p->issueOrder("Deploy"));
-//        }
-//    }
-//    //Advance and Card Orders
-//    int noMoreOrders = 0;
-//    while (players.size() != noMoreOrders)
-//    {
-//        noMoreOrders = 0;
-//
-//        for (Player* p : players)
-//        {
-//            Order* advanceOrCardOrder = p->issueOrder("AdvanceOrPlayCard");
-//            if (advanceOrCardOrder == NULL)
-//            {
-//                //all players must stop orders in the same turn
-//                noMoreOrders++;
-//            }
-//            else {
-//                allIssuedOrders->addOrder(advanceOrCardOrder);
-//            }
-//        }
-//    }
-//
-//    return allIssuedOrders;
-//}
+static bool allPlayerCardsPlayed(vector<Player*> players)
+{
+    bool allCardsPlayed = false;
+    for (Player* p : players)
+    {
+        allCardsPlayed = allCardsPlayed = p->getPlayerHand()->cards.size() != 0;
+        if (!allCardsPlayed) {
+            break;
+        }
+    }
+    return allCardsPlayed;
+}
+
+OrdersList* GameEngine::issueOrdersPhase(vector<Player*> players, Deck* gameDeck)
+{
+    OrdersList* allIssuedOrders = new OrdersList();
+    while (allPlayerCardsPlayed(players))
+    {
+        for (Player* p : players)
+        {
+            //5 is used here to keep a few territories to attack to be used by Cards
+            if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
+            {
+                Order* o = p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
+                allIssuedOrders->addOrder(o);
+            }
+            else
+            {
+                Order* o = p->issueOrder();
+                allIssuedOrders->addOrder(o);
+            }
+        }
+    }
+    return allIssuedOrders;
+}
+
+
 //
 //void GameEngine::executeOrdersPhase(OrdersList* allOrders)
 //{

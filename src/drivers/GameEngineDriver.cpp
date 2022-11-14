@@ -150,27 +150,21 @@ void testMainGameLoop()
         }
     }
     gameEngine->reinforcementPhase(*map, players);
+    gameEngine->issueOrdersPhase(players, gameDeck);
+    //while (player1->getPlayerHand()->cards.size() != 0 || player2->getPlayerHand()->cards.size() != 0)
+    //for (Player* p : players)
+    //{
+    //    //5 is used here to keep a few territories to attack to be used by Cards
+    //    if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
+    //    {
+    //        p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
+    //    }
+    //    else
+    //    {
+    //        p->issueOrder();
+    //    }
 
-    player1->toAttack();
-    cout << player1->getAttackList().size() << endl;
-    player2->toAttack();
-    cout << player2->getAttackList().size() << endl;
-
-    //while(player1->getAttackList().size() != 1 || player2->getAttackList().size() != 1)
-    while (player1->getPlayerHand()->cards.size() != 0 || player2->getPlayerHand()->cards.size() != 0)
-    for (Player* p : players)
-    {
-        //5 is used here to keep a few territories to attack to be used by Cards
-        if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
-        {
-            p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
-        }
-        else
-        {
-            p->issueOrder();
-        }
-
-    }
+    //}
     //gameEngine->mainGameLoop(*map, players);
 
 }

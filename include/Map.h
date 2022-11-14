@@ -97,7 +97,6 @@ public:
     void setNumberOfArmies(int numberOfArmies);
     friend ostream& operator<<(ostream& os, Territory& territory);
     Territory& operator=(const Territory& territory);
-    int getNumberOfArmies();
 };
 
 

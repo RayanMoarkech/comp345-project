@@ -71,7 +71,8 @@ public:
   string readCommand();
   Command *saveCommand(string command);
   Command *getCommand();
-  bool validate(Command *command, int &currentStateIndex);
+  bool validate(Command *command, int currentStateIndex, int &nextStateIndex,
+                string &commandOption);
   vector<Command *> getCommandList();
 
 private:
@@ -79,7 +80,7 @@ private:
                              const CommandProcessor &commandProcessor);
 
 protected:
-  static vector<State *> _stateList;
+  vector<State *> _stateList;
   vector<Command *> _commandList;
 };
 

@@ -38,8 +38,8 @@ vector<State *> stateList = {
     new State(stateName[1],
               {new Transition("loadmap", 1), new Transition("validatemap", 2)}),
     new State(stateName[2], {new Transition("addplayer", 3)}),
-    new State(stateName[3], {new Transition("addplayer", 3),
-                             new Transition("gamestart", 4)}),
+    new State(stateName[3],
+              {new Transition("addplayer", 3), new Transition("gamestart", 4)}),
     new State(stateName[4], {new Transition("issueorder", 5)}),
     new State(stateName[5], {new Transition("issueorder", 5),
                              new Transition("endissueorders", 6)}),
@@ -49,6 +49,21 @@ vector<State *> stateList = {
     new State(stateName[7],
               {new Transition("play", 0), new Transition("end", -1)}),
 };
+
+// Trim is used to remove the empty spaces at the beginning and the end of a
+// string
+string trim(const string &originalString) {
+  size_t firstCharNotASpace = originalString.find_first_not_of("\t\f\v\n\r ");
+  string noLeadingSpaces = (firstCharNotASpace == string::npos)
+                               ? ""
+                               : originalString.substr(firstCharNotASpace);
+
+  size_t lastCharNotASpace = noLeadingSpaces.find_last_not_of(" \t\f\v\n\r");
+  return (firstCharNotASpace == string::npos)
+             ? ""
+             : noLeadingSpaces.substr(0, lastCharNotASpace + 1);
+  ;
+}
 
 // ---------------------------------------------
 // -------------- Command Section --------------
@@ -125,21 +140,6 @@ ostream &operator<<(ostream &strm, const FileLineReader &fileLineReader) {
   return strm << "The current file is \"" + fileLineReader._filename + "\"";
 }
 
-// Trim is used to remove the empty spaces at the beginning and the end of a
-// string
-string trim(const string &originalString) {
-  size_t firstCharNotASpace = originalString.find_first_not_of("\t\f\v\n\r ");
-  string noLeadingSpaces = (firstCharNotASpace == string::npos)
-                               ? ""
-                               : originalString.substr(firstCharNotASpace);
-
-  size_t lastCharNotASpace = noLeadingSpaces.find_last_not_of(" \t\f\v\n\r");
-  return (firstCharNotASpace == string::npos)
-             ? ""
-             : noLeadingSpaces.substr(0, lastCharNotASpace + 1);
-  ;
-}
-
 bool FileLineReader::readLineFromFile() {
   string currentLineNotTrimmed;
   if (_fStr->eof()) {
@@ -158,7 +158,22 @@ string FileLineReader::getCurrentLine() { return _currentLine; }
 // ---------------------------------------------
 
 CommandProcessor::CommandProcessor() {
-  _stateList = stateList;
+  _stateList = {
+      new State(stateName[0], {new Transition("loadmap", 1)}),
+      new State(stateName[1], {new Transition("loadmap", 1),
+                               new Transition("validatemap", 2)}),
+      new State(stateName[2], {new Transition("addplayer", 3)}),
+      new State(stateName[3], {new Transition("addplayer", 3),
+                               new Transition("gamestart", 4)}),
+      new State(stateName[4], {new Transition("issueorder", 5)}),
+      new State(stateName[5], {new Transition("issueorder", 5),
+                               new Transition("endissueorders", 6)}),
+      new State(stateName[6],
+                {new Transition("execorder", 6),
+                 new Transition("endexecorders", 4), new Transition("win", 7)}),
+      new State(stateName[7],
+                {new Transition("play", 0), new Transition("end", -1)}),
+  };
   vector<Command *> _commandList;
 }
 
@@ -195,7 +210,8 @@ string CommandProcessor::readCommand() {
   string userCommand;
   cout << "Please enter your command. \n";
   getline(cin, userCommand);
-  return userCommand;
+  string userCommandTrimmed = trim(userCommand);
+  return userCommandTrimmed;
 }
 
 Command *CommandProcessor::saveCommand(string userCommand) {
@@ -211,15 +227,35 @@ Command *CommandProcessor::getCommand() {
   return command;
 }
 
-bool CommandProcessor::validate(Command *command, int &currentStateIndex) {
+bool CommandProcessor::validate(Command *command, int currentStateIndex,
+                                int &nextStateIndex, string &commandOption) {
   bool validCommand = false;
 
+  string userCommand = command->getUserCommand();
+  stringstream ss(userCommand);
+  string commandText;
+  ss >> commandText; // get first token of input string
+  if (commandText == "loadmap") {
+    ss >> commandOption;
+    if (commandOption == "") {
+      cout << "You did not enter the map file name." << endl;
+      command->saveEffect("User did not enter the map file name.");
+      return false;
+    }
+  } else if (commandText == "addplayer") {
+    ss >> commandOption;
+    if (commandOption == "") {
+      cout << "You did not enter the player name." << endl;
+      command->saveEffect("User did not enter the player name.");
+      return false;
+    }
+  }
   // Check the user command against the valid commands at the current state
   //  and set the current state index to the next state.
   for (auto const &transition :
        _stateList[currentStateIndex]->getTransition()) {
-    if (command->getUserCommand() == transition->getCommand()) {
-      currentStateIndex = transition->getNextStateIndex();
+    if (userCommand == transition->getCommand()) {
+      nextStateIndex = transition->getNextStateIndex();
       validCommand = true;
     }
   }

@@ -37,6 +37,7 @@ public:
     void addTerritory(Territory* territory);
     Territory* getTerritory(const string& name);
     vector<Territory*> getTerritories();
+    vector<Continent*> getContinents();
     void setValidFalse();
     bool validate();
     friend ostream& operator<<(ostream& os, Map& map);

@@ -27,9 +27,11 @@ private:
 	std::list<Player*> negotiatingWith;
 	Hand* playerHand;
 	OrdersList* playerOrders;
+    int armyUnits;
+	vector<Territory*> toDefendList;
+	vector<Territory*> toAttackList;
 	bool conqueredTerritory;
 	bool isNeutral;
-  int armyUnits;
 
 public:
 	Player();
@@ -39,9 +41,9 @@ public:
 	~Player();
 	Player& operator=(const Player& player);
 	friend std::ostream& operator<<(std::ostream& os, const Player& p);
-	vector<Territory*> toDefend();
-	vector<Territory*> toAttack();
-	void issueOrder();
+	void toDefend();
+	void toAttack();
+	Order* issueOrder();
 	vector<Territory*> getOwnedTerritories();
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
@@ -53,9 +55,13 @@ public:
 	void setConqueredTerritory(bool conqueredTerritory);
 	bool getConqueredTerriotry();
     string getName();
+	void setName(string name);
     void setArmyUnits(int armyUnits);
     int getArmyUnits();
     void addOwnedTerritory(Territory* territory);
+	vector<Territory*> getNeighbouringTerritories();
+	vector<Territory*> getAttackList();
+	vector<Territory*> getDefendList();
 };
 
 #endif //Player_H

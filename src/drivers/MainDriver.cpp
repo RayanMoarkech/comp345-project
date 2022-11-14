@@ -15,6 +15,7 @@ void testGameStates();
 
 // Phase 2
 void testStartupPhase(string fileName = "");
+void testMainGameLoop();
 
 int main(int argc, char *argv[]) {
   // Phase 1
@@ -39,6 +40,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Reading from console by default";
     testStartupPhase();
   }
+
+  testMainGameLoop();
 
   return 0;
 }

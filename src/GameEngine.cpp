@@ -193,7 +193,6 @@ int &GameEngine::getNextStateIndex() { return _nextStateIndex; }
 
 void GameEngine::setCurrentStateIndex(int currentStateIndex) {
   _currentStateIndex = currentStateIndex;
-  notify();
 }
 
 void GameEngine::setNextStateIndex(int nextStateIndex) {
@@ -207,8 +206,10 @@ bool GameEngine::nextState(Command *command, string &commandOption) {
   if (isValidCommand) {
     const bool valid =
         executeCurrentStateAction(_nextStateIndex, commandOption);
-    if (valid)
-      this->_currentStateIndex = _nextStateIndex;
+    if (valid) {
+        this->_currentStateIndex = _nextStateIndex;
+        notify();
+    }
     else
       cout << "Invalid. Staying in the same state." << endl;
     return true;

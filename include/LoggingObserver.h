@@ -28,11 +28,15 @@ public:
 class Subject {
 public:
     Subject();
-    Subject(int s);
+    Subject(int subject);
     Subject(const Subject& subject);
     Subject* operator=(const Subject& subject);
     friend std::ostream& operator<<(std::ostream& out, const Subject& subject);
     virtual ~Subject();
+
+//    virtual void Attach(Observer*);
+//    virtual void Detach(Observer*);
+//    virtual void Notify(ILoggable*);
 
     virtual void notify();
 };
@@ -40,6 +44,7 @@ public:
 class LogObserver: public Observer {
 
 public:
+    LogObserver();
     LogObserver(const LogObserver& subject);
     LogObserver* operator=(const LogObserver& subject);
     ~LogObserver();
@@ -48,8 +53,6 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const LogObserver& subject);
 
 private:
-    LogObserver();
-
     void outputToFile(std::string str);
 };
 

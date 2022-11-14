@@ -9,7 +9,7 @@ Observer::Observer(const Observer& subject) {}
 Observer::~Observer() {}
 
 std::ostream& operator<<(std::ostream& out, const Observer& subject) {
-    out << "Observer";
+    out << "OBSERVER";
     return out;
 }
 
@@ -26,10 +26,9 @@ Subject* Subject::operator=(const Subject& subject) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Subject& subject) {
-    out << "Subject";
+    out << "SUBJECT";
     return out;
 }
-
 
 void Subject::notify()
 {

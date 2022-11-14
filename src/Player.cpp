@@ -26,6 +26,8 @@ Player::Player() {
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
     this->armyUnits = 0;
 }
 
@@ -43,6 +45,9 @@ Player::Player(const Player& player) {
 	}
 	this->playerHand = new Hand(*player.playerHand);
 	this->playerOrders = new OrdersList(*player.playerOrders);
+	this->negotiatingWith = std::list<Player*>(player.negotiatingWith);
+	this->isNeutral = player.isNeutral;
+	this->conqueredTerritory = player.conqueredTerritory;
     this->armyUnits = player.armyUnits;
 }
 
@@ -54,6 +59,18 @@ Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHan
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
+	this->isNeutral = false;
+	this->conqueredTerritory = false;
+    this->armyUnits = 0;
+}
+
+Player::Player(bool isNeutral)
+{
+	this->ownedTerritories = {};
+	this->playerHand = new Hand();
+	this->playerOrders = new OrdersList();
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = false;
     this->armyUnits = 0;
 }
 
@@ -74,6 +91,12 @@ Player::~Player()
 //Assignment Operator
 Player& Player::operator=(const Player& player)
 {
+	this->ownedTerritories = ownedTerritories;
+	this->playerHand = playerHand;
+	this->playerOrders = playerOrders;
+	this->negotiatingWith = negotiatingWith;
+	this->isNeutral = isNeutral;
+	this->conqueredTerritory = conqueredTerritory;
     this->id = player.id;
 	this->ownedTerritories = player.ownedTerritories;
 	this->playerHand = player.playerHand;
@@ -327,6 +350,30 @@ Hand* Player::getPlayerHand()
 OrdersList* Player::getPlayerOrders()
 {
 	return this->playerOrders;
+}
+
+void Player::addTerritory(Territory* t)
+{
+	this->ownedTerritories.push_back(t);
+}
+
+void Player::addNegotiator(Player* p)
+{
+	negotiatingWith.push_back(p);
+}
+
+std::list<Player*> Player::getNegotiatorList()
+{
+	return this->negotiatingWith;
+}
+
+void Player::setConqueredTerritory(bool conqueredTerritory)
+{
+	this->conqueredTerritory = conqueredTerritory;
+}
+
+bool Player::getConqueredTerriotry() {
+    return conqueredTerritory;
 }
 
 void Player::addOwnedTerritory(Territory *territory)

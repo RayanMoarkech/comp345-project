@@ -25,20 +25,20 @@ public:
 
 	/*
 	* Destrcutor for Order Class
-	* //Declared as virtual so that both base class and derived class destructors called
+	* Declared as virtual so that both base class and derived class destructors called
 	*/
 	virtual ~Order();
 
 
 	Order& operator=(const Order& o); //Assignment 
 	friend std::ostream& operator<<(std::ostream& out, const Order& toOutput); //Stream insertion operator
+	Player* getPlayer(); // Get the player that an order belongs too 
 
 	/*
-	* Method to check if order is valid
-	* Virtual specifies that it will be overidden in derived classe
+	* Pure virtuak methods that will be overidden in derived classes
 	*/
-	virtual bool validate();
-	virtual void execute(); //Method to check if order is valid and then execute if it is
+	virtual bool validate() = 0; // Method to check if order is valid
+	virtual void execute() = 0; // Method to check if order is valid and then execute if it is
 };
 
 //Deploy Class Definition
@@ -57,7 +57,7 @@ public:
 private:
 	Territory* targetTerritory;
 	unsigned int numOfArmyUnits;
-	std::ostream& print(std::ostream& out) const override;
+	virtual std::ostream& print(std::ostream& out) const override;
 };
 
 //Advance class defintiion
@@ -75,7 +75,7 @@ private:
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
 	unsigned int numOfArmyUnits;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 };
 
 class Bomb : public Order {
@@ -88,7 +88,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Bomb& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 private:
 	Territory* targetTerritory;
 };
@@ -103,7 +103,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Blockade& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 private:
 	Territory* targetTerritory;
 };
@@ -122,7 +122,7 @@ private:
 	unsigned int numOfArmyUnits;
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 };
 
 class Negotiate : public Order {
@@ -135,7 +135,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Negotiate& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-	std::ostream& print(std::ostream& out) const;
+	virtual std::ostream& print(std::ostream& out) const;
 private:
 	Player* targetPlayer;
 };

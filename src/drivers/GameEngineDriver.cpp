@@ -160,8 +160,8 @@ void testMainGameLoop()
     while (player1->getPlayerHand()->cards.size() != 0 || player2->getPlayerHand()->cards.size() != 0)
     for (Player* p : players)
     {
-        
-        if (p->getAttackList().size() == 1 && p->getPlayerHand()->cards.size() != 0)
+        //5 is used here to keep a few territories to attack to be used by Cards
+        if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
         {
             p->getPlayerHand()->cards.at(0)->play(p, gameDeck);
         }

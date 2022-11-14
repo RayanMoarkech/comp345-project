@@ -4,6 +4,7 @@
 
 #ifndef GameEngine_H
 #define GameEngine_H
+#include "Cards.h"
 
 #include <string>
 using std::string;
@@ -12,12 +13,10 @@ using std::vector;
 #include <ostream>
 using std::ostream;
 
-#include "Cards.h"
-#include "CommandProcessing.h"
-
 class Map;
 class Player;
-
+class CommandProcessor;
+class Command;
 // ---------------------------------------------
 // ------------ Transition Section -------------
 // Transaction defines the valid command to
@@ -79,7 +78,7 @@ public:
 
   vector<State *> getState();
   int getCurrentStateIndex();
-  int getNextStateIndex();
+  int &getNextStateIndex();
   void setCurrentStateIndex(int currentStateIndex);
   void setNextStateIndex(int nextStateIndex);
 

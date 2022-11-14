@@ -13,6 +13,7 @@ using std::endl;
 #include <random>
 
 #include "../include/Cards.h"
+#include "../include/CommandProcessing.h"
 #include "../include/GameEngine.h"
 #include "../include/Map.h"
 #include "../include/Orders.h"
@@ -126,7 +127,7 @@ GameEngine::GameEngine(string fileName) {
                                new Transition("validatemap", 2)}),
       new State(stateName[2], {new Transition("addplayer", 3)}),
       new State(stateName[3], {new Transition("addplayer", 3),
-                               new Transition("assigncountries", 4)}),
+                               new Transition("gamestart", 4)}),
       new State(stateName[4], {new Transition("issueorder", 5)}),
       new State(stateName[5], {new Transition("issueorder", 5),
                                new Transition("endissueorders", 6)}),
@@ -134,7 +135,7 @@ GameEngine::GameEngine(string fileName) {
                 {new Transition("execorder", 6),
                  new Transition("endexecorders", 4), new Transition("win", 7)}),
       new State(stateName[7],
-                {new Transition("play", 0), new Transition("end", -1)}),
+                {new Transition("play", 0), new Transition("quit", -1)}),
   };
   _currentStateIndex = 0;
   _nextStateIndex = 0;
@@ -188,7 +189,7 @@ GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
 vector<State *> GameEngine::getState() { return _state; }
 
 int GameEngine::getCurrentStateIndex() { return _currentStateIndex; }
-int GameEngine::getNextStateIndex() { return _nextStateIndex; }
+int &GameEngine::getNextStateIndex() { return _nextStateIndex; }
 
 void GameEngine::setCurrentStateIndex(int currentStateIndex) {
   _currentStateIndex = currentStateIndex;
@@ -227,10 +228,14 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
   if (nextStateIndex == 2) {
     const bool validMap = this->_map->validate();
     if (!validMap) {
-      cout << "Map is not valid. Please try loading another one." << endl;
+      string effect = "Map is not valid. Please try loading another one.";
+      cout << effect << endl;
+      _commandProcessor->getLastCommand()->saveEffect(effect);
       return false;
     }
-    cout << "Map is valid!" << endl;
+    string effect = "Map is valid!";
+    cout << effect << endl;
+    _commandProcessor->getLastCommand()->saveEffect(effect);
     return true;
   }
   // Going to playersAdded
@@ -242,12 +247,16 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
       player = new Player(option, {}, new Hand(), new OrdersList());
     }
     cout << "Player " << player->getName() << " has been added." << endl;
+    string effect = "Player " + player->getName() + " has been added.";
+    _commandProcessor->getLastCommand()->saveEffect(effect);
     this->_players.push_back(player);
     return true;
   }
   // Going to assignReinforcement: Distribute Territories and Reinforcements
   if (nextStateIndex == 4) {
-    cout << "Fairly distributing the territories to the players" << endl;
+    string effect = "Fairly distributing the territories to the players";
+    cout << effect << endl;
+    _commandProcessor->getLastCommand()->saveEffect(effect);
 
     // Shuffling the territories
     vector<Territory *> shuffledTerritories = this->_map->getTerritories();
@@ -271,15 +280,23 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex,
   }
   // Going to issueOrders
   if (nextStateIndex == 5) {
+    string effect = "Going to issueOrders";
+    _commandProcessor->getLastCommand()->saveEffect(effect);
     return true;
   }
   // Going to executeOrders
   if (nextStateIndex == 6) {
+    string effect = "Going to executeOrders";
+    _commandProcessor->getLastCommand()->saveEffect(effect);
     return true;
   }
   // Going to win
   if (nextStateIndex == 7) {
+    string effect = "Going to win";
+    _commandProcessor->getLastCommand()->saveEffect(effect);
   }
+  string effect = "Someting went wrong!";
+  _commandProcessor->getLastCommand()->saveEffect(effect);
   return false;
 }
 

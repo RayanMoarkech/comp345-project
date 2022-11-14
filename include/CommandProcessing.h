@@ -2,8 +2,8 @@
 // COMP345_PROJECT_CommandProcessing_H CommandProcessing.h
 //
 
-#ifndef COMP345_PROJECT_COMMANDPROCESSING_H
-#define COMP345_PROJECT_COMMANDPROCESSING_H
+#ifndef COMMANDPROCESSING_H
+#define COMMANDPROCESSING_H
 
 #include <string>
 using std::string;
@@ -74,16 +74,15 @@ public:
   bool validate(Command *command, int currentStateIndex, int &nextStateIndex,
                 string &commandOption);
   vector<Command *> getCommandList();
+  Command *getLastCommand();
 
 private:
-  friend ostream &operator<<(ostream &strm,
-                             const CommandProcessor &commandProcessor);
-
-protected:
   vector<State *> _stateList;
 
 protected:
   vector<Command *> _commandList;
+  friend ostream &operator<<(ostream &strm,
+                             const CommandProcessor &commandProcessor);
 };
 
 // ---------------------------------------------

@@ -1,1 +1,14 @@
-bad command
+loadmap APKomp.map
+validatemap
+addplayer p1
+gamestart
+issueorder
+endissueorders
+win
+loadmap APKomp.map
+validatemap
+addplayer p1
+gamestart
+issueorder
+endissueorders
+win

@@ -21,7 +21,6 @@ using std::endl;
 using std::for_each;
 
 #include "../include/CommandProcessing.h"
-#include "../include/GameEngine.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",
@@ -32,23 +31,6 @@ static const string stateName[]{"start",
                                 "issueOrders",
                                 "executeOrders",
                                 "win"};
-
-vector<State *> stateList = {
-    new State(stateName[0], {new Transition("loadmap", 1)}),
-    new State(stateName[1],
-              {new Transition("loadmap", 1), new Transition("validatemap", 2)}),
-    new State(stateName[2], {new Transition("addplayer", 3)}),
-    new State(stateName[3],
-              {new Transition("addplayer", 3), new Transition("gamestart", 4)}),
-    new State(stateName[4], {new Transition("issueorder", 5)}),
-    new State(stateName[5], {new Transition("issueorder", 5),
-                             new Transition("endissueorders", 6)}),
-    new State(stateName[6],
-              {new Transition("execorder", 6),
-               new Transition("endexecorders", 4), new Transition("win", 7)}),
-    new State(stateName[7],
-              {new Transition("play", 0), new Transition("end", -1)}),
-};
 
 // Trim is used to remove the empty spaces at the beginning and the end of a
 // string
@@ -172,7 +154,7 @@ CommandProcessor::CommandProcessor() {
                 {new Transition("execorder", 6),
                  new Transition("endexecorders", 4), new Transition("win", 7)}),
       new State(stateName[7],
-                {new Transition("play", 0), new Transition("end", -1)}),
+                {new Transition("play", 0), new Transition("quit", -1)}),
   };
   vector<Command *> _commandList;
 }
@@ -215,7 +197,6 @@ ostream &operator<<(ostream &strm, const CommandProcessor &commandProcessor) {
 
 string CommandProcessor::readCommand() {
   string userCommand;
-  cout << "Please enter your command. \n";
   getline(cin, userCommand);
   string userCommandTrimmed = trim(userCommand);
   return userCommandTrimmed;
@@ -270,6 +251,8 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
 }
 
 vector<Command *> CommandProcessor::getCommandList() { return _commandList; }
+
+Command *CommandProcessor::getLastCommand() { return _commandList.back(); }
 
 // ---------------------------------------------
 // ---- FileCommandProcessorAdapter Section ----

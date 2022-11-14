@@ -100,6 +100,7 @@ public:
   operator=(const FileCommandProcessorAdapter &fileCommandProcessorAdapter);
 
   string readCommand();
+  Command *getCommand();
 
 private:
   FileLineReader *_flr;

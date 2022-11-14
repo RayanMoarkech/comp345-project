@@ -227,6 +227,7 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
       command->saveEffect("User did not enter the map file name.");
       return false;
     }
+    userCommand = commandText;
   } else if (commandText == "addplayer") {
     ss >> commandOption;
     if (commandOption == "") {
@@ -234,6 +235,7 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
       command->saveEffect("User did not enter the player name.");
       return false;
     }
+    userCommand = commandText;
   }
   // Check the user command against the valid commands at the current state
   //  and set the current state index to the next state.
@@ -302,4 +304,9 @@ operator<<(ostream &strm,
     strm << *command << endl;
   }
   return strm;
+}
+Command *FileCommandProcessorAdapter::getCommand() {
+  string userCommand = readCommand();
+  Command *command = saveCommand(userCommand);
+  return command;
 }

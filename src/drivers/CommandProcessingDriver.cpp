@@ -11,7 +11,7 @@ using std::cout;
 using std::endl;
 
 CommandProcessor *commandProcessorConsole = new CommandProcessor();
-CommandProcessor *commandProcessorFile =
+FileCommandProcessorAdapter *commandProcessorFile =
     new FileCommandProcessorAdapter("./commandFile.txt");
 
 void TestCommandProcessor() {
@@ -49,7 +49,7 @@ void TestCommandProcessor() {
         gameEngine->getNextStateIndex(), commandOption);
 
     // If the next index is -1, the game will terminate.
-    if (gameEngine->getCurrentStateIndex() == -1)
+    if (gameEngine->getNextStateIndex() == -1)
       break;
 
     // If the user command is invalid, print an error message
@@ -64,10 +64,12 @@ void TestCommandProcessor() {
     }
 
     // Print successful message if the transition was made.
-    else
+    else {
       cout << "\n"
            << (char)1 << " Yay that was a valid transition " << (char)1 << "\n"
            << endl;
+      gameEngine->setCurrentStateIndex(gameEngine->getNextStateIndex());
+    }
 
     // keep ask the user to enter the new command if the command was invalid
     //  or to make another transition.
@@ -87,7 +89,6 @@ void TestCommandProcessor() {
        << endl;
 
   delete gameEngine;
-
   //
   // Test File Command Processor Adapter.
   //
@@ -127,7 +128,7 @@ void TestCommandProcessor() {
         gameEngineFile->getNextStateIndex(), commandOption);
 
     // If the next index is -1, the game will terminate.
-    if (gameEngineFile->getCurrentStateIndex() == -1)
+    if (gameEngineFile->getNextStateIndex() == -1)
       break;
 
     // If the user command is invalid, print an error message
@@ -143,10 +144,12 @@ void TestCommandProcessor() {
     }
 
     // Print successful message if the transition was made.
-    else
+    else {
       cout << "\n"
            << (char)1 << " Yay that was a valid transition " << (char)1 << "\n"
            << endl;
+      gameEngineFile->setCurrentStateIndex(gameEngineFile->getNextStateIndex());
+    }
 
     // keep ask the user to enter the new command if the command was invalid
     //  or to make another transition.

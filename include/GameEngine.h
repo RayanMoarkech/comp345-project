@@ -4,22 +4,19 @@
 
 #ifndef GameEngine_H
 #define GameEngine_H
-
-#include <string>
-    using std::string;
-#include <vector>
-    using std::vector;
-#include <ostream>
-    using std::ostream;
-
 #include "Cards.h"
 
-#include "LoggingObserver.h"
+#include <string>
+using std::string;
+#include <vector>
+using std::vector;
+#include <ostream>
+using std::ostream;
 
 class Map;
 class Player;
-
-
+class CommandProcessor;
+class Command;
 // ---------------------------------------------
 // ------------ Transition Section -------------
 // Transaction defines the valid command to
@@ -27,22 +24,20 @@ class Player;
 // ---------------------------------------------
 class Transition {
 public:
-    Transition();
-    ~Transition();
-    Transition(string command, int nextStateIndex);
-    Transition(const Transition&);
-    Transition& operator=(const Transition&);
+  Transition();
+  ~Transition();
+  Transition(string command, int nextStateIndex);
+  Transition(const Transition &);
+  Transition &operator=(const Transition &);
 
-
-    string getCommand();
-    int getNextStateIndex();
+  string getCommand();
+  int getNextStateIndex();
 
 private:
-    string _command;
-    int _nextStateIndex;
-    friend ostream& operator<<(ostream&, const Transition&);
+  string _command;
+  int _nextStateIndex;
+  friend ostream &operator<<(ostream &, const Transition &);
 };
-
 
 // ---------------------------------------------
 // --------------- State Section ---------------
@@ -52,21 +47,20 @@ private:
 
 class State {
 public:
-    State();
-    ~State();
-    State(string name, vector<Transition*> transition);
-    State(const State&);
-    State& operator=(const State&);
+  State();
+  ~State();
+  State(string name, vector<Transition *> transition);
+  State(const State &);
+  State &operator=(const State &);
 
-    string getName();
-    vector<Transition*> getTransition();
-    std::string& toString();
+  string getName();
+  vector<Transition *> getTransition();
+
 private:
-    string _name;
-    vector<Transition*> _transition;
-    friend ostream& operator<<(ostream&, const State&);
+  string _name;
+  vector<Transition *> _transition;
+  friend ostream &operator<<(ostream &, const State &);
 };
-
 
 // ---------------------------------------------
 // ------------ GameEngine Section -------------
@@ -75,32 +69,37 @@ private:
 // navigate between them.
 // ---------------------------------------------
 
-class GameEngine: public Subject, public ILoggable {
+class GameEngine {
 public:
-    GameEngine();
-    ~GameEngine();
-    GameEngine(const GameEngine &);
-    GameEngine &operator=(const GameEngine &);
+  GameEngine(string fileName);
+  ~GameEngine();
+  GameEngine(const GameEngine &);
+  GameEngine &operator=(const GameEngine &);
 
-    std::string stringToLog();
-    vector<State*> getState();
-    int getCurrentStateIndex();
-    void setCurrentStateIndex(int currentStateIndex);
-    void startupPhase();
+  vector<State *> getState();
+  int getCurrentStateIndex();
+  int &getNextStateIndex();
+  void setCurrentStateIndex(int currentStateIndex);
+  void setNextStateIndex(int nextStateIndex);
+
+  void startupPhase();
 
 private:
-    vector<State*> _state;
-    int _currentStateIndex;
+  vector<State *> _state;
+  int _currentStateIndex;
+  int _nextStateIndex;
+  CommandProcessor *_commandProcessor;
+  string _fileName;
 
-    Map* _map;
-    vector<Player*> _players;
-    Deck* deck;
+private:
+  Map *_map;
+  vector<Player *> _players;
+  Deck *deck;
 
-    bool executeCurrentStateAction(int nextStateIndex, const string& option);
-    bool nextState(string command, string commandOption);
+  bool executeCurrentStateAction(int nextStateIndex, const string &option);
+  bool nextState(Command *command, string &commandOption);
 
-    friend ostream &operator<<(ostream &, const GameEngine &);
+  friend ostream &operator<<(ostream &, const GameEngine &);
 };
-
 
 #endif

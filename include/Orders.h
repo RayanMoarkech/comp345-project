@@ -1,16 +1,16 @@
 #pragma once
 
 #include <iostream>
-using std::cout;
-using std::endl;
-using std::ostream;
+    using std::cout;
+    using std::endl;
+    using std::ostream;
 #include <list>
+
 #include "LoggingObserver.h"
-//TODO: #include 'Player.h'
-//TODO: #include 'Territory.h'
 
 class Player;
 class Territory;
+
 
 //Parent order class
 class Order: public ILoggable, public Subject {
@@ -21,11 +21,11 @@ protected: // protected access specifies is used to ensure that members can be a
 
 public:
 	Order(); //Default constructor for Order class
-	Order(Player* player); //Parametized constructor for Order class
+	Order(Player* player); //Parametrized constructor for Order class
 	Order(const Order& toCopy); //Copy constructor
 
 	/*
-	* Destrcutor for Order Class
+	* Destructor for Order Class
 	* Declared as virtual so that both base class and derived class destructors called
 	*/
 	virtual ~Order();
@@ -61,11 +61,11 @@ private:
 	virtual std::ostream& print(std::ostream& out) const override;
 };
 
-//Advance class defintiion
+//Advance class definition
 class Advance : public Order {
 public:
 	Advance(); //Default Constructor
-	Advance(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametized constructor
+	Advance(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametrized constructor
 	~Advance(); //Destructor 
 	Advance(const Advance& toCopy); //Copy constructor
 	Advance& operator=(const Advance& rightSide); //Assignment operator
@@ -83,7 +83,7 @@ private:
 class Bomb : public Order {
 public:
 	Bomb(); //Default Constructor
-	Bomb(Player* player, Territory* target); //Parametized constructor
+	Bomb(Player* player, Territory* target); //Parametrized constructor
 	~Bomb(); //Destructor 
 	Bomb(const Bomb& toCopy); //Copy constructor
 	Bomb& operator=(const Bomb& rightSide); //Assignment operator
@@ -99,7 +99,7 @@ private:
 class Blockade : public Order {
 public:
 	Blockade(); //Default Constructor
-	Blockade(Player* player, Territory* target); //Parametized constructor
+	Blockade(Player* player, Territory* target); //Parametrized constructor
 	~Blockade(); //Destructor 
 	Blockade(const Blockade& toCopy); //Copy constructor
 	Blockade& operator=(const Blockade& rightSide); //Assignment operator
@@ -115,7 +115,7 @@ private:
 class Airlift : public Order {
 public:
 	Airlift(); //Default Constructor
-	Airlift(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametized constructor
+	Airlift(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametrized constructor
 	~Airlift(); //Destructor 
 	Airlift(const Airlift& toCopy); //Copy constructor
 	Airlift& operator=(const Airlift& rightSide); //Assignment operator
@@ -133,7 +133,7 @@ private:
 class Negotiate : public Order {
 public:
 	Negotiate(); //Default Constructor
-	Negotiate(Player* player, Player* target); //Parametized constructor
+	Negotiate(Player* player, Player* target); //Parametrized constructor
 	~Negotiate(); //Destructor 
 	Negotiate(const Negotiate& toCopy); //Copy constructor
 	Negotiate& operator=(const Negotiate& rightSide); //Assignment operator
@@ -155,7 +155,7 @@ public:
 	//Default constructor for OrdersList
 	OrdersList();
 
-	//Parametized constructor for OrdersList
+	//Parametrized constructor for OrdersList
 	OrdersList(std::list<Order*> order_list);
 
 	//OrdersList destructor

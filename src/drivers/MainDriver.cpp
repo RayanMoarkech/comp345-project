@@ -47,8 +47,8 @@ int main(int argc, char *argv[]) {
 
 
   testMainGameLoop();
-  testOrderExecution();
-  testCommandProcessor();
+//  testOrderExecution();
+//  testCommandProcessor();
   testLoggingObserver();
 
   return 0;

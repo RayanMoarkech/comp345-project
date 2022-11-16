@@ -5,6 +5,7 @@
 #define COMP345_PROJECT_LOGGINGOBSERVER_H
 
 #pragma once
+
 #include <string>
 #include <iostream>
 
@@ -28,15 +29,13 @@ public:
 class Subject {
 public:
     Subject();
-    Subject(int subject);
     Subject(const Subject& subject);
     Subject* operator=(const Subject& subject);
     friend std::ostream& operator<<(std::ostream& out, const Subject& subject);
     virtual ~Subject();
 
-//    virtual void Attach(Observer*);
-//    virtual void Detach(Observer*);
-//    virtual void Notify(ILoggable*);
+//    virtual void attach(Observer*);
+//    virtual void detach(Observer*);
 
     virtual void notify();
 };

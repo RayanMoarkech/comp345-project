@@ -460,12 +460,12 @@ void GameEngine::mainGameLoop()
     cout << endl
         << "------------- Execute Orders Phase -------------" << endl
         << endl;
-    this->_commandProcessor->saveCommand("issueorder");
+    this->_commandProcessor->saveCommand("endissueorders");
     this->transition();
     cout << endl
          << "------------- Reinforcement Phase -------------" << endl
          << endl;
-    this->_commandProcessor->saveCommand("issueorder");
+    this->_commandProcessor->saveCommand("endexecorders");
     this->transition();
 }
 

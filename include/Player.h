@@ -48,13 +48,13 @@ public:
 	Hand* getPlayerHand();
 	OrdersList* getPlayerOrders();
 	void addTerritory(Territory* t);
-	void removeTerritory(Territory* t); //TODO
+	void removeTerritory(Territory* t);
 	void addNegotiator(Player* p); //Adds a negotiating player
 	void removeReinforcements(int numArmies);
 	//May need to add a method to remove someone from the list of negotiators
 	std::list<Player*> getNegotiatorList();
 	void setConqueredTerritory(bool conqueredTerritory);
-	bool getConqueredTerriotry();
+	bool getConqueredTerritory();
     string getName();
 	void setName(string name);
     void setArmyUnits(int armyUnits);

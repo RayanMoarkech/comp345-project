@@ -237,7 +237,6 @@ void Advance::execute()
 				numOfArmyUnits--;
 		}
 		if (targetTerritory->getNumberOfArmies() == 0) {//all defender units elimated
-            // TODO: fix
 			cout << "Previous owner of " << targetTerritory->getName() << ": " << targetTerritory->getOwnedBy()->getName() << endl;
 			targetTerritory->getOwnedBy()->removeTerritory(targetTerritory); //Remove territory from defender
 			sourceTerritory->getOwnedBy()->addTerritory(targetTerritory); //Add territory to attacker
@@ -260,7 +259,7 @@ std::string Advance::stringToLog() {
 
 //----Bomb Class----
 
-//Deafult constructor for Bomb class
+//Default constructor for Bomb class
 Bomb::Bomb() : Order() {
 	targetTerritory = nullptr;
 	cout << "Created a Bomb order." << endl;
@@ -408,8 +407,7 @@ void Blockade::execute()
 	}
 	//Set ownership to the neutral players and double armies
 	targetTerritory->setOwnedBy(new Player(true), targetTerritory->getNumberOfArmies() * 2);
-    // TODO: fix
-//	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
+	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
 	executed = true;
 	cout << "Blockade order executed. Territory" << targetTerritory->getName() << " has doubled its army units and is now owned by the neutral player" << endl;
     notify();

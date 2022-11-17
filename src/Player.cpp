@@ -373,7 +373,7 @@ void Player::setConqueredTerritory(bool conqueredTerritory)
 	this->conqueredTerritory = conqueredTerritory;
 }
 
-bool Player::getConqueredTerriotry()
+bool Player::getConqueredTerritory()
 {
 	return conqueredTerritory;
 }

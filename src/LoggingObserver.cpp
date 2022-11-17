@@ -36,7 +36,7 @@ void Subject::notify()
 }
 
 LogObserver::LogObserver() {
-    std::fstream file("gamelog.txt", std::fstream::out);
+    std::fstream file("gamelog.txt", std::fstream::app);
     file << "";
     file.close();
 }
@@ -47,7 +47,11 @@ LogObserver& LogObserver::getInstance() {
 }
 
 LogObserver::LogObserver(const LogObserver& subject) {}
-LogObserver::~LogObserver() {}
+LogObserver::~LogObserver() {
+    std::fstream file("gamelog.txt", std::fstream::app);
+    file << "-----------------------------------------------------------------------------------------------\n";
+    file << "\n\n";
+    file.close();}
 
 LogObserver* LogObserver::operator=(const LogObserver& subject) {
     return this;

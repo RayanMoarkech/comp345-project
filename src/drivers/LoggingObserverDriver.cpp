@@ -28,7 +28,7 @@ void testLoggingObserver() {
 
         command->saveEffect("effect test");
 
-        delete commandProcessor;
+//        delete commandProcessor;
 
 #pragma endregion
 

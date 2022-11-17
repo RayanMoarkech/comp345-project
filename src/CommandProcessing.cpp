@@ -19,6 +19,7 @@ using std::cout;
 using std::endl;
 
 #include "../include/CommandProcessing.h"
+#include "../include/GameEngine.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",

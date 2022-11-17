@@ -11,7 +11,6 @@
 class Player;
 class Territory;
 
-
 //Parent order class
 class Order: public ILoggable, public Subject {
 protected: // protected access specifies is used to ensure that members can be accessed by inherited classes
@@ -36,7 +35,7 @@ public:
 	Player* getPlayer(); // Get the player that an order belongs too 
 
 	/*
-	* Pure virtuak methods that will be overidden in derived classes
+	* Pure virtual methods that will be overridden in derived classes
 	*/
 	virtual bool validate() = 0; // Method to check if order is valid
 	virtual void execute() = 0; // Method to check if order is valid and then execute if it is

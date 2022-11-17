@@ -13,7 +13,7 @@
 #include "../../include/Map.h"
 #include "../../include/Player.h"
 #include "../../include/Cards.h"
-
+#include "../../include/CommandProcessing.h"
 
 
 void testGameStates() {
@@ -114,52 +114,29 @@ void testMainGameLoop()
         << endl;
 
     GameEngine* gameEngine = new GameEngine("");
-    Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
+    CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
 
-    Deck* gameDeck = new Deck();
-    Hand* playerOneHand = new Hand();
-    Hand* playerTwoHand = new Hand();
+    // Load the map
+    commandProcessor->saveCommand("loadmap 001_I72_Ghtroc720.map");
+    gameEngine->transition();
 
-    Card* bombCard = new Card(BOMB);
-    Card* blockadeCard = new Card(BLOCKADE);
-    Card* airliftCard = new Card(AIRLIFT);
+    // Validate the map
+    commandProcessor->saveCommand("validatemap");
+    gameEngine->transition();
 
-    playerOneHand->addCard(bombCard);
-    playerOneHand->addCard(blockadeCard);
+    // Add players
+    commandProcessor->saveCommand("addplayer Player1");
+    gameEngine->transition();
 
-    playerTwoHand->addCard(airliftCard);
+    commandProcessor->saveCommand("addplayer Player2");
+    gameEngine->transition();
 
-    string playerOneName = "Player 1";
-    vector<Territory*> playerOneTerritories;
+    // Start Game phase
+    commandProcessor->saveCommand("gamestart");
+    gameEngine->transition();
 
-    string playerTwoName = "Player 2";
-    vector<Territory*> playerTwoTerritories;
+    // Main Game Loop
+    gameEngine->mainGameLoop();
 
-    Player* player1 = new Player(playerOneName, playerOneTerritories, playerOneHand, new OrdersList());
-
-    Player* player2 = new Player(playerTwoName, playerTwoTerritories, playerTwoHand, new OrdersList());;
-
-    //Populate owned territories 
-    vector<Player*> players = { player1, player2 };
-
-    player1->addOwnedTerritory(map->getTerritory("Cockpit01"));
-    player1->addOwnedTerritory(map->getTerritory("Cockpit02"));
-
-    for (Territory* t : map->getTerritories())
-    {
-        if (t->getContinent()->getName() == "hyperdrive")
-        {
-            player1->addOwnedTerritory(t);
-        }
-        if (t->getContinent()->getName() == "cockpit")
-        {
-            player2->addOwnedTerritory(t);
-        }
-    }
-    //gameEngine->reinforcementPhase(*map, players);
-    //gameEngine->issueOrdersPhase(players, gameDeck);
-
-
-    gameEngine->mainGameLoop(*map, players, gameDeck);
-
+    delete gameEngine;
 }

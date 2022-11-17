@@ -21,5 +21,5 @@ add_executable(
         src/drivers/OrderDriver.cpp src/Orders.cpp include/Orders.h
         src/drivers/GameEngineDriver.cpp src/GameEngine.cpp include/GameEngine.h
         src/drivers/MainDriver.cpp
-        include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp
-        include/CommandProcessing.h src/CommandProcessing.cpp src/drivers/CommandProcessingDriver.cpp)
+        include/CommandProcessing.h src/CommandProcessing.cpp src/drivers/CommandProcessingDriver.cpp
+        include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp include/LoggingObserver.h src/LoggingObserver.cpp src/drivers/LoggingObserverDriver.cpp)

@@ -140,6 +140,11 @@ void Deploy::execute()
 	targetTerritory->addArmies(numOfArmyUnits);
 	cout << "Deploy order executed. Deployed " << numOfArmyUnits << " armies to " << targetTerritory->getName() << "." << endl;
 	executed = true;
+    notify();
+}
+
+std::string Deploy::stringToLog() {
+    return "ORDER::Execute(): Deploy order executed.";
 }
 
 //----Advance Class----
@@ -245,9 +250,13 @@ void Advance::execute()
 			cout << "Attacking Advance Order Executed. Attacking player lost " << numOfArmyUnits << " armies and now has " << sourceTerritory->getNumberOfArmies() << " armies on " << sourceTerritory->getName() << " territory." << endl;
 		}
 	}
-	executed = true;	
+	executed = true;
+    notify();
 }
 
+std::string Advance::stringToLog() {
+    return "ORDER::Execute(): Advance order executed.";
+}
 
 //----Bomb Class----
 
@@ -328,6 +337,11 @@ void Bomb::execute()
 	targetTerritory->setNumberOfArmies(targetTerritory->getNumberOfArmies() / 2);
 	executed = true;
 	cout << "Bomb order executed. Half of the army units removed from territory" << targetTerritory->getName() << ". " << endl;
+    notify();
+}
+
+std::string Bomb::stringToLog() {
+    return "ORDER::Execute(): Bomb order executed.";
 }
 
 //----Blockade Class----
@@ -398,8 +412,11 @@ void Blockade::execute()
 //	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
 	executed = true;
 	cout << "Blockade order executed. Territory" << targetTerritory->getName() << " has doubled its army units and is now owned by the neutral player" << endl;
+    notify();
 }
-
+std::string Blockade::stringToLog() {
+    return "ORDER::Execute(): Blockade order executed.";
+}
 
 //----Airlift Class----
 
@@ -476,6 +493,10 @@ void Airlift::execute()
 	targetTerritory->addArmies(numOfArmyUnits);
 	executed = true;
 	cout << "Airlift Order executed. " << numOfArmyUnits << " moved from " << sourceTerritory->getName() << " to " << targetTerritory->getName() << ". " << endl;
+    notify();
+}
+std::string Airlift::stringToLog() {
+    return "ORDER::Execute(): Airlift order executed.";
 }
 
 //----Negotiate Class----
@@ -545,6 +566,10 @@ void Negotiate::execute()
 	targetPlayer->addNegotiator(this->getPlayer());
 	executed = true;
 	cout << "Negotiate order executed." << endl;
+    notify();
+}
+std::string Negotiate::stringToLog() {
+    return "ORDER::Execute(): Negotiate order executed.";
 }
 
 //----OrdersList Class----
@@ -626,6 +651,11 @@ void OrdersList::move(int oldIndex, int newIndex)
 void OrdersList::addOrder(Order* o)
 {
 	order_list.push_back(o);
+    notify();
+}
+
+std::string OrdersList::stringToLog() {
+    return "ORDERLIST::addOrder(): order added."; //maybe to improve ??
 }
 
 std::list<Order*> OrdersList::getOrdersList()

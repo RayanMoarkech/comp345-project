@@ -5,6 +5,7 @@ using std::cout;
 using std::endl;
 using std::ostream;
 #include <list>
+#include "LoggingObserver.h"
 //TODO: #include 'Player.h'
 //TODO: #include 'Territory.h'
 
@@ -12,7 +13,7 @@ class Player;
 class Territory;
 
 //Parent order class
-class Order {
+class Order: public ILoggable, public Subject {
 protected: // protected access specifies is used to ensure that members can be accessed by inherited classes
 	bool executed; //Keeps track of whether order has been executed
 	Player* player; //Player that the order belongs to
@@ -52,7 +53,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Deploy& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-
+    std::string stringToLog() override; // Method for logging
 
 private:
 	Territory* targetTerritory;
@@ -71,6 +72,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Advance& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
+    std::string stringToLog() override; // Method for logging
 private:
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
@@ -89,6 +91,7 @@ public:
 	bool validate() override;
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
+    std::string stringToLog() override; // Method for logging
 private:
 	Territory* targetTerritory;
 };
@@ -104,6 +107,7 @@ public:
 	bool validate() override;
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
+    std::string stringToLog() override; // Method for logging
 private:
 	Territory* targetTerritory;
 };
@@ -118,6 +122,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Airlift& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
+    std::string stringToLog() override; // Method for logging
 private:
 	unsigned int numOfArmyUnits;
 	Territory* sourceTerritory;
@@ -136,11 +141,12 @@ public:
 	bool validate() override;
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
+    std::string stringToLog() override; // Method for logging
 private:
 	Player* targetPlayer;
 };
 
-class OrdersList {
+class OrdersList: public ILoggable, public Subject {
 private:
 	//Pointer to a list of order objects
 	std::list<Order*> order_list;
@@ -174,4 +180,7 @@ public:
 	void addOrder(Order* o);
 
 	std::list<Order*> getOrdersList();
+
+    // Method for logging
+    std::string stringToLog();
 };

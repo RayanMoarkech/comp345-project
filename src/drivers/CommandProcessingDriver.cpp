@@ -14,7 +14,7 @@ CommandProcessor *commandProcessorConsole = new CommandProcessor();
 FileCommandProcessorAdapter *commandProcessorFile =
     new FileCommandProcessorAdapter("./commandFile.txt");
 
-void TestCommandProcessor() {
+void testCommandProcessor() {
   cout << endl
        << "------------------------------------------------------" << endl
        << "Test Command Processor - Console" << endl

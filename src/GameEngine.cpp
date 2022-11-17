@@ -450,23 +450,53 @@ void GameEngine::executeOrdersPhase()
     this->ordersList = nullptr;
 }
 
+int GameEngine::validateGameRound()
+{
+    for (int i = 0; i < this->_players.size(); i++)
+    {
+        Player* player = this->_players[i];
+        int ownedTerritoryCount = player->getOwnedTerritories().size();
+        // Kick out player that do not have any territories
+        if (ownedTerritoryCount == 0)
+        {
+            cout << player->getName() << " does not own at least one territory." << endl
+                 << player->getName() << " is removed from the game." << endl << endl;
+            this->_players.erase(this->_players.begin() + i);
+            continue;
+        }
+        // Check if player owns all territories
+        if (ownedTerritoryCount == this->_map->getTerritories().size())
+        {
+            cout << player->getName() << " owns all the territories." << endl << endl;
+            return i;
+        }
+    }
+    return -1;
+}
+
 void GameEngine::mainGameLoop()
 {
-    cout << endl
-        << "------------- Issue Orders Phase -------------" << endl
-        << endl;
-    this->_commandProcessor->saveCommand("issueorder");
-    this->transition();
-    cout << endl
-        << "------------- Execute Orders Phase -------------" << endl
-        << endl;
-    this->_commandProcessor->saveCommand("issueorder");
-    this->transition();
-    cout << endl
-         << "------------- Reinforcement Phase -------------" << endl
-         << endl;
-    this->_commandProcessor->saveCommand("issueorder");
-    this->transition();
+    int winnerIndex = validateGameRound();
+    while (winnerIndex == -1)
+    {
+        cout << endl
+             << "------------- Issue Orders Phase -------------" << endl
+             << endl;
+        this->_commandProcessor->saveCommand("issueorder");
+        this->transition();
+        cout << endl
+             << "------------- Execute Orders Phase -------------" << endl
+             << endl;
+        this->_commandProcessor->saveCommand("endissueorders");
+        this->transition();
+        cout << endl
+             << "------------- Reinforcement Phase -------------" << endl
+             << endl;
+        this->_commandProcessor->saveCommand("endexecorders");
+        this->transition();
+
+        winnerIndex = validateGameRound();
+    }
 }
 
 //Print a list of all states with their valid transitions

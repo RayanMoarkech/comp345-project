@@ -96,6 +96,7 @@ public:
     void issueOrdersPhase();
     void executeOrdersPhase();
     bool allPlayerCardsPlayed() const;
+    int validateGameRound();
     void mainGameLoop();
 
     std::string stringToLog();

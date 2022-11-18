@@ -136,8 +136,7 @@ void Deploy::execute()
 	}
 	// Remove numOfArmyUnits from reinforcement pool
 	// Add numOfArmyUnits to targetTerritory
-    // TODO: fix when merged
-//	player->removeReinforcements(numOfArmyUnits);
+	player->removeReinforcements(numOfArmyUnits);
 	targetTerritory->addArmies(numOfArmyUnits);
 	cout << "Deploy order executed. Deployed " << numOfArmyUnits << " armies to " << targetTerritory->getName() << "." << endl;
 	executed = true;
@@ -237,15 +236,17 @@ void Advance::execute()
 				sourceTerritory->removeArmies(1);
 				numOfArmyUnits--;
 		}
-		if (targetTerritory->getNumberOfArmies() == 0) {//all defender units eliminated
+		if (targetTerritory->getNumberOfArmies() == 0) {//all defender units elimated
+			cout << "Previous owner of " << targetTerritory->getName() << ": " << targetTerritory->getOwnedBy()->getName() << endl;
 			targetTerritory->getOwnedBy()->removeTerritory(targetTerritory); //Remove territory from defender
 			sourceTerritory->getOwnedBy()->addTerritory(targetTerritory); //Add territory to attacker
 			targetTerritory->setOwnedBy(sourceTerritory->getOwnedBy(), numOfArmyUnits); //Set territory owner and num armies to attacker
-			cout << "Attacking Advance Order Executed. Attacking player " << " won " << targetTerritory->getName() << " territory." << endl;
+			cout << "Attacking Advance Order Executed. Attacking player won " << targetTerritory->getName() << " territory." << endl;
+			cout << "New owner of " << targetTerritory->getName() << ": " << targetTerritory->getOwnedBy()->getName() << endl;
 			sourceTerritory->getOwnedBy()->setConqueredTerritory(true);
 		}
 		else {//attacking player loses
-			cout << "Attacking Advance Order Executed. Attacking player " << " lost " << numOfArmyUnits << " and now has " << sourceTerritory->getNumberOfArmies() << "armies on " << sourceTerritory->getName() << " territory." << endl;
+			cout << "Attacking Advance Order Executed. Attacking player lost " << numOfArmyUnits << " armies and now has " << sourceTerritory->getNumberOfArmies() << " armies on " << sourceTerritory->getName() << " territory." << endl;
 		}
 	}
 	executed = true;

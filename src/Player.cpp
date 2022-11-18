@@ -72,6 +72,7 @@ Player::Player(bool isNeutral)
 	this->isNeutral = isNeutral;
 	this->conqueredTerritory = false;
     this->armyUnits = 0;
+	this->name = "Neutral Player";
 }
 
 //Destructor
@@ -385,4 +386,9 @@ void Player::addOwnedTerritory(Territory *territory)
 void Player::removeTerritory(Territory* t)
 {
 	this->ownedTerritories.erase(std::remove(this->ownedTerritories.begin(), this->ownedTerritories.end(), t), this->ownedTerritories.end());
+}
+
+void Player::removeReinforcements(int numArmies)
+{
+	this->armyUnits = this->armyUnits - numArmies;
 }

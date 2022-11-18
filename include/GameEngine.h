@@ -99,6 +99,8 @@ public:
     int validateGameRound();
     void mainGameLoop();
 
+    vector<int> getOwnedTerritories(vector<int> ownedTerritory);
+
     std::string stringToLog();
 
 private:

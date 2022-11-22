@@ -96,7 +96,10 @@ public:
     void issueOrdersPhase();
     void executeOrdersPhase();
     bool allPlayerCardsPlayed() const;
+    int validateGameRound();
     void mainGameLoop();
+
+    vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 
     std::string stringToLog();
 

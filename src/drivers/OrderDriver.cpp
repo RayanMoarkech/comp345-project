@@ -111,24 +111,39 @@ void testOrderExecution()
             player2->addOwnedTerritory(t);
         }
     }
-	
+
 	vector<Territory*> territories = map->getTerritories();
 	Territory* sourceTerritory = territories[0];
 	Territory* targetTerritory = territories[1];
 	Territory* territory3 = territories[2];
 	Territory* territory4 = territories[24];
 
-	targetTerritory->setOwnedBy(player1, 15);
+	targetTerritory->setOwnedBy(player1, 1);
 	sourceTerritory->setOwnedBy(player1, 20);
 	territory3->setOwnedBy(player2, 3);
 	territory4->setOwnedBy(player2, 12);
 
+	OrdersList* testOrders = new OrdersList();
+
 	Deploy* deployOrder = new Deploy(player1, targetTerritory, 10);
-	deployOrder->execute();
-
 	Advance* advanceOrder = new Advance(player1, sourceTerritory, targetTerritory, 5);
-	advanceOrder->execute();
-
 	Bomb* bombOrder = new Bomb(player1, sourceTerritory);
-	bombOrder->execute();
+	Airlift* airliftOrder = new Airlift(player1, sourceTerritory, targetTerritory, 25);
+	Blockade* blockadeOrder = new Blockade(player1, targetTerritory);
+	testOrders->addOrder(deployOrder);
+	testOrders->addOrder(advanceOrder);
+	testOrders->addOrder(bombOrder);
+	testOrders->addOrder(airliftOrder);
+	testOrders->addOrder(blockadeOrder);	
+
+	Advance* attackAdvanceOrder = new Advance(player1, sourceTerritory, targetTerritory, 120);
+	testOrders->addOrder(attackAdvanceOrder);
+
+	Negotiate* negotiateOrder = new Negotiate(player1, player2);
+	testOrders->addOrder(negotiateOrder);
+	testOrders->addOrder(blockadeOrder);
+	testOrders->addOrder(bombOrder);
+	testOrders->addOrder(airliftOrder);
+
+	gameEngine->executeOrdersPhase(testOrders);
 }

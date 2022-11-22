@@ -370,6 +370,8 @@ void GameEngine::reinforcementPhase()
         cout << player->getName() << " owns " << player->getOwnedTerritories().size() << " territories." << endl;
 
         int armyUnits = (player->getOwnedTerritories().size() / 3);
+        if (player->getArmyUnits() > 0)
+            armyUnits += player->getArmyUnits();
 
         if (armyUnits < 3)
             player->setArmyUnits(3);
@@ -393,7 +395,7 @@ void GameEngine::reinforcementPhase()
                 if (ownsContinent)
                 {
                     cout << player->getName() << " owns continent " << c->getName() << " and gained " << c->getScore() << " army units." << endl;
-                    armyUnits = +armyUnits + c->getScore();
+                    armyUnits = armyUnits + c->getScore();
                 }
                 else
                     cout << player->getName() << " does not own continent " << c->getName() << "." << endl;
@@ -407,12 +409,11 @@ void GameEngine::reinforcementPhase()
 
 bool GameEngine::allPlayerCardsPlayed() const
 {
-    bool allCardsPlayed = false;
+    bool allCardsPlayed = true;
     for (Player* p : this->_players)
     {
-        allCardsPlayed = (p->getPlayerHand()->cards.size() != 0);
-        if (!allCardsPlayed)
-            break;
+        cout << p->getName() << ": " << p->getPlayerHand()->cards.size() << " cards." << endl;
+        allCardsPlayed = allCardsPlayed && (p->getPlayerHand()->cards.size() != 0);
     }
     return allCardsPlayed;
 }
@@ -424,7 +425,7 @@ void GameEngine::issueOrdersPhase()
     {
         for (Player* p : this->_players)
         {
-            //5 is used here to keep a few territories to attack to be used by Cards
+            // 5 is used here to keep a few territories to attack to be used by Cards
             if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
             {
                 Order* o = p->getPlayerHand()->cards.at(0)->play(p, this->deck);
@@ -450,23 +451,81 @@ void GameEngine::executeOrdersPhase()
     this->ordersList = nullptr;
 }
 
+int GameEngine::validateGameRound()
+{
+    for (int i = 0; i < this->_players.size(); i++)
+    {
+        Player* player = this->_players[i];
+        int ownedTerritoryCount = player->getOwnedTerritories().size();
+        // Kick out player that do not have any territories
+        if (ownedTerritoryCount == 0)
+        {
+            cout << player->getName() << " does not own at least one territory." << endl
+                 << player->getName() << " is removed from the game." << endl << endl;
+            this->_players.erase(this->_players.begin() + i);
+            continue;
+        }
+        // Check if player owns all territories
+        if (ownedTerritoryCount == this->_map->getTerritories().size())
+        {
+            cout << player->getName() << " owns all the territories." << endl << endl;
+            return i;
+        }
+    }
+    return -1;
+}
+
 void GameEngine::mainGameLoop()
 {
-    cout << endl
-        << "------------- Issue Orders Phase -------------" << endl
-        << endl;
-    this->_commandProcessor->saveCommand("issueorder");
-    this->transition();
-    cout << endl
-        << "------------- Execute Orders Phase -------------" << endl
-        << endl;
-    this->_commandProcessor->saveCommand("endissueorders");
-    this->transition();
-    cout << endl
-         << "------------- Reinforcement Phase -------------" << endl
-         << endl;
-    this->_commandProcessor->saveCommand("endexecorders");
-    this->transition();
+    int winnerIndex = validateGameRound();
+    vector<int> ownedTerritory = getOwnedTerritories({});
+    while (winnerIndex == -1)
+    {
+        cout << endl
+             << "------------- Issue Orders Phase -------------" << endl
+             << endl;
+        this->_commandProcessor->saveCommand("issueorder");
+        this->transition();
+        cout << endl
+             << "------------- Execute Orders Phase -------------" << endl
+             << endl;
+        this->_commandProcessor->saveCommand("endissueorders");
+        this->transition();
+        cout << endl
+             << "------------- Reinforcement Phase -------------" << endl
+             << endl;
+        this->_commandProcessor->saveCommand("endexecorders");
+        this->transition();
+
+        ownedTerritory = getOwnedTerritories(ownedTerritory);
+
+        winnerIndex = validateGameRound();
+    }
+    cout << this->_players[winnerIndex]->getName() << " is the winner." << endl;
+}
+
+vector<int> GameEngine::getOwnedTerritories(vector<int> ownedTerritory)
+{
+    vector<int> newOwnedTerritory = {};
+    for (int i = 0; i < this->_players.size(); i++)
+    {
+        newOwnedTerritory.push_back(this->_players[i]->getOwnedTerritories().size());
+        if (!ownedTerritory.empty())
+        {
+            int diff = this->_players[i]->getOwnedTerritories().size() - ownedTerritory[i];
+            cout << ownedTerritory[i];
+            if (diff > 0) {
+                cout << this->_players[i]->getName() << " needs to draw " << diff << " cards." << endl;
+                for (int t = 0; t < diff; t++) {
+                    Card *card = this->deck->draw();
+                    this->_players[i]->getPlayerHand()->addCard(card);
+                    cout << "\t\tDraw Card: " << card->getCardType() << endl;
+                }
+                cout << endl;
+            }
+        }
+    }
+    return newOwnedTerritory;
 }
 
 //Print a list of all states with their valid transitions

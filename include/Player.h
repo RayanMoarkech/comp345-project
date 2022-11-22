@@ -51,6 +51,7 @@ public:
 	void removeTerritory(Territory* t);
     void ownTerritory(Territory *territory, int armyUnits);
 	void addNegotiator(Player* p); //Adds a negotiating player
+	void removeReinforcements(int numArmies);
 	//May need to add a method to remove someone from the list of negotiators
 	std::list<Player*> getNegotiatorList();
 	void setConqueredTerritory(bool conqueredTerritory);

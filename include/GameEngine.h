@@ -20,6 +20,7 @@ class Player;
 class OrdersList;
 class CommandProcessor;
 class Command;
+class Territory;
 
 
 // ---------------------------------------------
@@ -76,7 +77,7 @@ private:
 
 class GameEngine: public ILoggable, public Subject {
 public:
-    GameEngine(string fileName);
+    GameEngine(string fileName="");
     ~GameEngine();
     GameEngine(const GameEngine &);
     GameEngine &operator=(const GameEngine &);
@@ -84,17 +85,23 @@ public:
     vector<State *> getState();
     int getCurrentStateIndex();
     int &getNextStateIndex();
+    CommandProcessor* getCommandProcessor();
     void setCurrentStateIndex(int currentStateIndex);
     void setNextStateIndex(int nextStateIndex);
 
+    bool transition();
+    bool startGame();
     void startupPhase();
+    void reinforcementPhase();
+    void issueOrdersPhase();
+    void executeOrdersPhase();
+    bool allPlayerCardsPlayed() const;
+    int validateGameRound();
+    void mainGameLoop();
+
+    vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 
     std::string stringToLog();
-
-    void reinforcementPhase(Map& map, vector<Player*> players);
-    OrdersList* issueOrdersPhase(vector<Player*> players, Deck* gameDeck);
-    void executeOrdersPhase(OrdersList* allOrders);
-    void mainGameLoop(Map& map, vector<Player*> players, Deck* gameDeck);
 
 private:
     vector<State *> _state;
@@ -105,9 +112,9 @@ private:
     Map *_map;
     vector<Player *> _players;
     Deck *deck;
+    OrdersList* ordersList;
 
     bool executeCurrentStateAction(int nextStateIndex, const string &option);
-    bool nextState(Command *command, string &commandOption);
 
     friend ostream &operator<<(ostream &, const GameEngine &);
 };

@@ -136,7 +136,9 @@ void Deploy::execute()
 	}
 	// Remove numOfArmyUnits from reinforcement pool
 	// Add numOfArmyUnits to targetTerritory
-	player->removeReinforcements(numOfArmyUnits);
+
+	player->ownTerritory(targetTerritory, numOfArmyUnits);
+
 	targetTerritory->addArmies(numOfArmyUnits);
 	cout << "Deploy order executed. Deployed " << numOfArmyUnits << " armies to " << targetTerritory->getName() << "." << endl;
 	executed = true;

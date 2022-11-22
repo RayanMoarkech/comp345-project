@@ -11,11 +11,12 @@ using std::string;
 using std::vector;
 #include <ostream>
 using std::ostream;
-#include "GameEngine.h"
 #include <fstream>
 using std::fstream;
 
 #include "LoggingObserver.h"
+
+class State;
 
 // ---------------------------------------------
 // -------------- Command Section --------------

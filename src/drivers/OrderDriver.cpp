@@ -66,8 +66,7 @@ void testOrdersList()
 void testOrderExecution() 
 {
 	cout << endl
-		<< "------------------------------------------------------"
-		<< endl
+		<< "------------------------------------------------------" << endl
 		<< "Test Order Execution" << endl
 		<< "------------------------------------------------------" << endl
 		<< endl;
@@ -75,7 +74,6 @@ void testOrderExecution()
     GameEngine* gameEngine = new GameEngine("");
     Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
 
-    Deck* gameDeck = new Deck();
     Hand* playerOneHand = new Hand();
     Hand* playerTwoHand = new Hand();
 
@@ -113,9 +111,6 @@ void testOrderExecution()
             player2->addOwnedTerritory(t);
         }
     }
-
-	OrdersList* allOrders = gameEngine->issueOrdersPhase(players, gameDeck);
-	gameEngine->executeOrdersPhase(allOrders);
 
 	vector<Territory*> territories = map->getTerritories();
 	Territory* sourceTerritory = territories[0];

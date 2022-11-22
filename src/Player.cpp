@@ -353,6 +353,12 @@ OrdersList* Player::getPlayerOrders()
 	return this->playerOrders;
 }
 
+void Player::ownTerritory(Territory *territory, int armyUnits)
+{
+    this->armyUnits = this->getArmyUnits() - armyUnits;
+    this->addOwnedTerritory(territory);
+}
+
 void Player::addTerritory(Territory* t)
 {
 	this->ownedTerritories.push_back(t);

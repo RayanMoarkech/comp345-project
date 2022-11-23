@@ -97,3 +97,40 @@ PlayerStrategy* NeutralPlayerStrategy::toDefend()
 
 NeutralPlayerStrategy::~NeutralPlayerStrategy() = default;
 
+
+// ---------------------------------------------
+// ----- AggressivePlayerStrategy Section ------
+// ---------------------------------------------
+
+// Constructors
+
+AggressivePlayerStrategy::AggressivePlayerStrategy(): PlayerStrategy() {}
+
+AggressivePlayerStrategy::AggressivePlayerStrategy(Player *player): PlayerStrategy(player) {}
+
+AggressivePlayerStrategy::AggressivePlayerStrategy(const PlayerStrategy &playerStrategy): PlayerStrategy(playerStrategy) {}
+
+// Functionalities
+
+PlayerStrategy* AggressivePlayerStrategy::issueOrder() {
+    //TODO: complete part
+    return this;
+}
+
+PlayerStrategy* AggressivePlayerStrategy::toAttack()
+{
+    //TODO: computer player that focuses on attack
+    // deploys or advances armies on its strongest country,
+    // then always advances to enemy territories until it cannot do so anymore
+    return this;
+}
+
+PlayerStrategy* AggressivePlayerStrategy::toDefend()
+{
+    //TODO: complete part
+    return this;
+}
+
+// Destructor
+
+AggressivePlayerStrategy::~AggressivePlayerStrategy() = default;

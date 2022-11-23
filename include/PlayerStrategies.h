@@ -36,3 +36,24 @@ public:
     ~PlayerStrategy();
 };
 
+
+// ---------------------------------------------
+// ------- NeutralPlayerStrategy Section -------
+// ---------------------------------------------
+
+class NeutralPlayerStrategy: public PlayerStrategy {
+public:
+    NeutralPlayerStrategy();
+    NeutralPlayerStrategy(Player* player);
+    NeutralPlayerStrategy(const PlayerStrategy& playerStrategy);
+
+    PlayerStrategy* issueOrder();
+    PlayerStrategy* toAttack();
+    PlayerStrategy* toDefend();
+
+//    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
+//    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+
+    ~NeutralPlayerStrategy();
+};
+

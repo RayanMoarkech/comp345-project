@@ -60,3 +60,40 @@ PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &playerStrategy) 
 
 PlayerStrategy::~PlayerStrategy() = default;
 
+
+// ---------------------------------------------
+// ------- NeutralPlayerStrategy Section -------
+// ---------------------------------------------
+
+// Constructors
+
+NeutralPlayerStrategy::NeutralPlayerStrategy(): PlayerStrategy() {}
+
+NeutralPlayerStrategy::NeutralPlayerStrategy(Player *player): PlayerStrategy(player) {}
+
+NeutralPlayerStrategy::NeutralPlayerStrategy(const PlayerStrategy &playerStrategy): PlayerStrategy(playerStrategy) {}
+
+// Functionalities
+
+// never issues any order
+PlayerStrategy* NeutralPlayerStrategy::issueOrder()
+{
+    return this;
+}
+
+PlayerStrategy* NeutralPlayerStrategy::toAttack()
+{
+    // TODO: not sure what to put here
+    return this;
+}
+
+// is attacked, it becomes an Aggressive player
+PlayerStrategy* NeutralPlayerStrategy::toDefend()
+{
+    return new AggressivePlayerStrategy(*this);
+}
+
+// Destructor
+
+NeutralPlayerStrategy::~NeutralPlayerStrategy() = default;
+

@@ -16,9 +16,11 @@ class Player;
 // ---------------------------------------------
 
 class PlayerStrategy {
-private:
-    Player* _player;
+//private:
+//    Player* _player;
 public:
+    Player* _player;
+
     PlayerStrategy();
     PlayerStrategy(Player* player);
     PlayerStrategy(const PlayerStrategy& playerStrategy);

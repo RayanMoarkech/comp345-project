@@ -173,17 +173,16 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 	cout << this->getPlayer()->getName() << "'s Turn" << endl;
 	cout << "----------------------------------" << endl;
 
-	//To Attack
-	if (this->getPlayer()->getAttackList().size() == 0)
-	{
-		this->toAttack();
-		return NULL;
-	}
 	//To Defend
 	if (this->getPlayer()->getDefendList().size() == 0)
 	{
 		this->toDefend();
-		return NULL;
+	}
+
+	//To Attack
+	if (this->getPlayer()->getAttackList().size() == 0)
+	{
+		this->toAttack();
 	}
 
 	//Deploy on toDefend territories, will not be able to issue other orders until
@@ -213,92 +212,93 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 		{
 			cout << "Number of army units to deploy to " << this->getPlayer()->getDefendList().at(territoryToDefend - 1)->getName() << ": ";
 			cin >> armyUnitsToDeploy;
-			while (armyUnitsToDeploy > this->armyUnits || armyUnitsToDeploy <= 0)
+			while (armyUnitsToDeploy > this->getPlayer()->getArmyUnits() || armyUnitsToDeploy <= 0)
 			{
 				cout << "Not a valid number of army units" << endl;
 				cout << "Number of army units to deploy to " << this->getPlayer()->getDefendList().at(territoryToDefend - 1)->getName() << ": ";
 				cin >> armyUnitsToDeploy;
 			}
-			this->armyUnits -= armyUnitsToDeploy;
+			this->getPlayer()->setArmyUnits(this->getPlayer()->getArmyUnits() - armyUnitsToDeploy);
 			//return new Deploy(this, this->toDefendList.at(territoryToDefend - 1), armyUnitsToDeploy);
 		}
 
-	//Advance (Defend)
-	/*if (this->toDefendList.size() != 5)
-	{
-		Territory* targetTerritory = this->toDefendList.at(0);
-		this->toDefendList.erase(this->toDefendList.begin());
-		int index = (rand() % this->toDefendList.size());
-		Territory* sourceTerritory = this->toDefendList.at(index);
-		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
-
-
-		cout << endl;
-		cout << "Defense: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
-			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
-		cout << endl;
-		return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
-	}
-	if (this->toAttackList.size() != 5)
-	{
-		Territory* targetTerritory = this->toAttackList.at(0);
-		this->toAttackList.erase(this->toAttackList.begin());
-		int index = (rand() % this->ownedTerritories.size());
-		Territory* sourceTerritory = this->ownedTerritories.at(index);
-		int armiesToAdvance = sourceTerritory->getNumberOfArmies();
-
-		cout << endl;
-		cout << "Attack: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
-			sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
-		cout << endl;
-		return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
-	}
-	if (this->getPlayerHand()->cards.size() != 0)
-	{
-		string cardType = this->getPlayerHand()->cards.at(0)->getCardType();
-		cout << endl;
-		cout << "Player played card: " << cardType << endl;
-		if (cardType == "Bomb")
+		//Advance (Defend)
+		/*if (this->toDefendList.size() != 5)
 		{
-			int index = (rand() % this->toAttackList.size());
-			Territory* toBomb = this->toAttackList.at(index);
-			cout << this->getName() << " will bomb " << toBomb->getName() << endl;
-			cout << endl;
-			return new Bomb(this, toBomb);
-		}
-		if (cardType == "Blockade")
-		{
+			Territory* targetTerritory = this->toDefendList.at(0);
+			this->toDefendList.erase(this->toDefendList.begin());
 			int index = (rand() % this->toDefendList.size());
-			Territory* toBlockade = this->toDefendList.at(index);
-			cout << this->getName() << " will blockade " << toBlockade->getName() << endl;
+			Territory* sourceTerritory = this->toDefendList.at(index);
+			int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
+
 			cout << endl;
-			return new Blockade(this, toBlockade);
+			cout << "Defense: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
+				sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
+			cout << endl;
+			return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
 		}
-		if (cardType == "Blockade")
+		if (this->toAttackList.size() != 5)
 		{
-			int index = (rand() % this->toDefendList.size());
-			Territory* toBlockade = this->toDefendList.at(index);
-			cout << this->getName() << " will blockade " << this->toDefendList.at(index)->getName() << endl;
+			Territory* targetTerritory = this->toAttackList.at(0);
+			this->toAttackList.erase(this->toAttackList.begin());
+			int index = (rand() % this->ownedTerritories.size());
+			Territory* sourceTerritory = this->ownedTerritories.at(index);
+			int armiesToAdvance = sourceTerritory->getNumberOfArmies();
+
 			cout << endl;
-			return new Blockade(this, toBlockade);
+			cout << "Attack: " << this->getName() << " advances " << armiesToAdvance << " armies from " <<
+				sourceTerritory->getName() << " to " << targetTerritory->getName() << endl;
+			cout << endl;
+			return new Advance(this, sourceTerritory, targetTerritory, armiesToAdvance);
 		}
-		if (cardType == "Airlift")
+		if (this->getPlayerHand()->cards.size() != 0)
 		{
-			int index1 = (rand() % this->toDefendList.size());
-			Territory* target = this->toDefendList.at(index1);
-			int index2 = (rand() % this->toDefendList.size());
-			Territory* source = this->toDefendList.at(index2);
-			cout << this->getName() << " will airlift 5 armies from " << source->getName() <<
-				" to " << target->getName() << endl;
+			string cardType = this->getPlayerHand()->cards.at(0)->getCardType();
 			cout << endl;
-			return new Airlift(this, source, target, 5);
+			cout << "Player played card: " << cardType << endl;
+			if (cardType == "Bomb")
+			{
+				int index = (rand() % this->toAttackList.size());
+				Territory* toBomb = this->toAttackList.at(index);
+				cout << this->getName() << " will bomb " << toBomb->getName() << endl;
+				cout << endl;
+				return new Bomb(this, toBomb);
+			}
+			if (cardType == "Blockade")
+			{
+				int index = (rand() % this->toDefendList.size());
+				Territory* toBlockade = this->toDefendList.at(index);
+				cout << this->getName() << " will blockade " << toBlockade->getName() << endl;
+				cout << endl;
+				return new Blockade(this, toBlockade);
+			}
+			if (cardType == "Blockade")
+			{
+				int index = (rand() % this->toDefendList.size());
+				Territory* toBlockade = this->toDefendList.at(index);
+				cout << this->getName() << " will blockade " << this->toDefendList.at(index)->getName() << endl;
+				cout << endl;
+				return new Blockade(this, toBlockade);
+			}
+			if (cardType == "Airlift")
+			{
+				int index1 = (rand() % this->toDefendList.size());
+				Territory* target = this->toDefendList.at(index1);
+				int index2 = (rand() % this->toDefendList.size());
+				Territory* source = this->toDefendList.at(index2);
+				cout << this->getName() << " will airlift 5 armies from " << source->getName() <<
+					" to " << target->getName() << endl;
+				cout << endl;
+				return new Airlift(this, source, target, 5);
+			}
+			return NULL;
 		}
-		return NULL;
+		cout << endl;
+		cout << this->getName() << " has no more orders." << endl;
+		cout << endl;
+		return NULL;*/
 	}
-	cout << endl;
-	cout << this->getName() << " has no more orders." << endl;
-	cout << endl;
-	return NULL;*/
     return this;
 }
 
@@ -306,7 +306,7 @@ PlayerStrategy* HumanPlayerStrategy::toAttack()
 {
 	vector<Territory*> territoriesToAttack;
 	cout << "Which neighbouring territories should be attacked in priority?" << endl;
-	vector<Territory*> neighbouringTerritories = this->getPlayer()->getNeighbouringTerritories();
+	vector<Territory*> neighbouringTerritories = this->_player->getNeighbouringTerritories();
 	int counter = 1;
 	for (Territory* t : neighbouringTerritories)
 	{
@@ -346,6 +346,7 @@ PlayerStrategy* HumanPlayerStrategy::toAttack()
 		cout << counter << " - " << t->getName() << endl;
 		counter++;
 	}
+	this->_player->setAttackList(territoriesToAttack);
     return this;
 }
 
@@ -393,6 +394,7 @@ PlayerStrategy* HumanPlayerStrategy::toDefend()
 		cout << counter << " - " << t->getName() << endl;
 		counter++;
 	}
+	this->_player->setDefendList(territoriesToDefend);
     return this;
 }
 

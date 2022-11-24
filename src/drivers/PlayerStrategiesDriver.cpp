@@ -1,3 +1,7 @@
+#include <iostream>
+using std::cout;
+using std::endl;
+
 #include "../../include/PlayerStrategies.h"
 #include "../../include/Player.h"
 #include "../../include/GameEngine.h"
@@ -51,9 +55,16 @@ void testPlayerStrategies()
         }
     }
 
+    player1->setArmyUnits(20);
+
     //Human Strategy
 
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
-    humanPlayer->toDefend();
-    humanPlayer->toAttack();
+    while (true)
+    {
+        cout << "player1 toAttack size: " << player1->getAttackList().size() << endl;
+        cout << "humanPlayer toAttack size: " << humanPlayer->getPlayer()->getAttackList().size() << endl;
+
+        humanPlayer->issueOrder();
+    }
 }

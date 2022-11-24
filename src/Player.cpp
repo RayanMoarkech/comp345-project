@@ -131,9 +131,19 @@ vector<Territory*> Player::getAttackList()
 	return this->toAttackList;
 }
 
+void Player::setAttackList(vector<Territory*> toAttackList)
+{
+	this->toAttackList = toAttackList;
+}
+
 vector<Territory*> Player::getDefendList()
 {
 	return this->toDefendList;
+}
+
+void Player::setDefendList(vector<Territory*> toDefendList)
+{
+	this->toDefendList = toDefendList;
 }
 
 //Stream Insertion Operator for Player class

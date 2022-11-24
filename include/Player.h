@@ -63,7 +63,9 @@ public:
     void addOwnedTerritory(Territory* territory);
 	vector<Territory*> getNeighbouringTerritories();
 	vector<Territory*> getAttackList();
+	void setAttackList(vector<Territory*> toAttackList);
 	vector<Territory*> getDefendList();
+	void setDefendList(vector<Territory*> toDefendList);
 };
 
 #endif //Player_H

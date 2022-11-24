@@ -20,6 +20,9 @@ void testMainGameLoop();
 void testOrderExecution();
 void testLoggingObserver();
 
+// Phase 3
+void testPlayerStrategies();
+
 int main(int argc, char *argv[]) {
     // Phase 1
 //    testLoadMaps();
@@ -30,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     // Phase 2
 
-    testCommandProcessor();
+    /*testCommandProcessor();
 
     if (argv[1] != NULL && (strcmp(argv[1], "-file") == 0))
     {
@@ -57,7 +60,9 @@ int main(int argc, char *argv[]) {
 
     testMainGameLoop();
     testOrderExecution();
-    testLoggingObserver();
+    testLoggingObserver();*/
+
+    testPlayerStrategies();
 
     return 0;
 }

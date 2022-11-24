@@ -78,5 +78,24 @@ public:
     ~AggressivePlayerStrategy();
 };
 
+// ---------------------------------------------
+// ----- HumanPlayerStrategy Section ------
+// ---------------------------------------------
+
+class HumanPlayerStrategy : public PlayerStrategy {
+public:
+    HumanPlayerStrategy();
+    HumanPlayerStrategy(Player* player);
+    HumanPlayerStrategy(const PlayerStrategy& playerStrategy);
+
+    PlayerStrategy* issueOrder();
+    PlayerStrategy* toAttack();
+    PlayerStrategy* toDefend();
+
+    //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
+    //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+
+    ~HumanPlayerStrategy();
+};
 
 #endif //PLAYERSTRATEGIES_H

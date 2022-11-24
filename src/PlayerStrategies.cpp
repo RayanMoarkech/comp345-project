@@ -3,10 +3,29 @@
 //
 
 #include "../include/PlayerStrategies.h"
+#include "../include/Player.h"
 
 #include <iostream>
     using std::cout;
+	using std::cin;
     using std::endl;
+#include <vector>
+    using std::vector;
+
+class Territory;
+
+//Static Methods
+static bool isIn(vector<Territory*> territoryVector, Territory* territory)
+{
+	for (Territory* t : territoryVector)
+	{
+		if (t == territory)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 
 // ---------------------------------------------
@@ -134,3 +153,82 @@ PlayerStrategy* AggressivePlayerStrategy::toDefend()
 // Destructor
 
 AggressivePlayerStrategy::~AggressivePlayerStrategy() = default;
+
+// ---------------------------------------------
+// ----- HumanPlayerStrategy Section ------
+// ---------------------------------------------
+
+// Constructors
+
+HumanPlayerStrategy::HumanPlayerStrategy() : PlayerStrategy() {}
+
+HumanPlayerStrategy::HumanPlayerStrategy(Player* player) : PlayerStrategy(player) {}
+
+HumanPlayerStrategy::HumanPlayerStrategy(const PlayerStrategy& playerStrategy) : PlayerStrategy(playerStrategy) {}
+
+// Functionalities
+
+PlayerStrategy* HumanPlayerStrategy::issueOrder() {
+    //TODO: complete part
+    return this;
+}
+
+PlayerStrategy* HumanPlayerStrategy::toAttack()
+{
+    //TODO: computer player that focuses on attack
+    // deploys or advances armies on its strongest country,
+    // then always advances to enemy territories until it cannot do so anymore
+    return this;
+}
+
+PlayerStrategy* HumanPlayerStrategy::toDefend()
+{
+    //TODO: complete part
+	cout << "HumanPlayerStrategy toDefend" << endl;
+	vector<Territory*> territoriesToDefend;
+	cout << "Which territories should be defended in priority?" << endl;
+	int counter = 1;
+	for (Territory* t : this->getPlayer()->getOwnedTerritories())
+	{
+		cout << counter << " - " << t->getName() << endl;
+		counter++;
+	}
+	cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
+	int territoryToDefend = -1;
+	while (territoryToDefend != 0)
+	{
+		cin >> territoryToDefend;
+		if (territoryToDefend == 0)
+		{
+			break;
+		}
+		else if (territoryToDefend < 0 || territoryToDefend > this->getPlayer()->getOwnedTerritories().size())
+		{
+			cout << "Not a valid number." << endl;
+			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
+		}
+		else
+		{
+			if (!isIn(territoriesToDefend, this->getPlayer()->getOwnedTerritories().at(territoryToDefend - 1)))
+			{
+				territoriesToDefend.push_back(this->getPlayer()->getOwnedTerritories().at(territoryToDefend - 1));
+			}
+			else
+			{
+				cout << "This territory is already in the to defend list." << endl;
+			}
+		}
+	}
+	cout << "prioritized list of territories to defend: " << endl;
+	counter = 1;
+	for (Territory* t : territoriesToDefend)
+	{
+		cout << counter << " - " << t->getName() << endl;
+		counter++;
+	}
+    return this;
+}
+
+// Destructor
+
+HumanPlayerStrategy::~HumanPlayerStrategy() = default;

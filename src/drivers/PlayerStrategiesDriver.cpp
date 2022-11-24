@@ -55,4 +55,5 @@ void testPlayerStrategies()
 
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
     humanPlayer->toDefend();
+    humanPlayer->toAttack();
 }

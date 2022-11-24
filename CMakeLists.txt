@@ -22,4 +22,7 @@ add_executable(
         src/drivers/GameEngineDriver.cpp src/GameEngine.cpp include/GameEngine.h
         src/drivers/MainDriver.cpp
         include/CommandProcessing.h src/CommandProcessing.cpp src/drivers/CommandProcessingDriver.cpp
-        include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp include/LoggingObserver.h src/LoggingObserver.cpp src/drivers/LoggingObserverDriver.cpp)
+        include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp
+        include/LoggingObserver.h src/LoggingObserver.cpp src/drivers/LoggingObserverDriver.cpp
+        src/PlayerStrategies.cpp include/PlayerStrategies.h
+)

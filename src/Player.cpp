@@ -436,3 +436,15 @@ void Player::removeReinforcements(int numArmies)
 {
 	this->armyUnits = this->armyUnits - numArmies;
 }
+
+bool Player::ownsCard(string cardType)
+{
+	for (Card* c : this->playerHand->cards)
+	{
+		if (c->getCardType() == cardType)
+		{
+			return true;
+		}
+	}
+	return false;
+}

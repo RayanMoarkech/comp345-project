@@ -24,7 +24,7 @@ void testPlayerStrategies()
     Card* blockadeCard = new Card(BLOCKADE);
     Card* airliftCard = new Card(AIRLIFT);
 
-    playerOneHand->addCard(bombCard);
+    //playerOneHand->addCard(bombCard);
     playerOneHand->addCard(blockadeCard);
     playerTwoHand->addCard(airliftCard);
 

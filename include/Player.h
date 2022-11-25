@@ -68,6 +68,7 @@ public:
 	void setAttackList(vector<Territory*> toAttackList);
 	vector<Territory*> getDefendList();
 	void setDefendList(vector<Territory*> toDefendList);
+	bool ownsCard(string cardType);
 };
 
 #endif //Player_H

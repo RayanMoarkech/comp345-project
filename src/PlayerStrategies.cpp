@@ -347,93 +347,120 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 
 			if (orderType == 3)
 			{
-				cout << "What territory do you want to bomb?" << endl;
-				int counter = 1;
-				for (Territory* t : this->_player->getAttackList())
+				if (this->_player->ownsCard("Bomb"))
 				{
-					cout << counter << " - " << t->getName() << endl;
-					counter++;
-				}
-				int territoryToBomb;
-				cin >> territoryToBomb;
-				while (territoryToBomb < 0 || territoryToBomb > this->_player->getAttackList().size())
-				{
-					cout << "Not a valid number." << endl;
 					cout << "What territory do you want to bomb?" << endl;
+					int counter = 1;
+					for (Territory* t : this->_player->getAttackList())
+					{
+						cout << counter << " - " << t->getName() << endl;
+						counter++;
+					}
+					int territoryToBomb;
 					cin >> territoryToBomb;
+					while (territoryToBomb < 0 || territoryToBomb > this->_player->getAttackList().size())
+					{
+						cout << "Not a valid number." << endl;
+						cout << "What territory do you want to bomb?" << endl;
+						cin >> territoryToBomb;
+					}
+					//return new Bomb(this, this->_player->getAttackList().at(territoryToBomb - 1));
 				}
-				//return new Bomb(this, this->_player->getAttackList().at(territoryToBomb - 1));
+				else {
+					cout << "You do not have a Bomb card." << endl;
+				}
 				return this;
 			}
 
 			if (orderType == 4)
 			{
-				cout << "What territory do you want to blockade?" << endl;
-				int counter = 1;
-				for (Territory* t : this->_player->getDefendList())
+				if (this->_player->ownsCard("Blockade"))
 				{
-					cout << counter << " - " << t->getName() << endl;
-					counter++;
-				}
-				int territoryToBlock;
-				cin >> territoryToBlock;
-				while (territoryToBlock < 0 || territoryToBlock > this->_player->getDefendList().size())
-				{
-					cout << "Not a valid number." << endl;
-					cout << "What territory do you want to block?" << endl;
+					cout << "What territory do you want to blockade?" << endl;
+					int counter = 1;
+					for (Territory* t : this->_player->getDefendList())
+					{
+						cout << counter << " - " << t->getName() << endl;
+						counter++;
+					}
+					int territoryToBlock;
 					cin >> territoryToBlock;
+					while (territoryToBlock < 0 || territoryToBlock > this->_player->getDefendList().size())
+					{
+						cout << "Not a valid number." << endl;
+						cout << "What territory do you want to block?" << endl;
+						cin >> territoryToBlock;
+					}
+					//return new Blockade(this, this->_player->getAttackList().at(territoryToBlock - 1));
 				}
-				//return new Blockade(this, this->_player->getAttackList().at(territoryToBlock - 1));
+				else 
+				{
+					cout << "You do not have a Blockade card." << endl;
+				}
 				return this;
 			}
 
 			if (orderType == 5)
 			{
-				cout << "What is the target territory to airlift?" << endl;
-				int counter = 1;
-				for (Territory* t : this->_player->getOwnedTerritories())
+				if (this->_player->ownsCard("Airlift"))
 				{
-					cout << counter << " - " << t->getName() << endl;
-					counter++;
-				}
-				int airliftTarget;
-				cin >> airliftTarget;
-				while (airliftTarget < 0 || airliftTarget > this->_player->getOwnedTerritories().size())
-				{
-					cout << "Not a valid number." << endl;
 					cout << "What is the target territory to airlift?" << endl;
+					int counter = 1;
+					for (Territory* t : this->_player->getOwnedTerritories())
+					{
+						cout << counter << " - " << t->getName() << endl;
+						counter++;
+					}
+					int airliftTarget;
 					cin >> airliftTarget;
-				}
+					while (airliftTarget < 0 || airliftTarget > this->_player->getOwnedTerritories().size())
+					{
+						cout << "Not a valid number." << endl;
+						cout << "What is the target territory to airlift?" << endl;
+						cin >> airliftTarget;
+					}
 
-				cout << "What is the source territory to airlift?" << endl;
-				counter = 1;
-				for (Territory* t : this->_player->getOwnedTerritories())
-				{
-					cout << counter << " - " << t->getName() << endl;
-					counter++;
-				}
-				int airliftSource;
-				cin >> airliftSource;
-				while (airliftSource < 0 || airliftSource > this->_player->getOwnedTerritories().size())
-				{
-					cout << "Not a valid number." << endl;
 					cout << "What is the source territory to airlift?" << endl;
+					counter = 1;
+					for (Territory* t : this->_player->getOwnedTerritories())
+					{
+						cout << counter << " - " << t->getName() << endl;
+						counter++;
+					}
+					int airliftSource;
 					cin >> airliftSource;
+					while (airliftSource < 0 || airliftSource > this->_player->getOwnedTerritories().size())
+					{
+						cout << "Not a valid number." << endl;
+						cout << "What is the source territory to airlift?" << endl;
+						cin >> airliftSource;
+					}
+
+					int armiesToAirlift;
+					cout << "How many armies to airlift?" << endl;
+					cin >> armiesToAirlift;
+
+					//return new Airlift(this, this->_player->getOwnedTerritories().at(airliftSource - 1),
+					//	this->_player->getOwnedTerritories().at(airliftTarget - 1), armiesToAirlift);
 				}
-
-				int armiesToAirlift;
-				cout << "How many armies to airlift?" << endl;
-				cin >> armiesToAirlift;
-
-				//return new Airlift(this, this->_player->getOwnedTerritories().at(airliftSource - 1),
-				//	this->_player->getOwnedTerritories().at(airliftTarget - 1), armiesToAirlift);
+				else
+				{
+					cout << "You do not have a Airlift card." << endl;
+				}
 				return this;
 			}
 
 			if (orderType == 6)
 			{
-				cout << "Which player do you want to negociate with?" << endl;
-				//TO DO
+				if (this->_player->ownsCard("Diplomacy"))
+				{
+					cout << "Which player do you want to negociate with?" << endl;
+					//TO DO
+				}
+				else
+				{
+					cout << "You do not have a Diplomacy card." << endl;
+				}
 				return this;
 			}
 

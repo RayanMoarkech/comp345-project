@@ -61,7 +61,9 @@ public:
     void setArmyUnits(int armyUnits);
     int getArmyUnits();
     void addOwnedTerritory(Territory* territory);
-	vector<Territory*> getNeighbouringTerritories();
+	vector<Territory*> getNeighbouringEnemyTerritories();
+	vector<Territory*> getNeighbouringEnemyTerritories(Territory* t);
+	vector<Territory*> getNeighbouringOwnedTerritories(Territory* t);
 	vector<Territory*> getAttackList();
 	void setAttackList(vector<Territory*> toAttackList);
 	vector<Territory*> getDefendList();

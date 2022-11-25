@@ -41,7 +41,7 @@ void testPlayerStrategies()
     vector<Player*> players = { player1, player2 };
 
     player1->addOwnedTerritory(map->getTerritory("Cockpit01"));
-    player1->addOwnedTerritory(map->getTerritory("Cockpit02"));
+    //player1->addOwnedTerritory(map->getTerritory("Cockpit02"));
 
     for (Territory* t : map->getTerritories())
     {
@@ -60,11 +60,8 @@ void testPlayerStrategies()
     //Human Strategy
 
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
-    while (true)
+    for (int i=0; i < 7; i++)
     {
-        cout << "player1 toAttack size: " << player1->getAttackList().size() << endl;
-        cout << "humanPlayer toAttack size: " << humanPlayer->getPlayer()->getAttackList().size() << endl;
-
         humanPlayer->issueOrder();
     }
 }

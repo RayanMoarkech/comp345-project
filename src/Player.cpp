@@ -202,7 +202,7 @@ void Player::toAttack()
 	cout << this->getName() << " 's Territories to Attack in Prioritized Order" << endl;
 	cout << endl;
 
-	vector<Territory*> territoriesToAttack = this->getNeighbouringTerritories();
+	vector<Territory*> territoriesToAttack = this->getNeighbouringEnemyTerritories();
 	std::random_shuffle(territoriesToAttack.begin(), territoriesToAttack.end());
 	for (Territory* t : territoriesToAttack)
 	{
@@ -212,7 +212,7 @@ void Player::toAttack()
 }
 
 //This method gets all adjacent territories of owned territories and excludes territories that are owned by player
-vector<Territory*> Player::getNeighbouringTerritories()
+vector<Territory*> Player::getNeighbouringEnemyTerritories()
 {
 	vector<Territory*> neighbouringTerritories;
 	for (Territory* t : this->ownedTerritories)
@@ -223,6 +223,34 @@ vector<Territory*> Player::getNeighbouringTerritories()
 			{
 				neighbouringTerritories.push_back(adjTerritory);
 			}
+		}
+	}
+	return neighbouringTerritories;
+}
+
+//Gets enemy territories adjacent to 1 territory
+vector<Territory*> Player::getNeighbouringEnemyTerritories(Territory* t)
+{
+	vector<Territory*> neighbouringTerritories;
+	for (Territory* adjTerritory : t->getAdjacentTerritories())
+	{
+		if (!isIn(neighbouringTerritories, adjTerritory) && !isIn(ownedTerritories, adjTerritory))
+		{
+				neighbouringTerritories.push_back(adjTerritory);
+		}
+	}
+	return neighbouringTerritories;
+}
+
+//Gets owned territories adjacent to 1 territory
+vector<Territory*> Player::getNeighbouringOwnedTerritories(Territory* t)
+{
+	vector<Territory*> neighbouringTerritories;
+	for (Territory* adjTerritory : t->getAdjacentTerritories())
+	{
+		if (!isIn(neighbouringTerritories, adjTerritory) && isIn(ownedTerritories, adjTerritory))
+		{
+			neighbouringTerritories.push_back(adjTerritory);
 		}
 	}
 	return neighbouringTerritories;

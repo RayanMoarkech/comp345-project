@@ -64,9 +64,9 @@ void testPlayerStrategies()
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
     BenevolentPlayerStrategy* benevolantPlayer = new BenevolentPlayerStrategy(player2);
 
-    for (int i=0; i < 20; i++)
+    for (int i=0; i < 40; i++)
     {
-        //humanPlayer->issueOrder();
+        humanPlayer->issueOrder();
         benevolantPlayer->issueOrder();
     }
 }

@@ -208,7 +208,7 @@ PlayerStrategy* BenevolentPlayerStrategy::issueOrder()
 			return this;
 		}
 	}
-
+	cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;
 	return this;
 }
 
@@ -227,7 +227,8 @@ PlayerStrategy* BenevolentPlayerStrategy::toDefend()
 
 	sort(toDefend.begin(), toDefend.end(), 
 		[](const Territory* t1, const Territory* t2) {return *t1 < *t2; });
-
+	cout << "Prioritized list of territories to defend: " << endl;
+	cout << endl;
 	for (Territory* t : toDefend)
 	{
 		cout << t->getName() << ": " << t->getNumberOfArmies() << " armies" << endl;
@@ -295,7 +296,7 @@ HumanPlayerStrategy::HumanPlayerStrategy(const PlayerStrategy& playerStrategy) :
 PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 	cout << endl;
 	cout << "----------------------------------" << endl;
-	cout << this->getPlayer()->getName() << "'s Turn" << endl;
+	cout << this->getPlayer()->getName() << "'s Turn - Type: Human" << endl;
 	cout << "----------------------------------" << endl;
 	cout << endl;
 
@@ -318,12 +319,14 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 	if (this->getPlayer()->getArmyUnits() != 0)
 	{
 		cout << "Choose territory and how many many army units to deploy." << endl;
+		cout << endl;
 		int counter = 1;
 		for (Territory* t : this->getPlayer()->getDefendList())
 		{
 			cout << counter << " - " << t->getName() << endl;
 			counter++;
 		}
+		cout << endl;
 		int territoryToDefend = -1;
 		int armyUnitsToDeploy;
 
@@ -334,6 +337,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 		if (territoryToDefend <= 0 || territoryToDefend > this->getPlayer()->getDefendList().size())
 		{
 			cout << "Not a valid number." << endl;
+			cout << endl;
 			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
 		}
 		else
@@ -343,11 +347,13 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 			while (armyUnitsToDeploy > this->getPlayer()->getArmyUnits() || armyUnitsToDeploy <= 0)
 			{
 				cout << "Not a valid number of army units" << endl;
+				cout << endl;
 				cout << "Number of army units to deploy to " << this->getPlayer()->getDefendList().at(territoryToDefend - 1)->getName() << ": ";
 				cin >> armyUnitsToDeploy;
 			}
 			this->getPlayer()->setArmyUnits(this->getPlayer()->getArmyUnits() - armyUnitsToDeploy);
 			//return new Deploy(this, this->toDefendList.at(territoryToDefend - 1), armyUnitsToDeploy);
+			return this;
 		}
 	}
 
@@ -365,6 +371,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 			while (orderType < 0 && orderType > 6)
 			{
 				cout << "Not a valid option" << endl;
+				cout << endl;
 				cout << "1 - Defend: Advance armies to your own territory" << endl;
 				cout << "2 - Attack: Advance armies to an enemy territory" << endl;
 				cout << "3 - Bomb Card" << endl;
@@ -377,6 +384,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 
 			if (orderType == 1)
 			{
+				cout << endl;
 				cout << "What territory do you want to defend?" << endl;
 				int counter = 1;
 				for (Territory* t : this->_player->getDefendList())
@@ -389,6 +397,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 				while (territoryToDefend < 0 || territoryToDefend > this->_player->getDefendList().size())
 				{
 					cout << "Not a valid number." << endl;
+					cout << endl;
 					cout << "What territory do you want to defend?" << endl;
 					cin >> territoryToDefend;
 				}
@@ -402,6 +411,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 				}
 				else
 				{
+					cout << endl;
 					cout << "What territory is the source of armies?" << endl;
 					counter = 1;
 					for (Territory* t : sourceTerritories)
@@ -414,10 +424,12 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 					while (sourceTerritory < 0 || sourceTerritory >sourceTerritories.size())
 					{
 						cout << "Not a valid number." << endl;
+						cout << endl;
 						cout << "What territory is the source of armies?" << endl;
 						cin >> sourceTerritory;
 					}
 					int armiesToAdvance;
+					cout << endl;
 					cout << "How many armies to advance?" << endl;
 					cin >> armiesToAdvance;
 					//return new Advance(this, this->_player->getOwnedTerritories().at(sourceTerritory - 1),
@@ -428,6 +440,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 
 			if (orderType == 2)
 			{
+				cout << endl;
 				cout << "What territory do you want to attack?" << endl;
 				int counter = 1;
 				for (Territory* t : this->_player->getAttackList())
@@ -440,12 +453,14 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 				while (territoryToAttack < 0 || territoryToAttack > this->_player->getAttackList().size())
 				{
 					cout << "Not a valid number." << endl;
+					cout << endl;
 					cout << "What territory do you want to attack?" << endl;
 					cin >> territoryToAttack;
 				}
 
 				vector<Territory*> sourceTerritories = this->_player->getNeighbouringOwnedTerritories(this->_player->getAttackList().at(territoryToAttack - 1));
 
+				cout << endl;
 				cout << "What territory is the source of armies?" << endl;
 				counter = 1;
 				for (Territory* t : sourceTerritories)
@@ -458,10 +473,12 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 				while (sourceTerritory < 0 || sourceTerritory > sourceTerritories.size())
 				{
 					cout << "Not a valid number." << endl;
+					cout << endl;
 					cout << "What territory is the source of armies?" << endl;
 					cin >> sourceTerritory;
 				}
 				int armiesToAdvance;
+				cout << endl;
 				cout << "How many armies to advance?" << endl;
 				cin >> armiesToAdvance;
 				//return new Advance(this, this->_player->getOwnedTerritories().at(sourceTerritory - 1),
@@ -473,6 +490,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 			{
 				if (this->_player->ownsCard("Bomb"))
 				{
+					cout << endl;
 					cout << "What territory do you want to bomb?" << endl;
 					int counter = 1;
 					for (Territory* t : this->_player->getAttackList())
@@ -485,6 +503,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 					while (territoryToBomb < 0 || territoryToBomb > this->_player->getAttackList().size())
 					{
 						cout << "Not a valid number." << endl;
+						cout << endl;
 						cout << "What territory do you want to bomb?" << endl;
 						cin >> territoryToBomb;
 					}
@@ -500,6 +519,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 			{
 				if (this->_player->ownsCard("Blockade"))
 				{
+					cout << endl;
 					cout << "What territory do you want to blockade?" << endl;
 					int counter = 1;
 					for (Territory* t : this->_player->getDefendList())
@@ -512,6 +532,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 					while (territoryToBlock < 0 || territoryToBlock > this->_player->getDefendList().size())
 					{
 						cout << "Not a valid number." << endl;
+						cout << endl;
 						cout << "What territory do you want to block?" << endl;
 						cin >> territoryToBlock;
 					}
@@ -528,6 +549,7 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 			{
 				if (this->_player->ownsCard("Airlift"))
 				{
+					cout << endl;
 					cout << "What is the target territory to airlift?" << endl;
 					int counter = 1;
 					for (Territory* t : this->_player->getOwnedTerritories())
@@ -540,10 +562,12 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 					while (airliftTarget < 0 || airliftTarget > this->_player->getOwnedTerritories().size())
 					{
 						cout << "Not a valid number." << endl;
+						cout << endl;
 						cout << "What is the target territory to airlift?" << endl;
 						cin >> airliftTarget;
 					}
 
+					cout << endl;
 					cout << "What is the source territory to airlift?" << endl;
 					counter = 1;
 					for (Territory* t : this->_player->getOwnedTerritories())
@@ -556,11 +580,13 @@ PlayerStrategy* HumanPlayerStrategy::issueOrder() {
 					while (airliftSource < 0 || airliftSource > this->_player->getOwnedTerritories().size())
 					{
 						cout << "Not a valid number." << endl;
+						cout << endl;
 						cout << "What is the source territory to airlift?" << endl;
 						cin >> airliftSource;
 					}
 
 					int armiesToAirlift;
+					cout << endl;
 					cout << "How many armies to airlift?" << endl;
 					cin >> armiesToAirlift;
 
@@ -602,6 +628,7 @@ PlayerStrategy* HumanPlayerStrategy::toAttack()
 {
 	vector<Territory*> territoriesToAttack;
 	cout << "Which neighbouring territories should be attacked in priority?" << endl;
+	cout << endl;
 	vector<Territory*> neighbouringTerritories = this->_player->getNeighbouringEnemyTerritories();
 	int counter = 1;
 	for (Territory* t : neighbouringTerritories)
@@ -609,6 +636,7 @@ PlayerStrategy* HumanPlayerStrategy::toAttack()
 		cout << counter << " - " << t->getName() << endl;
 		counter++;
 	}
+	cout << endl;
 	cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
 	int territoryToAttack = -1;
 	while (territoryToAttack != 0)
@@ -621,6 +649,7 @@ PlayerStrategy* HumanPlayerStrategy::toAttack()
 		else if (territoryToAttack < 0 || territoryToAttack > neighbouringTerritories.size())
 		{
 			cout << "Not a valid number." << endl;
+			cout << endl;
 			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
 		}
 		else
@@ -648,7 +677,6 @@ PlayerStrategy* HumanPlayerStrategy::toAttack()
 
 PlayerStrategy* HumanPlayerStrategy::toDefend()
 {
-	cout << "HumanPlayerStrategy toDefend" << endl;
 	vector<Territory*> territoriesToDefend;
 	cout << "Which territories should be defended in priority?" << endl;
 	int counter = 1;
@@ -657,6 +685,7 @@ PlayerStrategy* HumanPlayerStrategy::toDefend()
 		cout << counter << " - " << t->getName() << endl;
 		counter++;
 	}
+	cout << endl;
 	cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
 	int territoryToDefend = -1;
 	while (territoryToDefend != 0)
@@ -669,6 +698,7 @@ PlayerStrategy* HumanPlayerStrategy::toDefend()
 		else if (territoryToDefend < 0 || territoryToDefend > this->getPlayer()->getOwnedTerritories().size())
 		{
 			cout << "Not a valid number." << endl;
+			cout << endl;
 			cout << "Enter number corresponding to territory to add to list. Enter 0 to stop." << endl;
 		}
 		else
@@ -683,7 +713,8 @@ PlayerStrategy* HumanPlayerStrategy::toDefend()
 			}
 		}
 	}
-	cout << "prioritized list of territories to defend: " << endl;
+	cout << endl;
+	cout << "Prioritized list of territories to defend: " << endl;
 	counter = 1;
 	for (Territory* t : territoriesToDefend)
 	{

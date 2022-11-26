@@ -59,6 +59,29 @@ public:
     ~NeutralPlayerStrategy();
 };
 
+// ---------------------------------------------
+// ------BenevolentPlayerStrategy Section-------
+// ---------------------------------------------
+
+class BenevolentPlayerStrategy : public PlayerStrategy {
+public:
+    BenevolentPlayerStrategy();
+    BenevolentPlayerStrategy(Player* player);
+    BenevolentPlayerStrategy(const PlayerStrategy& playerStrategy);
+
+    PlayerStrategy* issueOrder();
+    PlayerStrategy* toAttack();
+    PlayerStrategy* toDefend();
+
+    //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
+    //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+
+    int toDefendIndex = 0;
+    int toAdvanceIndex = 0;
+
+    ~BenevolentPlayerStrategy();
+};
+
 
 // ---------------------------------------------
 // ----- AggressivePlayerStrategy Section ------

@@ -4,6 +4,7 @@
 
 #include "../include/PlayerStrategies.h"
 #include "../include/Player.h"
+#include "../include/Map.h"
 
 #include <iostream>
     using std::cout;
@@ -11,6 +12,8 @@
     using std::endl;
 #include <vector>
     using std::vector;
+#include <algorithm>
+	using std::sort;
 
 class Territory;
 
@@ -115,6 +118,127 @@ PlayerStrategy* NeutralPlayerStrategy::toDefend()
 // Destructor
 
 NeutralPlayerStrategy::~NeutralPlayerStrategy() = default;
+
+// ---------------------------------------------
+// -------BenevolentPlayerStrategy Sectio-------
+// ---------------------------------------------
+
+// Constructors
+
+BenevolentPlayerStrategy::BenevolentPlayerStrategy() : PlayerStrategy() {}
+
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player* player) : PlayerStrategy(player) {}
+
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(const PlayerStrategy& playerStrategy) : PlayerStrategy(playerStrategy) {}
+
+// Functionalities
+
+PlayerStrategy* BenevolentPlayerStrategy::issueOrder()
+{
+	cout << endl;
+	cout << "----------------------------------" << endl;
+	cout << this->getPlayer()->getName() << "'s Turn - Type: Benevolant" << endl;
+	cout << "----------------------------------" << endl;
+	cout << endl;
+
+	//To Defend
+	if (this->getPlayer()->getDefendList().size() == 0)
+	{
+		this->toDefend();
+		return this;
+	}
+
+	//Deploy on toDefend territories, will not be able to issue other orders until
+	//all armies are deployed
+	//Deploys to weakest countries in priority
+	if (this->getPlayer()->getArmyUnits() != 0)
+	{
+		cout << "Total remaining of army units to deploy: " << this->getPlayer()->getArmyUnits() << endl;
+		// Divide army units by 3 to not deploy all armies to a single territory
+		// Every turn this number will get smaller, proportionally deploying more
+		// armies to the weakest countries.
+		int armiesToDeploy = this->getPlayer()->getArmyUnits() / 3;
+		if (armiesToDeploy == 0) { armiesToDeploy = 1; };
+		Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toDefendIndex);
+		cout << this->getPlayer()->getName() << " (Benevolant) will deploy " << armiesToDeploy <<
+			" armies to territory " << this->getPlayer()->getDefendList().at(this->toDefendIndex)->getName() << endl;
+		this->toDefendIndex++;
+		this->getPlayer()->setArmyUnits(this->getPlayer()->getArmyUnits() - armiesToDeploy);
+		//return new Deploy(this->getPlayer(), weakestCountry, armiesToDeploy);
+		return this;
+	}
+
+	if (this->getPlayer()->getArmyUnits() == 0)
+	{
+		//Only plays Blockade and Airlift cards (Defensive cards)
+		if (this->getPlayer()->ownsCard("Blockade"))
+		{
+			Territory* weakestCountry = this->getPlayer()->getDefendList().at(0);
+			cout << this->getPlayer()->getName() << " will play a Blockade card." << endl;
+			cout << this->getPlayer()->getName() << " will blockade territory " << weakestCountry->getName() << endl;
+			//return new Blockade(this, weakestCountry);
+		}
+		if (this->getPlayer()->ownsCard("Airlift"))
+		{
+			Territory* weakestCountry = this->getPlayer()->getDefendList().front();
+			Territory* strongestCountry = this->getPlayer()->getDefendList().back();
+			int armiesToAirlift = strongestCountry->getNumberOfArmies() / 2;
+			cout << this->getPlayer()->getName() << " will play a Airlift card." << endl;
+			cout << this->getPlayer()->getName() << " will airlift " << armiesToAirlift << " armies to " 
+				<< weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
+			//return new Airlift(this, strongestCountry, weakestCountry, armiesToAirlift);
+		}
+
+		// Only goes down a third of the list of countries to defend
+		if (this->toAdvanceIndex != (this->getPlayer()->getDefendList().size() / 3))
+		{
+			// Advance (Defensive)
+			Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toAdvanceIndex);
+			vector<Territory*> adjacentOwnedCountries = this->getPlayer()->getNeighbouringOwnedTerritories(weakestCountry);
+		
+			//sort from strongest to weakest
+			sort(adjacentOwnedCountries.begin(), adjacentOwnedCountries.end(),
+				[](const Territory* t1, const Territory* t2) {return *t1 > *t2; });
+			Territory* strongestCountry = adjacentOwnedCountries.front();
+			int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
+			this->toAdvanceIndex++;
+			cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
+				<< weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
+			//return new Advance(this->getPlayer(), strongestCountry, weakestCountry, armiesToAdvance);
+			return this;
+		}
+	}
+
+	return this;
+}
+
+PlayerStrategy* BenevolentPlayerStrategy::toAttack()
+{
+	
+	return this;
+}
+
+
+PlayerStrategy* BenevolentPlayerStrategy::toDefend()
+{
+	// Advances armies on weakest countries
+	// Sort Player toDefend list by weakest to strongest country
+	vector<Territory*> toDefend = this->_player->getOwnedTerritories();
+
+	sort(toDefend.begin(), toDefend.end(), 
+		[](const Territory* t1, const Territory* t2) {return *t1 < *t2; });
+
+	for (Territory* t : toDefend)
+	{
+		cout << t->getName() << ": " << t->getNumberOfArmies() << " armies" << endl;
+	}
+	this->_player->setDefendList(toDefend);
+	return this;
+}
+
+// Destructor
+
+BenevolentPlayerStrategy::~BenevolentPlayerStrategy() = default;
 
 
 // ---------------------------------------------

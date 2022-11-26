@@ -24,9 +24,9 @@ void testPlayerStrategies()
     Card* blockadeCard = new Card(BLOCKADE);
     Card* airliftCard = new Card(AIRLIFT);
 
-    //playerOneHand->addCard(bombCard);
+    playerOneHand->addCard(bombCard);
     playerOneHand->addCard(blockadeCard);
-    playerTwoHand->addCard(airliftCard);
+    //playerTwoHand->addCard(airliftCard);
 
     string playerOneName = "Player 1";
     vector<Territory*> playerOneTerritories;
@@ -43,6 +43,7 @@ void testPlayerStrategies()
     player1->addOwnedTerritory(map->getTerritory("Cockpit01"));
     //player1->addOwnedTerritory(map->getTerritory("Cockpit02"));
 
+    int counter = 0;
     for (Territory* t : map->getTerritories())
     {
         if (t->getContinent()->getName() == "hyperdrive")
@@ -52,16 +53,20 @@ void testPlayerStrategies()
         if (t->getContinent()->getName() == "cockpit")
         {
             player2->addOwnedTerritory(t);
+            t->setNumberOfArmies(counter);
         }
+        counter++;
     }
 
     player1->setArmyUnits(20);
-
-    //Human Strategy
+    player2->setArmyUnits(19);
 
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
-    for (int i=0; i < 7; i++)
+    BenevolentPlayerStrategy* benevolantPlayer = new BenevolentPlayerStrategy(player2);
+
+    for (int i=0; i < 20; i++)
     {
-        humanPlayer->issueOrder();
+        //humanPlayer->issueOrder();
+        benevolantPlayer->issueOrder();
     }
 }

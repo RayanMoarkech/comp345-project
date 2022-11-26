@@ -10,7 +10,7 @@ void testPlayerStrategies()
 {
     cout << endl
         << "------------------------------------------------------" << endl
-        << "Test Order Execution" << endl
+        << "Test Human and Benevolant Strategies" << endl
         << "------------------------------------------------------" << endl
         << endl;
 

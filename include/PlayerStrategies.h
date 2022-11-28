@@ -16,10 +16,9 @@ class Player;
 // ---------------------------------------------
 
 class PlayerStrategy {
-//private:
-//    Player* _player;
-public:
+protected:
     Player* _player;
+public:
 
     PlayerStrategy();
     PlayerStrategy(Player* player);

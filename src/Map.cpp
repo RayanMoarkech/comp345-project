@@ -353,6 +353,17 @@ ostream& operator<<(ostream& os, Territory& territory)
 Territory &Territory::operator=(const Territory& territory)
 = default;
 
+//Overload < operator, comparison is based on number of armies
+bool operator<(const Territory& t1, const Territory& t2)
+{
+    return t1.numberOfArmies < t2.numberOfArmies;
+}
+
+bool operator>(const Territory& t1, const Territory& t2)
+{
+    return t2.numberOfArmies < t1.numberOfArmies;
+}
+
 
 // ---------------------------------------------
 // ------------- MapLoader Section -------------

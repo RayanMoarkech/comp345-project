@@ -16,9 +16,10 @@ class Player;
 // ---------------------------------------------
 
 class PlayerStrategy {
-private:
+protected:
     Player* _player;
 public:
+
     PlayerStrategy();
     PlayerStrategy(Player* player);
     PlayerStrategy(const PlayerStrategy& playerStrategy);
@@ -57,6 +58,29 @@ public:
     ~NeutralPlayerStrategy();
 };
 
+// ---------------------------------------------
+// ------BenevolentPlayerStrategy Section-------
+// ---------------------------------------------
+
+class BenevolentPlayerStrategy : public PlayerStrategy {
+public:
+    BenevolentPlayerStrategy();
+    BenevolentPlayerStrategy(Player* player);
+    BenevolentPlayerStrategy(const PlayerStrategy& playerStrategy);
+
+    PlayerStrategy* issueOrder();
+    PlayerStrategy* toAttack();
+    PlayerStrategy* toDefend();
+
+    //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
+    //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+
+    int toDefendIndex = 0;
+    int toAdvanceIndex = 0;
+
+    ~BenevolentPlayerStrategy();
+};
+
 
 // ---------------------------------------------
 // ----- AggressivePlayerStrategy Section ------
@@ -78,5 +102,24 @@ public:
     ~AggressivePlayerStrategy();
 };
 
+// ---------------------------------------------
+// ----- HumanPlayerStrategy Section ------
+// ---------------------------------------------
+
+class HumanPlayerStrategy : public PlayerStrategy {
+public:
+    HumanPlayerStrategy();
+    HumanPlayerStrategy(Player* player);
+    HumanPlayerStrategy(const PlayerStrategy& playerStrategy);
+
+    PlayerStrategy* issueOrder();
+    PlayerStrategy* toAttack();
+    PlayerStrategy* toDefend();
+
+    //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
+    //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+
+    ~HumanPlayerStrategy();
+};
 
 #endif //PLAYERSTRATEGIES_H

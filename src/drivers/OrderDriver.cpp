@@ -145,5 +145,5 @@ void testOrderExecution()
 	testOrders->addOrder(bombOrder);
 	testOrders->addOrder(airliftOrder);
 
-	gameEngine->executeOrdersPhase(testOrders);
+	gameEngine->executeOrdersPhase();
 }

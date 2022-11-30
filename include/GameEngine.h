@@ -21,6 +21,7 @@ class OrdersList;
 class CommandProcessor;
 class Command;
 class Territory;
+class Tournament;
 
 
 // ---------------------------------------------
@@ -82,6 +83,8 @@ public:
     GameEngine(const GameEngine &);
     GameEngine &operator=(const GameEngine &);
 
+    Tournament* tournament;
+
     vector<State *> getState();
     int getCurrentStateIndex();
     int &getNextStateIndex();
@@ -113,10 +116,31 @@ private:
     vector<Player *> _players;
     Deck *deck;
     OrdersList* ordersList;
+    void initiateTournament();
 
     bool executeCurrentStateAction(int nextStateIndex, const string &option);
 
     friend ostream &operator<<(ostream &, const GameEngine &);
+    friend class Tournament;
+};
+
+// ---------------------------------------------
+// ------------ Tournament Section -------------
+// Tournament holds
+// ---------------------------------------------
+// ---------------------------------------------
+
+class Tournament {
+public:
+    Tournament(vector<Map*> maps, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns, GameEngine*);
+    Tournament(const Tournament& tournament);
+    Tournament& operator =(const Tournament&);
+    ~Tournament();
+
+    friend ostream& operator << (ostream& out, const Tournament& t);
+private:
+    friend class GameEngine;
+
 };
 
 #endif

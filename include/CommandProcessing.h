@@ -84,6 +84,7 @@ public:
 
 private:
   vector<State *> _stateList;
+    bool validateTournamentCommand(const vector<string>&);
 
 protected:
   vector<Command *> _commandList;

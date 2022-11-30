@@ -29,7 +29,9 @@ static const string stateName[]{"start",
                                 "assignReinforcement",
                                 "issueOrders",
                                 "executeOrders",
-                                "win"};
+                                "win",
+                                "tournament"
+};
 
 // Trim is used to remove the empty spaces at the beginning and the end of a
 // string
@@ -224,6 +226,120 @@ Command *CommandProcessor::getCommand() {
   return command;
 }
 
+bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamentCmd) {
+    int numOfMaps = 0;
+    int index = 2;
+
+    int size = tournamentCmd.size();
+
+    // Validate if the command is a correct tournament command
+    if (tournamentCmd.size() < 2) {
+        cout << "Command is invalid." << endl;
+        return false;
+    }
+
+    // Validate if the first argument.
+    if (tournamentCmd[1] != "-M") {
+        cout << "The map files (-M) are missing." << endl;
+        return false;
+    }
+
+    //TODO Load possible maps
+
+
+
+
+    // Validate if all the maps are valid
+    while (tournamentCmd[index] != "-P" && index < size) {
+
+        // Validate map range (1-5)
+        if (numOfMaps == 5) {
+            cout << "Sorry. The map parameter seems out of range. " << endl;
+            return false;
+        }
+
+        //TODO Check that the current map file exists
+
+        numOfMaps++;
+        index++;
+    }
+
+    if (numOfMaps == 0) {
+        cout << "Map files are incomplete." << endl;
+        return false;
+    }
+
+    if (index == size) {
+        cout << "Player strategies are incomplete" << endl;
+        return false;
+    }
+
+    // Move to the next index (computer player strategies -P)
+    index++;
+
+    int numOfPlayers = 0;
+    // Validate player strategies.
+    while (tournamentCmd[index] != "-G" && index < size) {
+        if (numOfPlayers == 4) {
+            cout << "Player strategies exceed range." << endl;
+            return false;
+        }
+
+        // TODO Validate if the player strategy is valid
+        numOfPlayers++;
+        index++;
+    }
+
+
+// Validate the number of players and the number of games (missing player strategies)
+    if (tournamentCmd[index] != "-G" || index == size) {
+        cout << "Missing the flag for the number of games to be played on each map." << endl;
+        return false;
+    }
+    
+    if (numOfPlayers == 0) {
+        cout << "No player strategies provided." << endl;
+        return false;
+    }
+    
+    // Move to the next index (the number of games -G)
+    index++;
+
+    if (index == size) {
+        cout << "Number of games was not provided." << endl;
+        return false;
+    }
+
+    // convert the number of games (string) to an integer
+    int numOfGames = stoi(tournamentCmd[index]);
+
+    if (numOfGames > 5 || numOfGames < 1) {
+        cout << "Games to be played only range from 1-5." << endl;
+        return false;
+    }
+
+    // Move to the next index (max number of turns -D)
+    index++;
+
+    if (tournamentCmd[index] != "-D" || index == size) {
+        cout << "Maximum number of turns not provided" << endl;
+        return false;
+    }
+
+    index++;
+
+    // Convert the maximum number of turns (string) to an integer
+    int maxNumOfTurns = stoi(tournamentCmd[index]);
+
+    if (maxNumOfTurns > 50 || maxNumOfTurns < 10) {
+        cout << "Maximum number of turns can only range from 10 - 50" << endl;
+        return false;
+    }
+    cout << "Tournament command validated!" << endl;
+    return true;
+}
+
+
 bool CommandProcessor::validate(Command *command, int currentStateIndex,
                                 int &nextStateIndex, string &commandOption) {
   bool validCommand = false;
@@ -232,7 +348,15 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
   stringstream ss(userCommand);
   string commandText;
   ss >> commandText; // get first token of input string
-  if (commandText == "loadmap") {
+
+  if ((commandText == "tournament")) {
+      //TODO: enable tournament mode
+      if (commandOption == "") {
+          cout << "You did not enter the tournament." << endl;
+          command->saveEffect("User did not enter the tournament parameters.");
+          return false;
+      }
+    } else if (commandText == "loadmap") {
     ss >> commandOption;
     if (commandOption == "") {
       cout << "You did not enter the map file name." << endl;

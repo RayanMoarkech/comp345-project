@@ -142,6 +142,7 @@ GameEngine::GameEngine(string fileName) {
   _map = nullptr;
   _players = {};
   deck = nullptr;
+  tournament = nullptr;
   if (fileName == "") {
     _commandProcessor = new CommandProcessor();
     _fileName = "";
@@ -160,6 +161,7 @@ GameEngine::GameEngine(const GameEngine &gameEngine) {
   _nextStateIndex = gameEngine._nextStateIndex;
   _map = new Map(*gameEngine._map);
   _players = {};
+    this->tournament = gameEngine.tournament;
   for (auto const &player : gameEngine._players)
     _players.push_back(new Player(*player));
   if (deck != nullptr)
@@ -183,6 +185,7 @@ GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
   this->_map = gameEngine._map;
   this->_players = gameEngine._players;
   this->deck = gameEngine.deck;
+  this->tournament = gameEngine.tournament;
   return *this;
 }
 
@@ -221,6 +224,10 @@ bool GameEngine::transition() {
     return valid;
   }
   return false;
+}
+
+void GameEngine::initiateTournament() {
+    //TODO: Implement tournament
 }
 
 bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &option) {
@@ -293,6 +300,7 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
         cout << effect << endl;
         _commandProcessor->getLastCommand()->saveEffect(effect);
     }
+    //TODO: ADD TOURNAMENT MODE
     string effect = "Something went wrong!";
     _commandProcessor->getLastCommand()->saveEffect(effect);
     return false;

@@ -227,118 +227,123 @@ Command *CommandProcessor::getCommand() {
 }
 
 bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamentCmd) {
-    int numOfMaps = 0;
-    int index = 2;
-
-    int size = tournamentCmd.size();
 
     // Validate if the command is a correct tournament command
-    if (tournamentCmd.size() < 2) {
-        cout << "Command is invalid." << endl;
+    if (tournamentCmd.size() < 5) {
+        cout << "You did not enter the correct tournament parameters." << endl;
         return false;
     }
 
-    // Validate if the first argument.
-    if (tournamentCmd[1] != "-M") {
-        cout << "The map files (-M) are missing." << endl;
+    // Validate first argument
+    stringstream ss1(tournamentCmd[1]);
+    string param1;
+    ss1 >> param1;
+
+    if (param1 != "M") {
         return false;
     }
 
-    //TODO Load possible maps
+    const char separator = ' ';
+    std::vector<std::string>  mapArray;
+    std::string val1;
 
+    while (getline(ss1, val1, separator)) {
+        mapArray.push_back(val1);
+    }
+    //Get rid of the first space
+    mapArray.erase(mapArray.begin());
 
+    if (mapArray.size() < 1 || mapArray.size() > 5) {
+        cout << "This is not an acceptable number of maps" << endl;
+        return false;
+    }
 
+    // TO DO: Check that the maps are valid
+    
+    // Validate second argument
+    stringstream ss2(tournamentCmd[2]);
+    string param2;
+    ss2 >> param2;
 
-    // Validate if all the maps are valid
-    while (tournamentCmd[index] != "-P" && index < size) {
+    if (param2 != "P") {
+        return false;
+    }
 
-        // Validate map range (1-5)
-        if (numOfMaps == 5) {
-            cout << "Sorry. The map parameter seems out of range. " << endl;
+    std::vector<std::string>  playerStratArray;
+    std::string val2;
+
+    while (getline(ss2, val2, separator)) {
+        playerStratArray.push_back(val2);
+    }
+    //Get rid of the first space
+    playerStratArray.erase(playerStratArray.begin());
+
+    if (playerStratArray.size() < 2 || playerStratArray.size() > 4) {
+        cout << "This is not an acceptable number of player strategies" << endl;
+        return false;
+    }
+
+    std::vector<std::string> stratOptions { "human", "aggressive", "benevolent", "neutral", "cheater"};
+     
+    // Check that they are acceptale player strategies
+    for (auto& strat : playerStratArray) {
+        if (std::find(stratOptions.begin(), stratOptions.end(), strat) == stratOptions.end()) {
+            cout << "These are not acceptable player strategies" << endl;
             return false;
         }
-
-        //TODO Check that the current map file exists
-
-        numOfMaps++;
-        index++;
     }
 
-    if (numOfMaps == 0) {
-        cout << "Map files are incomplete." << endl;
+    // Validate third argument
+    stringstream ss3(tournamentCmd[3]);
+    string param3;
+    ss3 >> param3;
+
+    if (param3 != "G") {
         return false;
     }
 
-    if (index == size) {
-        cout << "Player strategies are incomplete" << endl;
+    ss3 >> param3;
+
+    string param3Check;
+    getline(ss3, param3Check);
+    if (param3Check != " ") {
+        cout << "There should only be one number for the number of games" << endl;
         return false;
     }
 
-    // Move to the next index (computer player strategies -P)
-    index++;
+    int numGames = std::stoi(param3);
+    if (numGames < 1 || numGames > 5) {
+        cout << "That is not an acceptable number of games" << endl;
+        return false;
+    }   
 
-    int numOfPlayers = 0;
-    // Validate player strategies.
-    while (tournamentCmd[index] != "-G" && index < size) {
-        if (numOfPlayers == 4) {
-            cout << "Player strategies exceed range." << endl;
-            return false;
-        }
+    // Validate fourth argument
+    stringstream ss4(tournamentCmd[4]);
+    string param4;
+    ss4 >> param4;
 
-        // TODO Validate if the player strategy is valid
-        numOfPlayers++;
-        index++;
-    }
-
-
-// Validate the number of players and the number of games (missing player strategies)
-    if (tournamentCmd[index] != "-G" || index == size) {
-        cout << "Missing the flag for the number of games to be played on each map." << endl;
+    if (param4 != "D") {
         return false;
     }
+
+    ss4 >> param4;
+
+    string param4Check;
+    getline(ss4, param4Check);
+    if (!param4Check.empty()) {
+        cout << "There should only be one number for the maximum number of turns" << endl;
+        return false;
+    }
+
+    int numTurns = std::stoi(param4);
+    if (numTurns < 10 || numTurns > 50) {
+        cout << "That is not an acceptable maximum number of turns" << endl;
+        return false;
+    }   
     
-    if (numOfPlayers == 0) {
-        cout << "No player strategies provided." << endl;
-        return false;
-    }
-    
-    // Move to the next index (the number of games -G)
-    index++;
-
-    if (index == size) {
-        cout << "Number of games was not provided." << endl;
-        return false;
-    }
-
-    // convert the number of games (string) to an integer
-    int numOfGames = stoi(tournamentCmd[index]);
-
-    if (numOfGames > 5 || numOfGames < 1) {
-        cout << "Games to be played only range from 1-5." << endl;
-        return false;
-    }
-
-    // Move to the next index (max number of turns -D)
-    index++;
-
-    if (tournamentCmd[index] != "-D" || index == size) {
-        cout << "Maximum number of turns not provided" << endl;
-        return false;
-    }
-
-    index++;
-
-    // Convert the maximum number of turns (string) to an integer
-    int maxNumOfTurns = stoi(tournamentCmd[index]);
-
-    if (maxNumOfTurns > 50 || maxNumOfTurns < 10) {
-        cout << "Maximum number of turns can only range from 10 - 50" << endl;
-        return false;
-    }
     cout << "Tournament command validated!" << endl;
     return true;
 }
-
 
 bool CommandProcessor::validate(Command *command, int currentStateIndex,
                                 int &nextStateIndex, string &commandOption) {
@@ -350,12 +355,18 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
   ss >> commandText; // get first token of input string
 
   if ((commandText == "tournament")) {
-      //TODO: enable tournament mode
-      if (commandOption == "") {
-          cout << "You did not enter the tournament." << endl;
-          command->saveEffect("User did not enter the tournament parameters.");
-          return false;
+      //Get the rest of the tournament command
+      const char separator = '-';
+      std::vector<std::string>  commandArray;
+      std::string val;
+
+      while (getline(ss, val, separator)) {
+          commandArray.push_back(val);
       }
+
+      // Validate the tournament command options
+      validCommand =  validateTournamentCommand(commandArray);
+      return validCommand;
     } else if (commandText == "loadmap") {
     ss >> commandOption;
     if (commandOption == "") {

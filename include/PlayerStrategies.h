@@ -137,11 +137,20 @@ public:
   PlayerStrategy *toAttack();
   PlayerStrategy *toDefend();
 
+
   //    friend ostream& operator<<(ostream& os, PlayerStrategies&
   //    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
   //    playerStrategies);
 
   ~CheaterPlayerStrategy();
+
+private:
+public:
+  bool isAttackedOncePerTurn() const;
+  void setAttackedOncePerTurn(bool attackedOncePerTurn);
+
+private:
+  bool attackedOncePerTurn = false;
 };
 
 #endif // PLAYERSTRATEGIES_H

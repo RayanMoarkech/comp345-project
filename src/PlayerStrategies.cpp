@@ -749,104 +749,44 @@ PlayerStrategy* CheaterPlayerStrategy::issueOrder()
 {
   cout << endl;
   cout << "----------------------------------" << endl;
-  cout << this->getPlayer()->getName() << "'s Turn - Type: Benevolant" << endl;
+  cout << this->getPlayer()->getName() << "'s Turn - Type: Cheater" << endl;
   cout << "----------------------------------" << endl;
   cout << endl;
 
   //To Defend
-  if (this->getPlayer()->getDefendList().size() == 0)
+  if (this->isAttackedOncePerTurn() == true)
   {
-    this->toDefend();
+    cout <<"Cheater has already attacked before this turn!." << endl;
     return this;
   }
 
-  //Deploy on toDefend territories, will not be able to issue other orders until
-  //all armies are deployed
-  //Deploys to weakest countries in priority
-  if (this->getPlayer()->getArmyUnits() != 0)
+  vector<Territory*> territoriesToAttack = this->getPlayer()->getNeighbouringEnemyTerritories();
+  for (Territory* territory : territoriesToAttack)
   {
-    cout << "Total remaining of army units to deploy: " << this->getPlayer()->getArmyUnits() << endl;
-    // Divide army units by 3 to not deploy all armies to a single territory
-    // Every turn this number will get smaller, proportionally deploying more
-    // armies to the weakest countries.
-    int armiesToDeploy = this->getPlayer()->getArmyUnits() / 3;
-    if (armiesToDeploy == 0) { armiesToDeploy = 1; };
-    Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toDefendIndex);
-    cout << this->getPlayer()->getName() << " (Benevolant) will deploy " << armiesToDeploy <<
-        " armies to territory " << this->getPlayer()->getDefendList().at(this->toDefendIndex)->getName() << endl;
-    this->toDefendIndex++;
-    this->getPlayer()->setArmyUnits(this->getPlayer()->getArmyUnits() - armiesToDeploy);
-    //return new Deploy(this->getPlayer(), weakestCountry, armiesToDeploy);
-    return this;
+   territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );
+   cout << territory->getName()<< "is now owned By the Cheater player" << endl;
   }
-
-  if (this->getPlayer()->getArmyUnits() == 0)
-  {
-    //Only plays Blockade and Airlift cards (Defensive cards)
-    if (this->getPlayer()->ownsCard("Blockade"))
-    {
-      Territory* weakestCountry = this->getPlayer()->getDefendList().at(0);
-      cout << this->getPlayer()->getName() << " will play a Blockade card." << endl;
-      cout << this->getPlayer()->getName() << " will blockade territory " << weakestCountry->getName() << endl;
-      //return new Blockade(this, weakestCountry);
-    }
-    if (this->getPlayer()->ownsCard("Airlift"))
-    {
-      Territory* weakestCountry = this->getPlayer()->getDefendList().front();
-      Territory* strongestCountry = this->getPlayer()->getDefendList().back();
-      int armiesToAirlift = strongestCountry->getNumberOfArmies() / 2;
-      cout << this->getPlayer()->getName() << " will play a Airlift card." << endl;
-      cout << this->getPlayer()->getName() << " will airlift " << armiesToAirlift << " armies to "
-           << weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
-      //return new Airlift(this, strongestCountry, weakestCountry, armiesToAirlift);
-    }
-
-    // Only goes down a third of the list of countries to defend
-    if (this->toAdvanceIndex != (this->getPlayer()->getDefendList().size() / 3))
-    {
-      // Advance (Defensive)
-      Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toAdvanceIndex);
-      vector<Territory*> adjacentOwnedCountries = this->getPlayer()->getNeighbouringOwnedTerritories(weakestCountry);
-
-      //sort from strongest to weakest
-      sort(adjacentOwnedCountries.begin(), adjacentOwnedCountries.end(),
-           [](const Territory* t1, const Territory* t2) {return *t1 > *t2; });
-      Territory* strongestCountry = adjacentOwnedCountries.front();
-      int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
-      this->toAdvanceIndex++;
-      cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
-           << weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
-      //return new Advance(this->getPlayer(), strongestCountry, weakestCountry, armiesToAdvance);
-      return this;
-    }
-  }
-  cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;
+  this->setAttackedOncePerTurn(true);
   return this;
 }
 
 PlayerStrategy* CheaterPlayerStrategy::toAttack()
 {
-
+  // Cheater player automatically conquers all adjacent territories.
   return this;
 }
 
 
 PlayerStrategy* CheaterPlayerStrategy::toDefend()
 {
-  // Advances armies on weakest countries
-  // Sort Player toDefend list by weakest to strongest country
-  vector<Territory*> toDefend = this->_player->getOwnedTerritories();
-
-  sort(toDefend.begin(), toDefend.end(),
-       [](const Territory* t1, const Territory* t2) {return *t1 < *t2; });
-  cout << "Prioritized list of territories to defend: " << endl;
-  cout << endl;
-  for (Territory* t : toDefend)
-  {
-    cout << t->getName() << ": " << t->getNumberOfArmies() << " armies" << endl;
-  }
-  this->_player->setDefendList(toDefend);
+  // Cheater player does not defend.
   return this;
+}
+bool CheaterPlayerStrategy::isAttackedOncePerTurn() const {
+  return attackedOncePerTurn;
+}
+void CheaterPlayerStrategy::setAttackedOncePerTurn(bool attackedOncePerTurn) {
+  CheaterPlayerStrategy::attackedOncePerTurn = attackedOncePerTurn;
 }
 
 // Destructor

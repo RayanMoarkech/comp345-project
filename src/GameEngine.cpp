@@ -441,6 +441,13 @@ void GameEngine::issueOrdersPhase()
         }
     }
     this->ordersList = allIssuedOrders;
+
+    // Clear all players toAttack and toDefend lists
+    for (Player* p : this->_players)
+    {
+        p->setAttackList(vector<Territory*>());
+        p->setDefendList(vector<Territory*>());
+    }
 }
 
 

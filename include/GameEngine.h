@@ -88,6 +88,7 @@ public:
     CommandProcessor* getCommandProcessor();
     void setCurrentStateIndex(int currentStateIndex);
     void setNextStateIndex(int nextStateIndex);
+    Deck* getDeck();
 
     bool transition();
     bool startGame();

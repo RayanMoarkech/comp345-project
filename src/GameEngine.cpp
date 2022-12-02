@@ -585,6 +585,11 @@ std::string GameEngine::stringToLog() {
     return "GameEngine::transition(): " + this->_state[this->_currentStateIndex]->getName() + "\n";
 }
 
+Deck* GameEngine::getDeck()
+{
+    return this->deck;
+}
+
 // Print a list of all states with their valid transitions
 ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
   for (auto const &state : gameEngine._state) {

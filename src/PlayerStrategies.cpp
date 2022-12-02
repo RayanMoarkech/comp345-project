@@ -15,6 +15,8 @@
     using std::vector;
 #include <algorithm>
 	using std::sort;
+#include <string>
+	using std::string;
 
 class Territory;
 class Order;
@@ -31,7 +33,6 @@ static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 	}
 	return false;
 }
-
 
 // ---------------------------------------------
 // ---------- PlayerStrategy Section -----------
@@ -76,6 +77,24 @@ ostream& operator<<(ostream& os, PlayerStrategy& playerStrategy)
     else
         cout << "no player" << endl;
     return cout;
+}
+
+// Defined dethod to be inherited by all strategies
+void PlayerStrategy::playCard(string cardType)
+{
+	vector<Card*> playersCards = this->getPlayer()->getPlayerHand()->cards;
+	
+	for (int i = 0; i < playersCards.size(); i++)
+	{
+		if (playersCards.at(i)->getCardType() == cardType)
+		{
+			Card* card = playersCards.at(i);
+			// return card to deck
+			this->getPlayer()->getGameEngine()->getDeck()->returnCard(card);
+			// remove card from hand
+			playersCards.erase(playersCards.begin() + i);
+		}
+	}
 }
 
 PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &playerStrategy) = default;
@@ -500,6 +519,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 						cout << "What territory do you want to bomb?" << endl;
 						cin >> territoryToBomb;
 					}
+
 					return new Bomb(this->getPlayer(), this->_player->getAttackList().at(territoryToBomb - 1));
 				}
 				else {

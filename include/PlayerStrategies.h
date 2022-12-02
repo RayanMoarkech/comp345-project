@@ -6,6 +6,8 @@
 
 #include <ostream>
     using std::ostream;
+#include <string>
+    using std::string;
 
 class Player;
 class Order;
@@ -33,6 +35,8 @@ public:
 
     friend ostream& operator<<(ostream& os, PlayerStrategy& playerStrategy);
     PlayerStrategy& operator=(const PlayerStrategy& playerStrategy);
+
+    void playCard(string cardType);
 
     ~PlayerStrategy();
 };

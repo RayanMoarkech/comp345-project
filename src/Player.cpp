@@ -460,3 +460,13 @@ void Player::setPlayerStrategy(PlayerStrategy* ps)
 {
 	this->ps = ps;
 }
+
+GameEngine* Player::getGameEngine()
+{
+	return this->gameEngine;
+}
+
+void Player::setGameEngine(GameEngine* gameEngine)
+{
+	this->gameEngine = gameEngine;
+}

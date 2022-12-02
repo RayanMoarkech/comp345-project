@@ -2,13 +2,13 @@
 // COMP345_PROJECT_PLAYERSTRATEGIES_H PlayerStrategies.h
 //
 
-#ifndef PLAYERSTRATEGIES_H
-#define PLAYERSTRATEGIES_H
+#pragma once
 
 #include <ostream>
     using std::ostream;
 
 class Player;
+class Order;
 
 
 // ---------------------------------------------
@@ -27,9 +27,9 @@ public:
     void setPlayer(Player* player);
     Player* getPlayer();
 
-    virtual PlayerStrategy* issueOrder() = 0;
-    virtual PlayerStrategy* toAttack() = 0;
-    virtual PlayerStrategy* toDefend() = 0;
+    virtual Order* issueOrder() = 0;
+    virtual void toAttack() = 0;
+    virtual void toDefend() = 0;
 
     friend ostream& operator<<(ostream& os, PlayerStrategy& playerStrategy);
     PlayerStrategy& operator=(const PlayerStrategy& playerStrategy);
@@ -48,9 +48,9 @@ public:
     NeutralPlayerStrategy(Player* player);
     NeutralPlayerStrategy(const PlayerStrategy& playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
 //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
 //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
@@ -68,9 +68,9 @@ public:
     BenevolentPlayerStrategy(Player* player);
     BenevolentPlayerStrategy(const PlayerStrategy& playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
     //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
     //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
@@ -92,9 +92,9 @@ public:
     AggressivePlayerStrategy(Player* player);
     AggressivePlayerStrategy(const PlayerStrategy& playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
 //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
 //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
@@ -112,14 +112,12 @@ public:
     HumanPlayerStrategy(Player* player);
     HumanPlayerStrategy(const PlayerStrategy& playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
     //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
     //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
 
     ~HumanPlayerStrategy();
 };
-
-#endif //PLAYERSTRATEGIES_H

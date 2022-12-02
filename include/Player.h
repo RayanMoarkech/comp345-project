@@ -13,6 +13,7 @@
 
 #include "../include/Map.h"
 #include "../include/Orders.h"
+#include "../include/PlayerStrategies.h"
 
 //import the following when merging features
 class Hand;
@@ -32,6 +33,7 @@ private:
 	vector<Territory*> toAttackList;
 	bool conqueredTerritory;
 	bool isNeutral;
+	PlayerStrategy* ps;
 
 public:
 	Player();
@@ -69,6 +71,8 @@ public:
 	vector<Territory*> getDefendList();
 	void setDefendList(vector<Territory*> toDefendList);
 	bool ownsCard(string cardType);
+	PlayerStrategy* getPlayerStrategy();
+	void setPlayerStrategy(PlayerStrategy* ps);
 };
 
 #endif //Player_H

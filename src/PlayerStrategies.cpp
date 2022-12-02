@@ -728,3 +728,69 @@ PlayerStrategy* HumanPlayerStrategy::toDefend()
 // Destructor
 
 HumanPlayerStrategy::~HumanPlayerStrategy() = default;
+
+
+
+// ---------------------------------------------
+// -------CheaterPlayerStrategy Sectio-------
+// ---------------------------------------------
+
+// Constructors
+
+CheaterPlayerStrategy::CheaterPlayerStrategy() : PlayerStrategy() {}
+
+CheaterPlayerStrategy::CheaterPlayerStrategy(Player* player) : PlayerStrategy(player) {}
+
+CheaterPlayerStrategy::CheaterPlayerStrategy(const PlayerStrategy& playerStrategy) : PlayerStrategy(playerStrategy) {}
+
+// Functionalities
+
+PlayerStrategy* CheaterPlayerStrategy::issueOrder()
+{
+  cout << endl;
+  cout << "----------------------------------" << endl;
+  cout << this->getPlayer()->getName() << "'s Turn - Type: Cheater" << endl;
+  cout << "----------------------------------" << endl;
+  cout << endl;
+
+  //To Defend
+  if (this->isAttackedOncePerTurn() == true)
+  {
+    cout <<"Cheater has already attacked before this turn!." << endl;
+    return this;
+  }
+
+  vector<Territory*> territoriesToAttack = this->getPlayer()->getNeighbouringEnemyTerritories();
+  for (Territory* territory : territoriesToAttack)
+  {
+   territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );
+   cout << territory->getName()<< "is now owned By the Cheater player" << endl;
+  }
+  this->setAttackedOncePerTurn(true);
+  return this;
+}
+
+PlayerStrategy* CheaterPlayerStrategy::toAttack()
+{
+  // Cheater player automatically conquers all adjacent territories.
+  return this;
+}
+
+
+PlayerStrategy* CheaterPlayerStrategy::toDefend()
+{
+  // Cheater player does not defend.
+  return this;
+}
+bool CheaterPlayerStrategy::isAttackedOncePerTurn() const {
+  return attackedOncePerTurn;
+}
+void CheaterPlayerStrategy::setAttackedOncePerTurn(bool attackedOncePerTurn) {
+  CheaterPlayerStrategy::attackedOncePerTurn = attackedOncePerTurn;
+}
+
+// Destructor
+
+CheaterPlayerStrategy::~CheaterPlayerStrategy() = default;
+
+

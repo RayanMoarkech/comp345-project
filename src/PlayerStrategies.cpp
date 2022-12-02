@@ -86,13 +86,16 @@ void PlayerStrategy::playCard(string cardType)
 	
 	for (int i = 0; i < playersCards.size(); i++)
 	{
+		cout << i << endl;
 		if (playersCards.at(i)->getCardType() == cardType)
 		{
 			Card* card = playersCards.at(i);
 			// return card to deck
 			this->getPlayer()->getGameEngine()->getDeck()->returnCard(card);
 			// remove card from hand
-			playersCards.erase(playersCards.begin() + i);
+			this->getPlayer()->getPlayerHand()->
+				cards.erase(this->getPlayer()->getPlayerHand()->cards.begin() + i);
+			break;
 		}
 	}
 }
@@ -519,10 +522,11 @@ Order* HumanPlayerStrategy::issueOrder() {
 						cout << "What territory do you want to bomb?" << endl;
 						cin >> territoryToBomb;
 					}
-
+					this->playCard("Bomb");
 					return new Bomb(this->getPlayer(), this->_player->getAttackList().at(territoryToBomb - 1));
 				}
 				else {
+					cout << endl;
 					cout << "You do not have a Bomb card." << endl;
 					return nullptr;
 				}

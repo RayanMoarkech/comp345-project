@@ -141,7 +141,7 @@ GameEngine::GameEngine(string fileName) {
   _nextStateIndex = 0;
   _map = nullptr;
   _players = {};
-  deck = nullptr;
+  deck = new Deck();
   if (fileName == "") {
     _commandProcessor = new CommandProcessor();
     _fileName = "";

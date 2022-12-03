@@ -426,7 +426,7 @@ void GameEngine::issueOrdersPhase()
         for (Player* p : this->_players)
         {
             // 5 is used here to keep a few territories to attack to be used by Cards
-            if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
+            if (p->toAttack().size() == 5 && p->getPlayerHand()->cards.size() != 0)
             {
                 Order* o = p->getPlayerHand()->cards.at(0)->play(p, this->deck);
                 if (o != nullptr)
@@ -441,13 +441,6 @@ void GameEngine::issueOrdersPhase()
         }
     }
     this->ordersList = allIssuedOrders;
-
-    // Clear all players toAttack and toDefend lists
-    for (Player* p : this->_players)
-    {
-        p->setAttackList(vector<Territory*>());
-        p->setDefendList(vector<Territory*>());
-    }
 }
 
 

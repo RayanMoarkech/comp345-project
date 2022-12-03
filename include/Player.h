@@ -31,13 +31,10 @@ private:
 		Hand *playerHand;
 		OrdersList *playerOrders;
 		int armyUnits;
-		vector<Territory *> toDefendList;
-		vector<Territory *> toAttackList;
 		bool conqueredTerritory;
 		bool isNeutral;
 		PlayerStrategy *ps;
 		GameEngine *gameEngine;
-
 
 public:
 		Player();
@@ -47,8 +44,8 @@ public:
 		~Player();
 		Player &operator=(const Player &player);
 		friend std::ostream &operator<<(std::ostream &os, const Player &p);
-		void toDefend();
-		void toAttack();
+		vector<Territory*> toDefend();
+		vector<Territory*> toAttack();
 		Order *issueOrder();
 		vector<Territory *> getOwnedTerritories();
 		Hand *getPlayerHand();
@@ -58,24 +55,17 @@ public:
 		void ownTerritory(Territory *territory, int armyUnits);
 		void addNegotiator(Player *p); //Adds a negotiating player
 		void removeReinforcements(int numArmies);
-		//May need to add a method to remove someone from the list of negotiators
 		std::list<Player *> getNegotiatorList();
 		void setConqueredTerritory(bool conqueredTerritory);
 		bool getConqueredTerritory();
 		string getName();
-		void setName(string name);
 		void setArmyUnits(int armyUnits);
 		int getArmyUnits();
 		void addOwnedTerritory(Territory *territory);
 		vector<Territory *> getNeighbouringEnemyTerritories();
 		vector<Territory *> getNeighbouringEnemyTerritories(Territory *t);
 		vector<Territory *> getNeighbouringOwnedTerritories(Territory *t);
-		vector<Territory *> getAttackList();
-		void setAttackList(vector<Territory *> toAttackList);
-		vector<Territory *> getDefendList();
-		void setDefendList(vector<Territory *> toDefendList);
 		bool ownsCard(string cardType);
-		PlayerStrategy *getPlayerStrategy();
 		void setPlayerStrategy(PlayerStrategy *ps);
 		GameEngine *getGameEngine();
 		void setGameEngine(GameEngine *gameEngine);

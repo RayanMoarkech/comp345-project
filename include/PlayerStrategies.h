@@ -8,9 +8,12 @@
     using std::ostream;
 #include <string>
     using std::string;
+#include <ostream>
+		using std::vector;
 
 class Player;
 class Order;
+class Territory;
 
 // ---------------------------------------------
 // ---------- PlayerStrategy Section -----------
@@ -29,15 +32,15 @@ public:
 		Player *getPlayer();
 
 		virtual Order *issueOrder() = 0;
-		virtual void toAttack() = 0;
-		virtual void toDefend() = 0;
+		virtual vector<Territory*> toAttack() = 0;
+		virtual vector<Territory*> toDefend() = 0;
 
 		friend ostream &operator<<(ostream &os, PlayerStrategy &playerStrategy);
 		PlayerStrategy &operator=(const PlayerStrategy &playerStrategy);
 
 		void playCard(string cardType);
 
-		~PlayerStrategy();
+		virtual ~PlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -51,14 +54,14 @@ public:
 		NeutralPlayerStrategy(const PlayerStrategy &playerStrategy);
 
 		Order *issueOrder();
-		void toAttack();
-		void toDefend();
+		vector<Territory*> toAttack();
+		vector<Territory*> toDefend();
 
 		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
 
-		~NeutralPlayerStrategy();
+		virtual ~NeutralPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -72,8 +75,8 @@ public:
 		BenevolentPlayerStrategy(const PlayerStrategy &playerStrategy);
 
 		Order *issueOrder();
-		void toAttack();
-		void toDefend();
+		vector<Territory*> toAttack();
+		vector<Territory*> toDefend();
 
 		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
@@ -82,7 +85,7 @@ public:
 		int toDefendIndex = 0;
 		int toAdvanceIndex = 0;
 
-		~BenevolentPlayerStrategy();
+		virtual ~BenevolentPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -96,14 +99,14 @@ public:
 		AggressivePlayerStrategy(const PlayerStrategy &playerStrategy);
 
 		Order *issueOrder();
-		void toAttack();
-		void toDefend();
+		vector<Territory*> toAttack();
+		vector<Territory*> toDefend();
 
 		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
 
-		~AggressivePlayerStrategy();
+		virtual ~AggressivePlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -117,14 +120,14 @@ public:
 		HumanPlayerStrategy(const PlayerStrategy &playerStrategy);
 
 		Order *issueOrder();
-		void toAttack();
-		void toDefend();
+		vector<Territory*> toAttack();
+		vector<Territory*> toDefend();
 
 		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
 
-		~HumanPlayerStrategy();
+		virtual ~HumanPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -138,13 +141,10 @@ public:
 		CheaterPlayerStrategy(const PlayerStrategy &playerStrategy);
 
 		Order *issueOrder();
-		void toAttack();
-		void toDefend();
+		vector<Territory*> toAttack();
+		vector<Territory*> toDefend();
 
-		~CheaterPlayerStrategy();
-
-		bool isAttackedOncePerTurn() const;
-		void setAttackedOncePerTurn(bool attackedOncePerTurn);
+		virtual ~CheaterPlayerStrategy();
 
 private:
 		bool attackedOncePerTurn = false;

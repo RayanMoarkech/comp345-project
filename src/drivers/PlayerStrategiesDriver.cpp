@@ -67,9 +67,12 @@ void testPlayerStrategies()
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
     BenevolentPlayerStrategy* benevolantPlayer = new BenevolentPlayerStrategy(player2);
 
+    player1->setPlayerStrategy(humanPlayer);
+    player2->setPlayerStrategy(benevolantPlayer);
+
     for (int i=0; i < 40; i++)
     {
-        humanPlayer->issueOrder();
-        benevolantPlayer->issueOrder();
+        player1->issueOrder();
+        player2->issueOrder();
     }
 }

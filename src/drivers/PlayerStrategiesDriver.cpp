@@ -40,9 +40,6 @@ void testPlayerStrategies()
     Player* player1 = new Player(playerOneName, playerOneTerritories, playerOneHand, new OrdersList());
     Player* player2 = new Player(playerTwoName, playerTwoTerritories, playerTwoHand, new OrdersList());;
 
-    player1->setGameEngine(gameEngine);
-    player2->setGameEngine(gameEngine);
-
     //Populate owned territories 
     vector<Player*> players = { player1, player2 };
 

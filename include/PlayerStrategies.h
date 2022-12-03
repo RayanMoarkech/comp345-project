@@ -35,9 +35,7 @@ public:
 		friend ostream &operator<<(ostream &os, PlayerStrategy &playerStrategy);
 		PlayerStrategy &operator=(const PlayerStrategy &playerStrategy);
 
-		void playCard(string cardType);
-
-		~PlayerStrategy();
+		virtual ~PlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -58,7 +56,7 @@ public:
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
 
-		~NeutralPlayerStrategy();
+		virtual ~NeutralPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -82,7 +80,7 @@ public:
 		int toDefendIndex = 0;
 		int toAdvanceIndex = 0;
 
-		~BenevolentPlayerStrategy();
+		virtual ~BenevolentPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -103,7 +101,7 @@ public:
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
 
-		~AggressivePlayerStrategy();
+		virtual ~AggressivePlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -124,7 +122,7 @@ public:
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
 
-		~HumanPlayerStrategy();
+		virtual ~HumanPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -141,6 +139,6 @@ public:
 		void toAttack();
 		void toDefend();
 
-		~CheaterPlayerStrategy();
+		virtual ~CheaterPlayerStrategy();
 };
 

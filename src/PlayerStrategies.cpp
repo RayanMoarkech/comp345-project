@@ -18,7 +18,6 @@
 #include <string>
 	using std::string;
 
-#include "../include/GameEngine.h"
 #include "../include/Cards.h"
 
 
@@ -78,27 +77,6 @@ ostream& operator<<(ostream& os, PlayerStrategy& playerStrategy)
     else
         cout << "no player" << endl;
     return cout;
-}
-
-// Defined method to be inherited by all strategies
-void PlayerStrategy::playCard(string cardType)
-{
-	vector<Card*> playersCards = this->getPlayer()->getPlayerHand()->cards;
-	
-	for (int i = 0; i < playersCards.size(); i++)
-	{
-		cout << i << endl;
-		if (playersCards.at(i)->getCardType() == cardType)
-		{
-			Card* card = playersCards.at(i);
-			// return card to deck
-			this->getPlayer()->getGameEngine()->getDeck()->returnCard(card);
-			// remove card from hand
-			this->getPlayer()->getPlayerHand()->
-				cards.erase(this->getPlayer()->getPlayerHand()->cards.begin() + i);
-			break;
-		}
-	}
 }
 
 PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &playerStrategy) = default;
@@ -200,7 +178,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 			Territory* weakestCountry = this->getPlayer()->getDefendList().at(0);
 			cout << this->getPlayer()->getName() << " will play a Blockade card." << endl;
 			cout << this->getPlayer()->getName() << " will blockade territory " << weakestCountry->getName() << endl;
-			this->playCard("Blockade");
+			this->_player->removeCardFromHand("Blockade");
 			return new Blockade(this->getPlayer(), weakestCountry);
 		}
 		if (this->getPlayer()->ownsCard("Airlift"))
@@ -211,7 +189,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 			cout << this->getPlayer()->getName() << " will play a Airlift card." << endl;
 			cout << this->getPlayer()->getName() << " will airlift " << armiesToAirlift << " armies to " 
 				<< weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
-			this->playCard("Airlift");
+			this->_player->removeCardFromHand("Airlift");
 			return new Airlift(this->getPlayer(), strongestCountry, weakestCountry, armiesToAirlift);
 		}
 
@@ -525,7 +503,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 						cout << "What territory do you want to bomb?" << endl;
 						cin >> territoryToBomb;
 					}
-					this->playCard("Bomb");
+					this->_player->removeCardFromHand("Bomb");
 					return new Bomb(this->getPlayer(), this->_player->getAttackList().at(territoryToBomb - 1));
 				}
 				else {
@@ -556,7 +534,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 						cout << "What territory do you want to block?" << endl;
 						cin >> territoryToBlock;
 					}
-					this->playCard("Blockade");
+					this->_player->removeCardFromHand("Blockade");
 					return new Blockade(this->getPlayer(), this->_player->getAttackList().at(territoryToBlock - 1));
 				}
 				else 
@@ -612,7 +590,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 					cout << "How many armies to airlift?" << endl;
 					cin >> armiesToAirlift;
 
-					this->playCard("Airlift");
+					this->_player->removeCardFromHand("Airlift");
 					return new Airlift(this->getPlayer(), this->_player->getOwnedTerritories().at(airliftSource - 1),
 					this->_player->getOwnedTerritories().at(airliftTarget - 1), armiesToAirlift);
 				}
@@ -755,7 +733,7 @@ HumanPlayerStrategy::~HumanPlayerStrategy() = default;
 
 
 // ---------------------------------------------
-// -------CheaterPlayerStrategy Sectio-------
+// -------CheaterPlayerStrategy Section-------
 // ---------------------------------------------
 
 // Constructors
@@ -777,7 +755,7 @@ Order* CheaterPlayerStrategy::issueOrder()
   cout << endl;
 
   //To Defend
-  if (this->getPlayer()->getAttackList().size() > 0)
+  if (!this->getPlayer()->getAttackList().empty())
   {
     cout <<"Cheater has already attacked before this turn!." << endl;
     return nullptr;
@@ -790,7 +768,6 @@ Order* CheaterPlayerStrategy::issueOrder()
    territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );
    cout << territory->getName()<< " is now owned By the Cheater player" << endl;
   }
-  this->setAttackedOncePerTurn(true);
   return nullptr;
 }
 

@@ -79,7 +79,7 @@ ostream& operator<<(ostream& os, PlayerStrategy& playerStrategy)
     return cout;
 }
 
-// Defined dethod to be inherited by all strategies
+// Defined method to be inherited by all strategies
 void PlayerStrategy::playCard(string cardType)
 {
 	vector<Card*> playersCards = this->getPlayer()->getPlayerHand()->cards;
@@ -750,3 +750,67 @@ void HumanPlayerStrategy::toDefend()
 // Destructor
 
 HumanPlayerStrategy::~HumanPlayerStrategy() = default;
+
+
+
+// ---------------------------------------------
+// -------CheaterPlayerStrategy Sectio-------
+// ---------------------------------------------
+
+// Constructors
+
+CheaterPlayerStrategy::CheaterPlayerStrategy() : PlayerStrategy() {}
+
+CheaterPlayerStrategy::CheaterPlayerStrategy(Player* player) : PlayerStrategy(player) {}
+
+CheaterPlayerStrategy::CheaterPlayerStrategy(const PlayerStrategy& playerStrategy) : PlayerStrategy(playerStrategy) {}
+
+// Functionalities
+
+Order* CheaterPlayerStrategy::issueOrder()
+{
+  cout << endl;
+  cout << "----------------------------------" << endl;
+  cout << this->getPlayer()->getName() << "'s Turn - Type: Cheater" << endl;
+  cout << "----------------------------------" << endl;
+  cout << endl;
+
+  //To Defend
+  if (this->isAttackedOncePerTurn() == true)
+  {
+    cout <<"Cheater has already attacked before this turn!." << endl;
+    return nullptr;
+  }
+
+  vector<Territory*> territoriesToAttack = this->getPlayer()->getNeighbouringEnemyTerritories();
+  for (Territory* territory : territoriesToAttack)
+  {
+   territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );
+   cout << territory->getName()<< "is now owned By the Cheater player" << endl;
+  }
+  this->setAttackedOncePerTurn(true);
+  return nullptr;
+}
+
+void CheaterPlayerStrategy::toAttack()
+{
+  // Cheater player automatically conquers all adjacent territories.
+}
+
+
+void CheaterPlayerStrategy::toDefend()
+{
+  // Cheater player does not defend.
+}
+bool CheaterPlayerStrategy::isAttackedOncePerTurn() const {
+  return attackedOncePerTurn;
+}
+void CheaterPlayerStrategy::setAttackedOncePerTurn(bool attackedOncePerTurn) {
+  CheaterPlayerStrategy::attackedOncePerTurn = attackedOncePerTurn;
+}
+
+// Destructor
+
+CheaterPlayerStrategy::~CheaterPlayerStrategy() = default;
+
+

@@ -468,14 +468,20 @@ void GameEngine::issueOrdersPhase()
                 allIssuedOrders->addOrder(o);
             }
         }
+
         for (int i = 0; i < this->_players.size(); i++)
         {
+            // Players cannot finish issuing orders until all armies are deployed
             if (_players.at(i)->getArmyUnits() != 0)
             {
                 allPlayersDone = false;
                 break;
             }
             else {
+                // Check the end of the list, if the last #ofplayers orders are null, 
+                // then all players are done issuing orders
+                // If any of the last #ofplayers order are not null (advance, card, etc.) then
+                // not all players are done
                 if (list.at(list.size() - 1 - i))
                 {
                     allPlayersDone = false;

@@ -18,8 +18,9 @@
 #include <string>
 	using std::string;
 
-class Territory;
-class Order;
+#include "../include/GameEngine.h"
+#include "../include/Cards.h"
+
 
 //Static Methods
 static bool isIn(vector<Territory*> territoryVector, Territory* territory)

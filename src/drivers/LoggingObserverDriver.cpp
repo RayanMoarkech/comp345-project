@@ -1,15 +1,14 @@
-//
-// Created by Lujain Khalaf on 2022-11-13.
-//
+#include <string>
+#include <iostream>
+	using std::cout;
+	using std::endl;
+
+#include "../../include/CommandProcessing.h"
 #include "../../include/Player.h"
 #include "../../include/Map.h"
 #include "../../include/GameEngine.h"
-#include <string>
+#include "../../include/Orders.h"
 
-#include "../../include/CommandProcessing.h"
-#include <sstream>
-using std::cout;
-using std::endl;
 
 void testLoggingObserver()
 {

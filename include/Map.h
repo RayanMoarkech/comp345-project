@@ -12,8 +12,8 @@
 #include <ostream>
     using std::ostream;
 
-class Continent; // Used to determine size of the pointer
-class Territory; // Used to determine size of the pointer
+class Continent;
+class Territory;
 class Player;
 
 
@@ -21,27 +21,26 @@ class Player;
 // ---------------- Map Section ----------------
 // ---------------------------------------------
 
-class Map
-{
+class Map {
 private:
-    vector<Continent*> continents;
-    vector<Territory*> territories;
-    bool isValid;
+		vector<Continent *> continents;
+		vector<Territory *> territories;
+		bool isValid;
 
 public:
-    Map();
-    Map(const Map& map);
-    ~Map();
-    void addContinent(Continent* continent);
-    Continent* getContinent(const string& name);
-    void addTerritory(Territory* territory);
-    Territory* getTerritory(const string& name);
-    vector<Territory*> getTerritories();
-    vector<Continent*> getContinents();
-    void setValidFalse();
-    bool validate();
-    friend ostream& operator<<(ostream& os, Map& map);
-    Map& operator=(const Map& map);
+		Map();
+		Map(const Map &map);
+		~Map();
+		void addContinent(Continent *continent);
+		Continent *getContinent(const string &name);
+		void addTerritory(Territory *territory);
+		Territory *getTerritory(const string &name);
+		vector<Territory *> getTerritories();
+		vector<Continent *> getContinents();
+		void setValidFalse();
+		bool validate();
+		friend ostream &operator<<(ostream &os, Map &map);
+		Map &operator=(const Map &map);
 };
 
 
@@ -49,20 +48,19 @@ public:
 // ------------- Continent Section -------------
 // ---------------------------------------------
 
-class Continent
-{
+class Continent {
 private:
-    string name;
-    int score;
+		string name;
+		int score;
 
 public:
-    Continent(string name, int score);
-    Continent(const Continent& continent);
-    ~Continent();
-    string getName();
-    int getScore() const;
-    friend ostream& operator<<(ostream& os, Continent& continent);
-    Continent& operator=(const Continent& continent);
+		Continent(string name, int score);
+		Continent(const Continent &continent);
+		~Continent();
+		string getName();
+		int getScore() const;
+		friend ostream &operator<<(ostream &os, Continent &continent);
+		Continent &operator=(const Continent &continent);
 };
 
 
@@ -70,35 +68,34 @@ public:
 // ------------- Territory Section -------------
 // ---------------------------------------------
 
-class Territory
-{
+class Territory {
 private:
-    int coordinateX;
-    int coordinateY;
-    string name;
-    Continent* continent;
-    vector<Territory*> adjacentTerritories; // The maximum allowed is 10. Maybe change to array?
-    Player* ownedBy;
-    int numberOfArmies;
+		int coordinateX;
+		int coordinateY;
+		string name;
+		Continent *continent;
+		vector<Territory *> adjacentTerritories; // The maximum allowed is 10. Maybe change to array?
+		Player *ownedBy;
+		int numberOfArmies;
 
 public:
-    Territory(string name, int coordinateX, int coordinateY, Continent* continent);
-    Territory(const Territory& territory, Continent* continent = nullptr);
-    ~Territory();
-    string getName();
-    Continent* getContinent();
-    Player* getOwnedBy();
-    int getNumberOfArmies();
-    void addAdjacentTerritory(Territory* territory);
-    void addArmies(int numArmies);
-    void removeArmies(int numArmies);
-    vector<Territory*> getAdjacentTerritories();
-    void setOwnedBy(Player* ownedBy, int numberOfArmies);
-    void setNumberOfArmies(int numberOfArmies);
-    friend ostream& operator<<(ostream& os, Territory& territory);
-    Territory& operator=(const Territory& territory);
-    friend bool operator<(const Territory& t1, const Territory& t2);
-    friend bool operator>(const Territory& t1, const Territory& t2);
+		Territory(string name, int coordinateX, int coordinateY, Continent *continent);
+		Territory(const Territory &territory, Continent *continent = nullptr);
+		~Territory();
+		string getName();
+		Continent *getContinent();
+		Player *getOwnedBy();
+		int getNumberOfArmies();
+		void addAdjacentTerritory(Territory *territory);
+		void addArmies(int numArmies);
+		void removeArmies(int numArmies);
+		vector<Territory *> getAdjacentTerritories();
+		void setOwnedBy(Player *ownedBy, int numberOfArmies);
+		void setNumberOfArmies(int numberOfArmies);
+		friend ostream &operator<<(ostream &os, Territory &territory);
+		Territory &operator=(const Territory &territory);
+		friend bool operator<(const Territory &t1, const Territory &t2);
+		friend bool operator>(const Territory &t1, const Territory &t2);
 };
 
 
@@ -106,17 +103,16 @@ public:
 // ------------- MapLoader Section -------------
 // ---------------------------------------------
 
-class MapLoader
-{
+class MapLoader {
 private:
 
 public:
-    MapLoader();
-    MapLoader(const MapLoader& mapLoader);
-    ~MapLoader();
-    static Map* load(const string& mapFileDir);
-    friend ostream& operator<<(ostream& os, MapLoader& mapLoader);
-    MapLoader& operator=(const MapLoader& mapLoader);
+		MapLoader();
+		MapLoader(const MapLoader &mapLoader);
+		~MapLoader();
+		static Map *load(const string &mapFileDir);
+		friend ostream &operator<<(ostream &os, MapLoader &mapLoader);
+		MapLoader &operator=(const MapLoader &mapLoader);
 };
 
 

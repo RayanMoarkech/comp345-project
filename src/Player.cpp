@@ -17,6 +17,7 @@
 #include "../include/Orders.h"
 #include "../include/Cards.h"
 #include "../include/PlayerStrategies.h"
+#include "../include/Map.h"
 
 int Player::idCounter = 1;
 

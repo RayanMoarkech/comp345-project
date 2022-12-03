@@ -123,7 +123,7 @@ void NeutralPlayerStrategy::toDefend()
 NeutralPlayerStrategy::~NeutralPlayerStrategy() = default;
 
 // ---------------------------------------------
-// -------BenevolentPlayerStrategy Sectio-------
+// -------BenevolentPlayerStrategy Section------
 // ---------------------------------------------
 
 // Constructors
@@ -145,7 +145,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 	cout << endl;
 
 	//To Defend
-	if (this->getPlayer()->getDefendList().size() == 0)
+	if (this->getPlayer()->getDefendList().empty())
 	{
 		this->toDefend();
 		return nullptr;
@@ -258,19 +258,66 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(const PlayerStrategy &playerS
 // Functionalities
 
 Order* AggressivePlayerStrategy::issueOrder() {
-    //TODO: complete part
-    return nullptr;
+	cout << endl;
+	cout << "----------------------------------" << endl;
+	cout << this->getPlayer()->getName() << "'s Turn - Type: Aggressive" << endl;
+	cout << "----------------------------------" << endl;
+	cout << endl;
+
+	// To defend
+	if (this->getPlayer()->getDefendList().empty())
+	{
+		this->toDefend();
+		return nullptr;
+	}
+
+	int playerArmyUnits = this->getPlayer()->getArmyUnits();
+	Territory* strongestCountry = this->getPlayer()->getAttackList().at(0);
+
+	// Deploys or advances armies on its strongest country
+	if (playerArmyUnits != 0)
+	{
+		cout << "Total remaining of army units to deploy: " << playerArmyUnits << endl;
+		cout << this->getPlayer()->getName() << " (Aggressive) will deploy " << playerArmyUnits <<
+				 " armies to territory " << this->getPlayer()->getDefendList().at(0)->getName() << endl;
+		return new Deploy(this->getPlayer(), strongestCountry, playerArmyUnits);
+	}
+
+	// To defend
+	if (this->getPlayer()->getAttackList().empty())
+	{
+		this->toAttack();
+		return nullptr;
+	}
+
+	// always advances to enemy territories until it cannot do so anymore
+	Territory* enemyCountry = this->getPlayer()->getAttackList().at(0);
+	int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
+	cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
+			 << enemyCountry->getName() << " from " << strongestCountry->getName() << endl;
+	return new Advance(this->getPlayer(), strongestCountry, enemyCountry, armiesToAdvance);
 }
 void AggressivePlayerStrategy::toAttack()
 {
-    //TODO: computer player that focuses on attack
-    // deploys or advances armies on its strongest country,
-    // then always advances to enemy territories until it cannot do so anymore
+	vector<Territory*> toAttack = this->_player->getNeighbouringEnemyTerritories(this->_player->getDefendList().at(0));
+	this->_player->setAttackList(toAttack);
 }
 
 void AggressivePlayerStrategy::toDefend()
 {
-    //TODO: complete part
+	// Advances armies on strongest countries
+	// Sort Player toDefend list by strongest to weakest country
+	vector<Territory*> toDefend = this->_player->getOwnedTerritories();
+
+	sort(toDefend.begin(), toDefend.end(),
+			 [](const Territory* t1, const Territory* t2) {return *t1 > *t2; });
+	cout << "Prioritized list of territories to defend: " << endl;
+	cout << endl;
+	for (Territory* t : toDefend)
+	{
+		cout << t->getName() << ": " << t->getNumberOfArmies() << " armies" << endl;
+	}
+	this->_player->setDefendList(toDefend);
 }
 
 // Destructor

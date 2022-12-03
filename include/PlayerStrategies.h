@@ -2,13 +2,15 @@
 // COMP345_PROJECT_PLAYERSTRATEGIES_H PlayerStrategies.h
 //
 
-#ifndef PLAYERSTRATEGIES_H
-#define PLAYERSTRATEGIES_H
+#pragma once
 
 #include <ostream>
-using std::ostream;
+    using std::ostream;
+#include <string>
+    using std::string;
 
 class Player;
+class Order;
 
 // ---------------------------------------------
 // ---------- PlayerStrategy Section -----------
@@ -26,14 +28,16 @@ public:
   void setPlayer(Player *player);
   Player *getPlayer();
 
-  virtual PlayerStrategy *issueOrder() = 0;
-  virtual PlayerStrategy *toAttack() = 0;
-  virtual PlayerStrategy *toDefend() = 0;
+    virtual Order* issueOrder() = 0;
+    virtual void toAttack() = 0;
+    virtual void toDefend() = 0;
 
   friend ostream &operator<<(ostream &os, PlayerStrategy &playerStrategy);
   PlayerStrategy &operator=(const PlayerStrategy &playerStrategy);
 
-  ~PlayerStrategy();
+    void playCard(string cardType);
+
+    ~PlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -46,9 +50,9 @@ public:
   NeutralPlayerStrategy(Player *player);
   NeutralPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-  PlayerStrategy *issueOrder();
-  PlayerStrategy *toAttack();
-  PlayerStrategy *toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
   //    friend ostream& operator<<(ostream& os, PlayerStrategies&
   //    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
@@ -67,9 +71,9 @@ public:
   BenevolentPlayerStrategy(Player *player);
   BenevolentPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-  PlayerStrategy *issueOrder();
-  PlayerStrategy *toAttack();
-  PlayerStrategy *toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
   //    friend ostream& operator<<(ostream& os, PlayerStrategies&
   //    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
@@ -91,9 +95,9 @@ public:
   AggressivePlayerStrategy(Player *player);
   AggressivePlayerStrategy(const PlayerStrategy &playerStrategy);
 
-  PlayerStrategy *issueOrder();
-  PlayerStrategy *toAttack();
-  PlayerStrategy *toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
   //    friend ostream& operator<<(ostream& os, PlayerStrategies&
   //    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
@@ -112,9 +116,9 @@ public:
   HumanPlayerStrategy(Player *player);
   HumanPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-  PlayerStrategy *issueOrder();
-  PlayerStrategy *toAttack();
-  PlayerStrategy *toDefend();
+    Order* issueOrder();
+    void toAttack();
+    void toDefend();
 
   //    friend ostream& operator<<(ostream& os, PlayerStrategies&
   //    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
@@ -133,14 +137,11 @@ public:
   CheaterPlayerStrategy(Player *player);
   CheaterPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-  PlayerStrategy *issueOrder();
-  PlayerStrategy *toAttack();
-  PlayerStrategy *toDefend();
+  Order* issueOrder();
+  void toAttack();
+  void toDefend();
 
 
-  //    friend ostream& operator<<(ostream& os, PlayerStrategies&
-  //    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
-  //    playerStrategies);
 
   ~CheaterPlayerStrategy();
 
@@ -153,4 +154,3 @@ private:
   bool attackedOncePerTurn = false;
 };
 
-#endif // PLAYERSTRATEGIES_H

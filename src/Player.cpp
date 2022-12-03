@@ -16,6 +16,7 @@
 #include "../include/Player.h"
 #include "../include/Orders.h"
 #include "../include/Cards.h"
+#include "../include/PlayerStrategies.h"
 
 int Player::idCounter = 1;
 
@@ -29,6 +30,7 @@ Player::Player() {
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
     this->armyUnits = 0;
+	this->ps = new HumanPlayerStrategy(); //default player is human
 }
 
 //Copy constructor (Deep)
@@ -447,4 +449,24 @@ bool Player::ownsCard(string cardType)
 		}
 	}
 	return false;
+}
+
+PlayerStrategy* Player::getPlayerStrategy()
+{
+	return this->ps;
+}
+
+void Player::setPlayerStrategy(PlayerStrategy* ps)
+{
+	this->ps = ps;
+}
+
+GameEngine* Player::getGameEngine()
+{
+	return this->gameEngine;
+}
+
+void Player::setGameEngine(GameEngine* gameEngine)
+{
+	this->gameEngine = gameEngine;
 }

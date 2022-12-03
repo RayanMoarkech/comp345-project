@@ -141,7 +141,7 @@ GameEngine::GameEngine(string fileName) {
   _nextStateIndex = 0;
   _map = nullptr;
   _players = {};
-  deck = nullptr;
+  deck = new Deck();
   if (fileName == "") {
     _commandProcessor = new CommandProcessor();
     _fileName = "";
@@ -441,6 +441,13 @@ void GameEngine::issueOrdersPhase()
         }
     }
     this->ordersList = allIssuedOrders;
+
+    // Clear all players toAttack and toDefend lists
+    for (Player* p : this->_players)
+    {
+        p->setAttackList(vector<Territory*>());
+        p->setDefendList(vector<Territory*>());
+    }
 }
 
 
@@ -576,6 +583,11 @@ void GameEngine::startupPhase()
 }
 std::string GameEngine::stringToLog() {
     return "GameEngine::transition(): " + this->_state[this->_currentStateIndex]->getName() + "\n";
+}
+
+Deck* GameEngine::getDeck()
+{
+    return this->deck;
 }
 
 // Print a list of all states with their valid transitions

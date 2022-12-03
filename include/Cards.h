@@ -2,21 +2,20 @@
 #define COMP345_CARDS_H
 
 #include <iostream>
-using std::cout;
-using std::endl;
-using std::ostream;
+	using std::cout;
+	using std::endl;
+	using std::ostream;
 #include <vector>
-using std::vector;
+	using std::vector;
 
 #define DECK_SIZE 54
 #define HAND_SIZE 5
-
-
 
 class Deck;
 class Hand;
 class Player;
 class Order;
+
 
 // ---------------------------------------------
 // ---------------- Card Section ---------------

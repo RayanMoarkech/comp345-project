@@ -8,6 +8,8 @@
 #include "../../include/Orders.h"
 #include "../../include/Player.h"
 #include "../../include/GameEngine.h"
+#include "../../include/Map.h"
+#include "../../include/Cards.h"
 
 void testOrdersList()
 {

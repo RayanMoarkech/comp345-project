@@ -6,13 +6,13 @@
 #define COMMANDPROCESSING_H
 
 #include <string>
-using std::string;
+	using std::string;
 #include <vector>
-using std::vector;
+	using std::vector;
 #include <ostream>
-using std::ostream;
+	using std::ostream;
 #include <fstream>
-using std::fstream;
+	using std::fstream;
 
 #include "LoggingObserver.h"
 

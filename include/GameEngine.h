@@ -4,7 +4,6 @@
 
 #ifndef GameEngine_H
 #define GameEngine_H
-#include "Cards.h"
 
 #include <string>
     using std::string;
@@ -21,6 +20,7 @@ class OrdersList;
 class CommandProcessor;
 class Command;
 class Territory;
+class Deck;
 
 
 // ---------------------------------------------

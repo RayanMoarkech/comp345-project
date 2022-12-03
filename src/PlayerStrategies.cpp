@@ -776,17 +776,18 @@ Order* CheaterPlayerStrategy::issueOrder()
   cout << endl;
 
   //To Defend
-  if (this->isAttackedOncePerTurn() == true)
+  if (this->getPlayer()->getAttackList().size() > 0)
   {
     cout <<"Cheater has already attacked before this turn!." << endl;
     return nullptr;
   }
 
   vector<Territory*> territoriesToAttack = this->getPlayer()->getNeighbouringEnemyTerritories();
+  this->getPlayer()->setAttackList(territoriesToAttack);
   for (Territory* territory : territoriesToAttack)
   {
    territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );
-   cout << territory->getName()<< "is now owned By the Cheater player" << endl;
+   cout << territory->getName()<< " is now owned By the Cheater player" << endl;
   }
   this->setAttackedOncePerTurn(true);
   return nullptr;

@@ -199,6 +199,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 			Territory* weakestCountry = this->getPlayer()->getDefendList().at(0);
 			cout << this->getPlayer()->getName() << " will play a Blockade card." << endl;
 			cout << this->getPlayer()->getName() << " will blockade territory " << weakestCountry->getName() << endl;
+			this->playCard("Blockade");
 			return new Blockade(this->getPlayer(), weakestCountry);
 		}
 		if (this->getPlayer()->ownsCard("Airlift"))
@@ -209,6 +210,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 			cout << this->getPlayer()->getName() << " will play a Airlift card." << endl;
 			cout << this->getPlayer()->getName() << " will airlift " << armiesToAirlift << " armies to " 
 				<< weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
+			this->playCard("Airlift");
 			return new Airlift(this->getPlayer(), strongestCountry, weakestCountry, armiesToAirlift);
 		}
 
@@ -553,10 +555,12 @@ Order* HumanPlayerStrategy::issueOrder() {
 						cout << "What territory do you want to block?" << endl;
 						cin >> territoryToBlock;
 					}
-					//return new Blockade(this, this->_player->getAttackList().at(territoryToBlock - 1));
+					this->playCard("Blockade");
+					return new Blockade(this->getPlayer(), this->_player->getAttackList().at(territoryToBlock - 1));
 				}
 				else 
 				{
+					cout << endl;
 					cout << "You do not have a Blockade card." << endl;
 					return nullptr;
 				}
@@ -607,11 +611,13 @@ Order* HumanPlayerStrategy::issueOrder() {
 					cout << "How many armies to airlift?" << endl;
 					cin >> armiesToAirlift;
 
+					this->playCard("Airlift");
 					return new Airlift(this->getPlayer(), this->_player->getOwnedTerritories().at(airliftSource - 1),
 					this->_player->getOwnedTerritories().at(airliftTarget - 1), armiesToAirlift);
 				}
 				else
 				{
+					cout << endl;
 					cout << "You do not have a Airlift card." << endl;
 					return nullptr;
 				}
@@ -626,6 +632,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 				}
 				else
 				{
+					cout << endl;
 					cout << "You do not have a Diplomacy card." << endl;
 					return nullptr;
 				}

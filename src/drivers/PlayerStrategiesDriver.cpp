@@ -26,7 +26,7 @@ void testPlayerStrategies()
 
     playerOneHand->addCard(bombCard);
     playerOneHand->addCard(blockadeCard);
-    //playerTwoHand->addCard(airliftCard);
+    playerTwoHand->addCard(airliftCard);
 
     string playerOneName = "Player 1";
     vector<Territory*> playerOneTerritories;

@@ -803,15 +803,8 @@ void CheaterPlayerStrategy::toDefend()
 {
   // Cheater player does not defend.
 }
-bool CheaterPlayerStrategy::isAttackedOncePerTurn() const {
-  return attackedOncePerTurn;
-}
-void CheaterPlayerStrategy::setAttackedOncePerTurn(bool attackedOncePerTurn) {
-  CheaterPlayerStrategy::attackedOncePerTurn = attackedOncePerTurn;
-}
 
 // Destructor
-
 CheaterPlayerStrategy::~CheaterPlayerStrategy() = default;
 
 

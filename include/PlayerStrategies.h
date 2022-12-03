@@ -144,13 +144,5 @@ public:
 
 
   ~CheaterPlayerStrategy();
-
-private:
-public:
-  bool isAttackedOncePerTurn() const;
-  void setAttackedOncePerTurn(bool attackedOncePerTurn);
-
-private:
-  bool attackedOncePerTurn = false;
 };
 

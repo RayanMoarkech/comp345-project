@@ -260,8 +260,7 @@ vector<Territory*> Player::getNeighbouringOwnedTerritories(Territory* t)
 
 Order* Player::issueOrder()
 {
-	this->ps->issueOrder();
-	return nullptr;
+	return this->ps->issueOrder();
 }
 
 vector<Territory*> Player::getOwnedTerritories()

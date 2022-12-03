@@ -18,9 +18,6 @@
 #include <string>
 	using std::string;
 
-class Territory;
-class Order;
-
 //Static Methods
 static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 {
@@ -394,7 +391,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 				cout << "Your Hand: " << endl;
 				for (Card* c : this->getPlayer()->getPlayerHand()->cards)
 				{
-					cout << "- " << c->getCardType() << " card" << endl;
+					cout << "- " <<  c->getCardType() << " card" << endl;
 				}
 			}
 			cout << endl;

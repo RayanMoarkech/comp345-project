@@ -418,27 +418,76 @@ bool GameEngine::allPlayerCardsPlayed() const
     return allCardsPlayed;
 }
 
+//void GameEngine::issueOrdersPhase()
+//{
+//    OrdersList* allIssuedOrders = new OrdersList();
+//    while (allPlayerCardsPlayed())
+//    {
+//        for (Player* p : this->_players)
+//        {
+//            // 5 is used here to keep a few territories to attack to be used by Cards
+//            if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
+//            {
+//                Order* o = p->getPlayerHand()->cards.at(0)->play(p, this->deck);
+//                if (o != nullptr)
+//                    allIssuedOrders->addOrder(o);
+//            }
+//            else
+//            {
+//                Order* o = p->issueOrder();
+//                if (o != nullptr)
+//                    allIssuedOrders->addOrder(o);
+//            }
+//        }
+//    }
+//    this->ordersList = allIssuedOrders;
+//
+//    // Clear all players toAttack and toDefend lists
+//    for (Player* p : this->_players)
+//    {
+//        p->setAttackList(vector<Territory*>());
+//        p->setDefendList(vector<Territory*>());
+//    }
+//}
+
 void GameEngine::issueOrdersPhase()
 {
+    bool allPlayersDone = false;
     OrdersList* allIssuedOrders = new OrdersList();
-    while (allPlayerCardsPlayed())
+    //OrdersList* list = new OrdersList();
+    vector<Order*> list;
+    while (!allPlayersDone)
     {
         for (Player* p : this->_players)
         {
-            // 5 is used here to keep a few territories to attack to be used by Cards
-            if (p->getAttackList().size() == 5 && p->getPlayerHand()->cards.size() != 0)
+            Order* o = p->issueOrder();
+            //list->addOrder(o);
+            list.push_back(o);
+            if (o != nullptr)
             {
-                Order* o = p->getPlayerHand()->cards.at(0)->play(p, this->deck);
-                if (o != nullptr)
-                    allIssuedOrders->addOrder(o);
-            }
-            else
-            {
-                Order* o = p->issueOrder();
-                if (o != nullptr)
-                    allIssuedOrders->addOrder(o);
+                allIssuedOrders->addOrder(o);
             }
         }
+        for (int i = 0; i < this->_players.size(); i++)
+        {
+            if (_players.at(i)->getArmyUnits() != 0)
+            {
+                allPlayersDone = false;
+                break;
+            }
+            else {
+                if (list.at(list.size() - 1 - i))
+                {
+                    allPlayersDone = false;
+                    break;
+                }
+                else
+                {
+                    allPlayersDone = true;
+                }
+            }
+        }
+
     }
     this->ordersList = allIssuedOrders;
 

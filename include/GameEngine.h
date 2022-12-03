@@ -104,6 +104,8 @@ public:
 
     std::string stringToLog();
 
+    vector<Player*> _players;
+
 private:
     vector<State *> _state;
     int _currentStateIndex;
@@ -111,7 +113,6 @@ private:
     CommandProcessor *_commandProcessor;
     string _fileName;
     Map *_map;
-    vector<Player *> _players;
     Deck *deck;
     OrdersList* ordersList;
 

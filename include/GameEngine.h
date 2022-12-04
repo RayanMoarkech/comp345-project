@@ -98,7 +98,7 @@ public:
     void executeOrdersPhase();
     bool allPlayerCardsPlayed() const;
     int validateGameRound();
-    void mainGameLoop();
+    int mainGameLoop(int maxLoop = 50); // Default maximum of loops to 50
 
     vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 

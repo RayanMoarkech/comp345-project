@@ -11,6 +11,7 @@ using std::cout;
 using std::endl;
 #include <algorithm>
 #include <random>
+#include <sstream>
 
 #include "../include/Cards.h"
 #include "../include/CommandProcessing.h"
@@ -18,6 +19,7 @@ using std::endl;
 #include "../include/Map.h"
 #include "../include/Orders.h"
 #include "../include/Player.h"
+#include "../include/PlayerStrategies.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",
@@ -251,7 +253,26 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
         if (option.empty()) {
             player = new Player();
         } else {
-            player = new Player(option, {}, new Hand(), new OrdersList());
+						std::istringstream iss(option);
+						string name;
+						iss >> name;
+						string strategy;
+						iss >> strategy;
+						PlayerStrategy* ps = nullptr;
+						if (!strategy.empty())
+						{
+								if (strategy == "human")
+										return new HumanPlayerStrategy();
+								else if (strategy == "aggressive")
+										return new AggressivePlayerStrategy();
+								else if (strategy == "benevolant")
+										return new BenevolentPlayerStrategy();
+								else if (strategy == "neutral")
+										return new NeutralPlayerStrategy();
+								else if (strategy == "cheater")
+										return new CheaterPlayerStrategy();
+						}
+            player = new Player(option, {}, new Hand(), new OrdersList(), ps);
         }
         cout << "Player " << player->getName() << " has been added." << endl;
         string effect = "Player " + player->getName() + " has been added.";
@@ -483,11 +504,16 @@ int GameEngine::validateGameRound()
     return -1;
 }
 
-void GameEngine::mainGameLoop()
+// Starts the mainGameLoop
+// GameEngine should have the startPhase initiated before!
+// Returns the index of the winning player
+// Returns -1 if it ended a draw when maxLoop is reached
+int GameEngine::mainGameLoop(int maxLoop)
 {
     int winnerIndex = validateGameRound();
     vector<int> ownedTerritory = getOwnedTerritories({});
-    while (winnerIndex == -1)
+		int loop = 0;
+    while (winnerIndex == -1 && loop < maxLoop)
     {
         cout << endl
              << "------------- Issue Orders Phase -------------" << endl
@@ -508,8 +534,13 @@ void GameEngine::mainGameLoop()
         ownedTerritory = getOwnedTerritories(ownedTerritory);
 
         winnerIndex = validateGameRound();
+				loop++;
     }
-    cout << this->_players[winnerIndex]->getName() << " is the winner." << endl;
+		if (winnerIndex == -1)
+				cout << "Draw game. Max loop reached." << endl;
+		else
+				cout << this->_players[winnerIndex]->getName() << " is the winner." << endl;
+		return winnerIndex;
 }
 
 vector<int> GameEngine::getOwnedTerritories(vector<int> ownedTerritory)

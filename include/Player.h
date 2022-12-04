@@ -42,7 +42,7 @@ private:
 public:
 		// Constructors
 		Player();
-		Player(string name, vector<Territory *> ownedTerritories, Hand *playerHand, OrdersList *playerOrders);
+		Player(string name, vector<Territory *> ownedTerritories, Hand *playerHand, OrdersList *playerOrders, PlayerStrategy* ps = nullptr);
 		Player(const Player &player);
 		Player(bool isNeutral);
 

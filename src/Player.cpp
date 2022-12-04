@@ -31,7 +31,7 @@ Player::Player() {
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
 	this->armyUnits = 0;
-	this->ps = new HumanPlayerStrategy(); //default player is human
+	this->ps = new HumanPlayerStrategy(); // default player is human
 }
 
 //Copy constructor (Deep)
@@ -52,10 +52,11 @@ Player::Player(const Player& player) {
 	this->isNeutral = player.isNeutral;
 	this->conqueredTerritory = player.conqueredTerritory;
 	this->armyUnits = player.armyUnits;
+	this->ps = player.ps;
 }
 
 //Parametrized constructor
-Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
+Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders, PlayerStrategy* ps)
 {
 	this->id = idCounter++;
 	this->name = std::move(name);
@@ -65,6 +66,10 @@ Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHan
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
 	this->armyUnits = 0;
+	if (ps == nullptr)
+		this->ps = new HumanPlayerStrategy(); // default player is human
+	else
+		this->ps = ps;
 }
 
 Player::Player(bool isNeutral)

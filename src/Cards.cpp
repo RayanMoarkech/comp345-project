@@ -1,7 +1,8 @@
 #include "../include/Cards.h"
 #include "../include/Player.h"
+
 #include <iostream>
-using std::cout;
+	using std::cout;
 #include <cstdlib>
 
 // ---------------------------------------------
@@ -10,6 +11,7 @@ using std::cout;
 
 // Default constructor
 Card::Card() {
+		this->deck = nullptr;
     switch (rand() % 5) {
         case 0:
             type = BOMB;
@@ -60,6 +62,17 @@ std::string Card::getCardType() {
     }
 }
 
+// Set the Deck that the card belongs to
+void Card::setDeck(Deck *deck)
+{
+		this->deck = deck;
+}
+
+Deck *Card::getDeck()
+{
+		return this->deck;
+}
+
 // Stream insertion operator
 ostream& operator << (ostream& out, const Card& card) {
     switch (card.type) {
@@ -98,7 +111,9 @@ Order* Card::play(Player* player, Deck* deck)
 // Default constructor
 Deck::Deck() {
     for (int i = 0; i < DECK_SIZE; i++) {
-        cards.push_back(new Card());
+				Card* newCard = new Card();
+				newCard->setDeck(this);
+        cards.push_back(newCard);
     }
 }
 
@@ -134,6 +149,7 @@ Card* Deck::draw() {
     int randomIndex = rand() % cards.size();
     Card* card = cards.at(randomIndex);
     cards.erase(cards.begin() + randomIndex);
+		card->setDeck(this);
     return card;
 }
 

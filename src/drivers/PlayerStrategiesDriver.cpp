@@ -1,11 +1,15 @@
 #include <iostream>
-using std::cout;
-using std::endl;
+	using std::cout;
+	using std::endl;
 #include <typeinfo>
 
 #include "../../include/PlayerStrategies.h"
 #include "../../include/Player.h"
 #include "../../include/GameEngine.h"
+#include "../../include/Map.h"
+#include "../../include/Orders.h"
+#include "../../include/Cards.h"
+
 
 void testPlayerStrategies()
 {
@@ -15,15 +19,20 @@ void testPlayerStrategies()
         << "------------------------------------------------------" << endl
         << endl;
 
-    GameEngine* gameEngine = new GameEngine("");
+		GameEngine* gameEngine = new GameEngine();
+
+    Deck* deck = gameEngine->getDeck();
     Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
 
     Hand* playerOneHand = new Hand();
     Hand* playerTwoHand = new Hand();
 
     Card* bombCard = new Card(BOMB);
+		bombCard->setDeck(deck);
     Card* blockadeCard = new Card(BLOCKADE);
+		blockadeCard->setDeck(deck);
     Card* airliftCard = new Card(AIRLIFT);
+		airliftCard->setDeck(deck);
 
     playerOneHand->addCard(bombCard);
     playerOneHand->addCard(blockadeCard);
@@ -36,10 +45,7 @@ void testPlayerStrategies()
     vector<Territory*> playerTwoTerritories;
 
     Player* player1 = new Player(playerOneName, playerOneTerritories, playerOneHand, new OrdersList());
-    Player* player2 = new Player(playerTwoName, playerTwoTerritories, playerTwoHand, new OrdersList());;
-
-    player1->setGameEngine(gameEngine);
-    player2->setGameEngine(gameEngine);
+    Player* player2 = new Player(playerTwoName, playerTwoTerritories, playerTwoHand, new OrdersList());
 
     //Populate owned territories 
     vector<Player*> players = { player1, player2 };

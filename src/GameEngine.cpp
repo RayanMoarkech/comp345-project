@@ -501,6 +501,7 @@ void GameEngine::issueOrdersPhase()
     {
         p->setAttackList(vector<Territory*>());
         p->setDefendList(vector<Territory*>());
+				p->setIssuedArmyUnits(0);
     }
 }
 

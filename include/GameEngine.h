@@ -21,6 +21,8 @@ class CommandProcessor;
 class Command;
 class Territory;
 class Deck;
+class Tournament;
+class PlayerStrategy;
 
 
 // ---------------------------------------------
@@ -82,6 +84,8 @@ public:
     GameEngine(const GameEngine &);
     GameEngine &operator=(const GameEngine &);
 
+    Tournament* tournament;
+
     vector<State *> getState();
     int getCurrentStateIndex();
     int &getNextStateIndex();
@@ -98,7 +102,8 @@ public:
     void executeOrdersPhase();
     bool allPlayerCardsPlayed() const;
     int validateGameRound();
-    void mainGameLoop();
+    int mainGameLoop(int maxLoop = 50); // Default maximum of loops to 50
+    void executeTournament(Tournament* t);
 
     vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 
@@ -113,12 +118,41 @@ private:
     CommandProcessor *_commandProcessor;
     string _fileName;
     Map *_map;
+    vector<Player *> _players;
+    vector<PlayerStrategy *> _playerStrats;
     Deck *deck;
     OrdersList* ordersList;
 
     bool executeCurrentStateAction(int nextStateIndex, const string &option);
 
     friend ostream &operator<<(ostream &, const GameEngine &);
+    friend class Tournament;
+};
+
+// ---------------------------------------------
+// ------------ Tournament Section -------------
+// Tournament holds the parameters necessary to
+// execute tournament mode
+// ---------------------------------------------
+// ---------------------------------------------
+
+class Tournament {
+public:
+    Tournament(vector<string>  mapArray, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns);
+    Tournament(const Tournament& tournament);
+    Tournament& operator =(const Tournament& tournament);
+    ~Tournament();
+
+    friend ostream& operator << (ostream& out, const Tournament& t);
+private:
+    friend class GameEngine;
+    vector<string>  mapArray;
+    vector<Map*> maps;
+    vector<string> playerStrategies;
+    int numOfGames;
+    int maxNumOfTurns;
+
+
 };
 
 #endif

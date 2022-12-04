@@ -17,6 +17,7 @@
 #include "LoggingObserver.h"
 
 class State;
+class Tournament;
 
 // ---------------------------------------------
 // -------------- Command Section --------------
@@ -80,10 +81,14 @@ public:
   vector<Command *> getCommandList();
   Command *getLastCommand();
   std::string stringToLog();
+  void saveTournament(Tournament* t);
+  Tournament* getTournament();
 
 
 private:
   vector<State *> _stateList;
+    bool validateTournamentCommand(const vector<string>&);
+    Tournament* tournament;
 
 protected:
   vector<Command *> _commandList;

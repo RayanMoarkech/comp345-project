@@ -11,6 +11,8 @@ using std::cout;
 using std::endl;
 #include <algorithm>
 #include <random>
+#include <typeinfo>
+#include <sstream>
 
 #include "../include/Cards.h"
 #include "../include/CommandProcessing.h"
@@ -18,6 +20,7 @@ using std::endl;
 #include "../include/Map.h"
 #include "../include/Orders.h"
 #include "../include/Player.h"
+#include "../include/PlayerStrategies.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",
@@ -142,6 +145,8 @@ GameEngine::GameEngine(string fileName) {
   _map = nullptr;
   _players = {};
   deck = new Deck();
+  _playerStrats = {};
+  tournament = nullptr;
   if (fileName == "") {
     _commandProcessor = new CommandProcessor();
     _fileName = "";
@@ -160,6 +165,8 @@ GameEngine::GameEngine(const GameEngine &gameEngine) {
   _nextStateIndex = gameEngine._nextStateIndex;
   _map = new Map(*gameEngine._map);
   _players = {};
+  _playerStrats = {};
+  this->tournament = gameEngine.tournament;
   for (auto const &player : gameEngine._players)
     _players.push_back(new Player(*player));
   if (deck != nullptr)
@@ -182,7 +189,9 @@ GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
   this->_nextStateIndex = gameEngine._nextStateIndex;
   this->_map = gameEngine._map;
   this->_players = gameEngine._players;
+  this->_playerStrats = gameEngine._playerStrats;
   this->deck = gameEngine.deck;
+  this->tournament = gameEngine.tournament;
   return *this;
 }
 
@@ -251,7 +260,27 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
         if (option.empty()) {
             player = new Player();
         } else {
-            player = new Player(option, {}, new Hand(), new OrdersList());
+						std::istringstream iss(option);
+						string name;
+						iss >> name;
+						string strategy;
+						iss >> strategy;
+						PlayerStrategy* ps = nullptr;
+						if (!strategy.empty())
+						{
+								if (strategy == "human")
+										ps = new HumanPlayerStrategy();
+								else if (strategy == "aggressive")
+										ps = new AggressivePlayerStrategy();
+								else if (strategy == "benevolant")
+										ps = new BenevolentPlayerStrategy();
+								else if (strategy == "neutral")
+										ps = new NeutralPlayerStrategy();
+								else if (strategy == "cheater")
+										ps = new CheaterPlayerStrategy();
+						}
+            player = new Player(option, {}, new Hand(), new OrdersList(), ps);
+						ps->setPlayer(player);
         }
         cout << "Player " << player->getName() << " has been added." << endl;
         string effect = "Player " + player->getName() + " has been added.";
@@ -508,8 +537,23 @@ void GameEngine::issueOrdersPhase()
 
 void GameEngine::executeOrdersPhase()
 {
-    for (Order* o : this->ordersList->getOrdersList())
-        o->execute();
+    for (Order* order : this->ordersList->getOrdersList()){
+        if(typeid(order).name()=="Bomb"||typeid(order).name()=="Advance")
+            if(typeid(order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() == "NeutralPlayerStrategy"){
+                cout << endl;
+                cout << "**********************************" << endl;
+                cout << order->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
+                cout << "**********************************" << endl;
+
+                delete order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy();
+                order->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(new AggressivePlayerStrategy(order->getTargetTerritory()->getOwnedBy()));
+
+                cout << "**********************************" << endl;
+                cout << order->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type has changed to Aggressive" << endl;
+                cout << "**********************************" << endl;
+            }
+        order->execute();
+    }
     this->ordersList = nullptr;
 }
 
@@ -537,11 +581,16 @@ int GameEngine::validateGameRound()
     return -1;
 }
 
-void GameEngine::mainGameLoop()
+// Starts the mainGameLoop
+// GameEngine should have the startPhase initiated before!
+// Returns the index of the winning player
+// Returns -1 if it ended a draw when maxLoop is reached
+int GameEngine::mainGameLoop(int maxLoop)
 {
     int winnerIndex = validateGameRound();
     vector<int> ownedTerritory = getOwnedTerritories({});
-    while (winnerIndex == -1)
+		int loop = 0;
+    while (winnerIndex == -1 && loop < maxLoop)
     {
         cout << endl
              << "------------- Issue Orders Phase -------------" << endl
@@ -562,8 +611,13 @@ void GameEngine::mainGameLoop()
         ownedTerritory = getOwnedTerritories(ownedTerritory);
 
         winnerIndex = validateGameRound();
+				loop++;
     }
-    cout << this->_players[winnerIndex]->getName() << " is the winner." << endl;
+		if (winnerIndex == -1)
+				cout << "Draw game. Max loop reached." << endl;
+		else
+				cout << this->_players[winnerIndex]->getName() << " is the winner." << endl;
+		return winnerIndex;
 }
 
 vector<int> GameEngine::getOwnedTerritories(vector<int> ownedTerritory)
@@ -651,4 +705,102 @@ ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
     strm << *state << endl;
   }
   return strm;
+}
+
+void GameEngine::executeTournament(Tournament* t)
+{
+    this->tournament = t;
+    bool validMap = true;
+    cout << endl;
+
+    for (auto& val : t->mapArray) {
+        // Play num games on each map
+        for (int i = 0; i < t->numOfGames; i = i + 1) {
+            // Load a new game engine and command processor
+            GameEngine* gameEngine = new GameEngine("");
+            CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+            // Load the map
+            commandProcessor->saveCommand("loadmap " + val);
+            gameEngine->transition();
+
+            // Validate the map
+            commandProcessor->saveCommand("validatemap");
+            gameEngine->transition();
+
+            // Add players
+            if ((val.find(".map") != std::string::npos) && (gameEngine->_map->validate())) {
+                for (int i = 1; i <= t->playerStrategies.size(); i = i + 1) {
+                    // Add players
+                    commandProcessor->saveCommand("addplayer player" + i + ' ' + t->playerStrategies[i]);
+                    gameEngine->transition();
+                }
+            }
+            else {
+                // If map is empty stop game and don't use this map
+                cout << "Map is invalid/empty and will not be used" << endl;
+                validMap = false;
+                break;
+            }
+
+            // Start Game phase
+            commandProcessor->saveCommand("gamestart");
+            gameEngine->transition();
+
+            // Main Game Loop
+            int winner = gameEngine->mainGameLoop(t->maxNumOfTurns);
+            cout << endl;
+
+            delete gameEngine;
+        }
+        if (!validMap)
+        {
+            break;
+        }
+
+    }
+
+    // TO DO: Output the details of tournament mode games
+
+
+
+}
+
+// ---------------------------------------------
+// ------------ Tournament Section -------------
+// ---------------------------------------------
+
+Tournament::Tournament(vector<string> mapArray, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns)
+{
+    this->mapArray = mapArray;
+    this->playerStrategies = playerStrategies;
+    this->numOfGames = numOfGames;
+    this->maxNumOfTurns = maxNumOfTurns;
+}
+
+Tournament::Tournament(const Tournament& tournament)
+{
+    this->mapArray = tournament.mapArray;
+    this->playerStrategies = tournament.playerStrategies;
+    this->numOfGames = tournament.numOfGames;
+    this->maxNumOfTurns = tournament.maxNumOfTurns;
+}
+
+Tournament& Tournament::operator=(const Tournament& tournament)
+{
+    this->mapArray = tournament.mapArray;
+    this->playerStrategies = tournament.playerStrategies;
+    this->numOfGames = tournament.numOfGames;
+    this->maxNumOfTurns = tournament.maxNumOfTurns;
+    return *this;
+}
+
+Tournament::~Tournament()
+{
+}
+
+ostream& operator<<(ostream& out, const Tournament& t)
+{
+    out << "Tournament with" << t.mapArray.size() << " maps, " << t.playerStrategies.size() << " player strategies, " << t.numOfGames << "games and " << t.maxNumOfTurns << "maximum number of turns per game." << endl;
+    return out;
 }

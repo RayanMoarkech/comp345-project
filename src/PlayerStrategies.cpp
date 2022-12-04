@@ -103,19 +103,25 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(const PlayerStrategy &playerStrateg
 // never issues any order
 Order* NeutralPlayerStrategy::issueOrder()
 {
+    cout << endl;
+    cout << "----------------------------------" << endl;
+    cout << this->getPlayer()->getName() << "'s Turn - Type: Neutral" << endl;
+    cout << "----------------------------------" << endl;
+    cout << endl;
+
+    // Neutral player does not issue Orders.
     return nullptr;
 }
 
 void NeutralPlayerStrategy::toAttack()
 {
-    // TODO: not sure what to put here
+    // Neutral player does not Attack.
 }
 
 // is attacked, it becomes an Aggressive player
 void NeutralPlayerStrategy::toDefend()
 {
-	//TODO
-    //return new AggressivePlayerStrategy(*this);
+    // Neutral player does not defend.
 }
 
 // Destructor
@@ -847,7 +853,6 @@ Order* CheaterPlayerStrategy::issueOrder()
   cout << "----------------------------------" << endl;
   cout << endl;
 
-  //To Defend
   if (!this->getPlayer()->getAttackList().empty())
   {
     cout <<"Cheater has already attacked before this turn!." << endl;
@@ -856,6 +861,7 @@ Order* CheaterPlayerStrategy::issueOrder()
 
   vector<Territory*> territoriesToAttack = this->getPlayer()->getNeighbouringEnemyTerritories();
   this->getPlayer()->setAttackList(territoriesToAttack);
+
   for (Territory* territory : territoriesToAttack)
   {
    territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );

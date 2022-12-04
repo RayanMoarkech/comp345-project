@@ -25,5 +25,4 @@ add_executable(
         include/Cards.h src/Cards.cpp src/drivers/CardsDriver.cpp
         include/LoggingObserver.h src/LoggingObserver.cpp src/drivers/LoggingObserverDriver.cpp
         src/PlayerStrategies.cpp include/PlayerStrategies.h
-				src/drivers/PlayerStrategiesDriver.cpp
-)
+ "src/drivers/PlayerStrategiesDriver.cpp" src/drivers/TournamentDriver.cpp)

@@ -258,6 +258,7 @@ void Advance::execute()
 std::string Advance::stringToLog() {
     return "ORDER::Execute(): Advance order executed.";
 }
+Territory *Advance::getTargetTerritory() const { return targetTerritory; }
 
 //----Bomb Class----
 
@@ -344,6 +345,7 @@ void Bomb::execute()
 std::string Bomb::stringToLog() {
     return "ORDER::Execute(): Bomb order executed.";
 }
+Territory *Bomb::getTargetTerritory() const { return targetTerritory; }
 
 //----Blockade Class----
 

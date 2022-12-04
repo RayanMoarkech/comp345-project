@@ -103,6 +103,12 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(const PlayerStrategy &playerStrateg
 // never issues any order
 Order* NeutralPlayerStrategy::issueOrder()
 {
+    cout << endl;
+    cout << "----------------------------------" << endl;
+    cout << this->getPlayer()->getName() << "'s Turn - Type: Neutral" << endl;
+    cout << "----------------------------------" << endl;
+    cout << endl;
+
     // Neutral player does not issue Orders.
     return nullptr;
 }

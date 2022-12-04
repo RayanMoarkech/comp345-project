@@ -268,17 +268,18 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
 						if (!strategy.empty())
 						{
 								if (strategy == "human")
-										return new HumanPlayerStrategy();
+										ps = new HumanPlayerStrategy();
 								else if (strategy == "aggressive")
-										return new AggressivePlayerStrategy();
+										ps = new AggressivePlayerStrategy();
 								else if (strategy == "benevolant")
-										return new BenevolentPlayerStrategy();
+										ps = new BenevolentPlayerStrategy();
 								else if (strategy == "neutral")
-										return new NeutralPlayerStrategy();
+										ps = new NeutralPlayerStrategy();
 								else if (strategy == "cheater")
-										return new CheaterPlayerStrategy();
+										ps = new CheaterPlayerStrategy();
 						}
             player = new Player(option, {}, new Hand(), new OrdersList(), ps);
+						ps->setPlayer(player);
         }
         cout << "Player " << player->getName() << " has been added." << endl;
         string effect = "Player " + player->getName() + " has been added.";

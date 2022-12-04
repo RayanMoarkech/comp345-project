@@ -149,6 +149,7 @@ Card* Deck::draw() {
     int randomIndex = rand() % cards.size();
     Card* card = cards.at(randomIndex);
     cards.erase(cards.begin() + randomIndex);
+		card->setDeck(this);
     return card;
 }
 

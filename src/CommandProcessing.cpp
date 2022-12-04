@@ -4,19 +4,17 @@
 //
 
 #include <string>
-using std::string;
+	using std::string;
 #include <vector>
-using std::vector;
-
-#include <fstream>
-using std::ifstream;
+	using std::vector;
 #include <sstream>
-using std::ios;
-using std::stringstream;
+	using std::ifstream;
+	using std::ios;
+	using std::stringstream;
 #include <iostream>
-using std::cin;
-using std::cout;
-using std::endl;
+	using std::cin;
+	using std::cout;
+	using std::endl;
 
 #include "../include/CommandProcessing.h"
 #include "../include/GameEngine.h"

@@ -142,8 +142,8 @@ GameEngine::GameEngine(string fileName) {
   _nextStateIndex = 0;
   _map = nullptr;
   _players = {};
+  deck = new Deck();
   _playerStrats = {};
-  deck = nullptr;
   tournament = nullptr;
   if (fileName == "") {
     _commandProcessor = new CommandProcessor();
@@ -310,7 +310,7 @@ bool GameEngine::startGame()
     string effect = "Fairly distributing the territories to the players";
     cout << effect << endl;
     _commandProcessor->getLastCommand()->saveEffect(effect);
-    
+
     // Check if there are 2 to 6 players
     if (this->_players.size() < 2 || this->_players.size() > 6)
     {
@@ -331,8 +331,6 @@ bool GameEngine::startGame()
                  rng);
     int numberOfPlayer = this->_players.size();
     int count = 0;
-
-    
 
     // Loop through players and add territories
     for (auto const &territory : shuffledTerritories) {
@@ -450,6 +448,14 @@ void GameEngine::issueOrdersPhase()
         }
     }
     this->ordersList = allIssuedOrders;
+
+    // Clear all players toAttack and toDefend lists
+    for (Player* p : this->_players)
+    {
+        p->setAttackList(vector<Territory*>());
+        p->setDefendList(vector<Territory*>());
+				p->setIssuedArmyUnits(0);
+    }
 }
 
 
@@ -587,6 +593,11 @@ std::string GameEngine::stringToLog() {
     return "GameEngine::transition(): " + this->_state[this->_currentStateIndex]->getName() + "\n";
 }
 
+Deck* GameEngine::getDeck()
+{
+    return this->deck;
+}
+
 // Print a list of all states with their valid transitions
 ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
   for (auto const &state : gameEngine._state) {
@@ -602,7 +613,7 @@ void GameEngine::executeTournament(Tournament* t)
     cout << endl;
 
     for (auto& val : t->mapArray) {
-        // Play num games on each map 
+        // Play num games on each map
         for (int i = 0; i < t->numOfGames; i = i + 1) {
             // Load a new game engine and command processor
             GameEngine* gameEngine = new GameEngine("");
@@ -630,7 +641,7 @@ void GameEngine::executeTournament(Tournament* t)
                 validMap = false;
                 break;
             }
-            
+
             // Start Game phase
             commandProcessor->saveCommand("gamestart");
             gameEngine->transition();
@@ -641,16 +652,16 @@ void GameEngine::executeTournament(Tournament* t)
 
             delete gameEngine;
         }
-        if (!validMap) 
-        { 
-            break; 
+        if (!validMap)
+        {
+            break;
         }
 
     }
 
     // TO DO: Output the details of tournament mode games
 
-    
+
 
 }
 

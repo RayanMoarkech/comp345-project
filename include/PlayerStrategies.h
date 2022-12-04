@@ -2,14 +2,15 @@
 // COMP345_PROJECT_PLAYERSTRATEGIES_H PlayerStrategies.h
 //
 
-#ifndef PLAYERSTRATEGIES_H
-#define PLAYERSTRATEGIES_H
+#pragma once
 
 #include <ostream>
     using std::ostream;
+#include <string>
+    using std::string;
 
 class Player;
-
+class Order;
 
 // ---------------------------------------------
 // ---------- PlayerStrategy Section -----------
@@ -17,45 +18,45 @@ class Player;
 
 class PlayerStrategy {
 protected:
-    Player* _player;
+		Player *_player;
+
 public:
+		PlayerStrategy();
+		PlayerStrategy(Player *player);
+		PlayerStrategy(const PlayerStrategy &playerStrategy);
 
-    PlayerStrategy();
-    PlayerStrategy(Player* player);
-    PlayerStrategy(const PlayerStrategy& playerStrategy);
+		void setPlayer(Player *player);
+		Player *getPlayer();
 
-    void setPlayer(Player* player);
-    Player* getPlayer();
+		virtual Order *issueOrder() = 0;
+		virtual void toAttack() = 0;
+		virtual void toDefend() = 0;
 
-    virtual PlayerStrategy* issueOrder() = 0;
-    virtual PlayerStrategy* toAttack() = 0;
-    virtual PlayerStrategy* toDefend() = 0;
+		friend ostream &operator<<(ostream &os, PlayerStrategy &playerStrategy);
+		PlayerStrategy &operator=(const PlayerStrategy &playerStrategy);
 
-    friend ostream& operator<<(ostream& os, PlayerStrategy& playerStrategy);
-    PlayerStrategy& operator=(const PlayerStrategy& playerStrategy);
-
-    ~PlayerStrategy();
+		virtual ~PlayerStrategy();
 };
-
 
 // ---------------------------------------------
 // ------- NeutralPlayerStrategy Section -------
 // ---------------------------------------------
 
-class NeutralPlayerStrategy: public PlayerStrategy {
+class NeutralPlayerStrategy : public PlayerStrategy {
 public:
-    NeutralPlayerStrategy();
-    NeutralPlayerStrategy(Player* player);
-    NeutralPlayerStrategy(const PlayerStrategy& playerStrategy);
+		NeutralPlayerStrategy();
+		NeutralPlayerStrategy(Player *player);
+		NeutralPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+		Order *issueOrder();
+		void toAttack();
+		void toDefend();
 
-//    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
-//    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
+		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
+		//    playerStrategies);
 
-    ~NeutralPlayerStrategy();
+		virtual ~NeutralPlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -64,42 +65,43 @@ public:
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
 public:
-    BenevolentPlayerStrategy();
-    BenevolentPlayerStrategy(Player* player);
-    BenevolentPlayerStrategy(const PlayerStrategy& playerStrategy);
+		BenevolentPlayerStrategy();
+		BenevolentPlayerStrategy(Player *player);
+		BenevolentPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+		Order *issueOrder();
+		void toAttack();
+		void toDefend();
 
-    //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
-    //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
+		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
+		//    playerStrategies);
 
-    int toDefendIndex = 0;
-    int toAdvanceIndex = 0;
+		int toDefendIndex = 0;
+		int toAdvanceIndex = 0;
 
-    ~BenevolentPlayerStrategy();
+		virtual ~BenevolentPlayerStrategy();
 };
-
 
 // ---------------------------------------------
 // ----- AggressivePlayerStrategy Section ------
 // ---------------------------------------------
 
-class AggressivePlayerStrategy: public PlayerStrategy {
+class AggressivePlayerStrategy : public PlayerStrategy {
 public:
-    AggressivePlayerStrategy();
-    AggressivePlayerStrategy(Player* player);
-    AggressivePlayerStrategy(const PlayerStrategy& playerStrategy);
+		AggressivePlayerStrategy();
+		AggressivePlayerStrategy(Player *player);
+		AggressivePlayerStrategy(const PlayerStrategy &playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+		Order *issueOrder();
+		void toAttack();
+		void toDefend();
 
-//    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
-//    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
+		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
+		//    playerStrategies);
 
-    ~AggressivePlayerStrategy();
+		virtual ~AggressivePlayerStrategy();
 };
 
 // ---------------------------------------------
@@ -108,18 +110,35 @@ public:
 
 class HumanPlayerStrategy : public PlayerStrategy {
 public:
-    HumanPlayerStrategy();
-    HumanPlayerStrategy(Player* player);
-    HumanPlayerStrategy(const PlayerStrategy& playerStrategy);
+		HumanPlayerStrategy();
+		HumanPlayerStrategy(Player *player);
+		HumanPlayerStrategy(const PlayerStrategy &playerStrategy);
 
-    PlayerStrategy* issueOrder();
-    PlayerStrategy* toAttack();
-    PlayerStrategy* toDefend();
+		Order *issueOrder();
+		void toAttack();
+		void toDefend();
 
-    //    friend ostream& operator<<(ostream& os, PlayerStrategies& playerStrategies);
-    //    PlayerStrategies& operator=(const PlayerStrategies& playerStrategies);
+		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
+		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
+		//    playerStrategies);
 
-    ~HumanPlayerStrategy();
+		virtual ~HumanPlayerStrategy();
 };
 
-#endif //PLAYERSTRATEGIES_H
+// ---------------------------------------------
+// ------- CheaterPlayerStrategy Section -------
+// ---------------------------------------------
+
+class CheaterPlayerStrategy : public PlayerStrategy {
+public:
+		CheaterPlayerStrategy();
+		CheaterPlayerStrategy(Player *player);
+		CheaterPlayerStrategy(const PlayerStrategy &playerStrategy);
+
+		Order *issueOrder();
+		void toAttack();
+		void toDefend();
+
+		virtual ~CheaterPlayerStrategy();
+};
+

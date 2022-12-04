@@ -2,21 +2,20 @@
 #define COMP345_CARDS_H
 
 #include <iostream>
-using std::cout;
-using std::endl;
-using std::ostream;
+	using std::cout;
+	using std::endl;
+	using std::ostream;
 #include <vector>
-using std::vector;
+	using std::vector;
 
 #define DECK_SIZE 54
 #define HAND_SIZE 5
-
-
 
 class Deck;
 class Hand;
 class Player;
 class Order;
+
 
 // ---------------------------------------------
 // ---------------- Card Section ---------------
@@ -26,6 +25,7 @@ enum CardType {BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY }; // Possible 
 class Card {
 private:
     CardType type; // Type of the card
+		Deck* deck; // The deck that it belongs to
 
 public:
     Card(); // Default constructor
@@ -37,6 +37,10 @@ public:
     ~Card(); // Destructor
 
     std::string getCardType(); // Returns the type of the card
+
+		void setDeck(Deck* deck);
+
+		Deck* getDeck();
 
     Card &operator=(const Card &card); // Assignment operator overloading
 

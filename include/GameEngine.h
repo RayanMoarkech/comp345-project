@@ -4,7 +4,6 @@
 
 #ifndef GameEngine_H
 #define GameEngine_H
-#include "Cards.h"
 
 #include <string>
     using std::string;
@@ -21,6 +20,7 @@ class OrdersList;
 class CommandProcessor;
 class Command;
 class Territory;
+class Deck;
 class Tournament;
 class PlayerStrategy;
 
@@ -92,6 +92,7 @@ public:
     CommandProcessor* getCommandProcessor();
     void setCurrentStateIndex(int currentStateIndex);
     void setNextStateIndex(int nextStateIndex);
+    Deck* getDeck();
 
     bool transition();
     bool startGame();
@@ -128,7 +129,7 @@ private:
 
 // ---------------------------------------------
 // ------------ Tournament Section -------------
-// Tournament holds the parameters necessary to 
+// Tournament holds the parameters necessary to
 // execute tournament mode
 // ---------------------------------------------
 // ---------------------------------------------

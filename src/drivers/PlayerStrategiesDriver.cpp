@@ -1,11 +1,15 @@
 #include <iostream>
-using std::cout;
-using std::endl;
+	using std::cout;
+	using std::endl;
 #include <typeinfo>
 
 #include "../../include/PlayerStrategies.h"
 #include "../../include/Player.h"
 #include "../../include/GameEngine.h"
+#include "../../include/Map.h"
+#include "../../include/Orders.h"
+#include "../../include/Cards.h"
+
 
 void testPlayerStrategies()
 {

@@ -290,7 +290,7 @@ bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamen
         return false;
     }
 
-    std::vector<std::string> stratOptions { "human", "aggressive", "benevolent", "neutral", "cheater"};
+    std::vector<std::string> stratOptions {"aggressive", "benevolent", "neutral", "cheater"};
      
     // Check that they are acceptale player strategies
     for (auto& strat : playerStratArray) {

@@ -493,7 +493,6 @@ void GameEngine::issueOrdersPhase()
                 }
             }
         }
-
     }
     this->ordersList = allIssuedOrders;
 

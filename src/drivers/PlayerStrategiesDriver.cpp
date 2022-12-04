@@ -73,41 +73,6 @@ void testPlayerStrategies()
 
     gameEngine->_players = players;
 
-    //for (int i=0; i < 40; i++)
-    //{
-    //    player1->issueOrder();
-    //    player2->issueOrder();
-    //}
-
-    /*bool allPlayersDone = false;
-    OrdersList* allOrders = new OrdersList();
-
-    while (!allPlayersDone)
-    {
-        allOrders->addOrder(player1->issueOrder());
-        allOrders->addOrder(player2->issueOrder());
-
-        
-        for (int i = 0; i < players.size(); i++)
-        {
-            if (players.at(i)->getArmyUnits() == 0 && !allOrders->getOrdersList().back())
-            {
-                allPlayersDone = true;
-                allOrders->getOrdersList().pop_back();
-            }
-            else {
-                allPlayersDone = false;
-                break;
-            }
-        }
-    }
-    for (Order* o: allOrders->getOrdersList())
-    {
-        if (o != nullptr)
-        {
-            cout << o->getPlayer()->getName() << endl;
-        }
-    }*/
-
+    gameEngine->issueOrdersPhase();
     gameEngine->issueOrdersPhase();
 }

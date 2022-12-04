@@ -102,7 +102,7 @@ public:
     void executeOrdersPhase();
     bool allPlayerCardsPlayed() const;
     int validateGameRound();
-    void mainGameLoop();
+    int mainGameLoop(int maxLoop = 50); // Default maximum of loops to 50
     void executeTournament(Tournament* t);
 
     vector<int> getOwnedTerritories(vector<int> ownedTerritory);

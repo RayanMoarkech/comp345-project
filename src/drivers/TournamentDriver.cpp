@@ -9,7 +9,7 @@ void testTournament()
 {
     GameEngine* game = new GameEngine();
     cout << "Provide a tournament command:\n";
-    CommandProcessor* cmdProcessor= new CommandProcessor();
+    CommandProcessor* cmdProcessor = game->getCommandProcessor();
     Command* tournamentCommand = cmdProcessor->getCommand();
 
     bool validCommand = false;
@@ -17,4 +17,10 @@ void testTournament()
     validCommand = cmdProcessor->validate(
         tournamentCommand, game->getCurrentStateIndex(),
         game->getNextStateIndex(), commandOption);
+
+    if (validCommand) {
+        game->executeTournament(cmdProcessor->getTournament());
+    }
+
+    delete game;
 }

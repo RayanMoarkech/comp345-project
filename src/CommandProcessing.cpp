@@ -226,6 +226,17 @@ Command *CommandProcessor::getCommand() {
   return command;
 }
 
+void CommandProcessor::saveTournament(Tournament* t)
+{
+    this->tournament = t;
+}
+
+Tournament* CommandProcessor::getTournament()
+{
+    return this->tournament;
+}
+
+
 bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamentCmd) {
 
     // Validate if the command is a correct tournament command
@@ -257,8 +268,6 @@ bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamen
         cout << "This is not an acceptable number of maps" << endl;
         return false;
     }
-
-    // TO DO: Check that the maps are valid
     
     // Validate second argument
     stringstream ss2(tournamentCmd[2]);
@@ -341,6 +350,8 @@ bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamen
         return false;
     }   
     
+    Tournament* t = new Tournament(mapArray, playerStratArray, numGames, numTurns);
+    this->saveTournament(t);
     cout << "Tournament command validated!" << endl;
     return true;
 }

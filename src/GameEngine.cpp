@@ -18,6 +18,7 @@ using std::endl;
 #include "../include/Map.h"
 #include "../include/Orders.h"
 #include "../include/Player.h"
+#include "../include/PlayerStrategies.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",
@@ -141,6 +142,7 @@ GameEngine::GameEngine(string fileName) {
   _nextStateIndex = 0;
   _map = nullptr;
   _players = {};
+  _playerStrats = {};
   deck = nullptr;
   tournament = nullptr;
   if (fileName == "") {
@@ -161,7 +163,8 @@ GameEngine::GameEngine(const GameEngine &gameEngine) {
   _nextStateIndex = gameEngine._nextStateIndex;
   _map = new Map(*gameEngine._map);
   _players = {};
-    this->tournament = gameEngine.tournament;
+  _playerStrats = {};
+  this->tournament = gameEngine.tournament;
   for (auto const &player : gameEngine._players)
     _players.push_back(new Player(*player));
   if (deck != nullptr)
@@ -184,6 +187,7 @@ GameEngine &GameEngine::operator=(const GameEngine &gameEngine) {
   this->_nextStateIndex = gameEngine._nextStateIndex;
   this->_map = gameEngine._map;
   this->_players = gameEngine._players;
+  this->_playerStrats = gameEngine._playerStrats;
   this->deck = gameEngine.deck;
   this->tournament = gameEngine.tournament;
   return *this;
@@ -224,10 +228,6 @@ bool GameEngine::transition() {
     return valid;
   }
   return false;
-}
-
-void GameEngine::initiateTournament() {
-    //TODO: Implement tournament
 }
 
 bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &option) {
@@ -300,7 +300,6 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
         cout << effect << endl;
         _commandProcessor->getLastCommand()->saveEffect(effect);
     }
-    //TODO: ADD TOURNAMENT MODE
     string effect = "Something went wrong!";
     _commandProcessor->getLastCommand()->saveEffect(effect);
     return false;
@@ -311,7 +310,7 @@ bool GameEngine::startGame()
     string effect = "Fairly distributing the territories to the players";
     cout << effect << endl;
     _commandProcessor->getLastCommand()->saveEffect(effect);
-
+    
     // Check if there are 2 to 6 players
     if (this->_players.size() < 2 || this->_players.size() > 6)
     {
@@ -332,6 +331,8 @@ bool GameEngine::startGame()
                  rng);
     int numberOfPlayer = this->_players.size();
     int count = 0;
+
+    
 
     // Loop through players and add territories
     for (auto const &territory : shuffledTerritories) {
@@ -592,4 +593,102 @@ ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
     strm << *state << endl;
   }
   return strm;
+}
+
+void GameEngine::executeTournament(Tournament* t)
+{
+    this->tournament = t;
+    bool validMap = true;
+    cout << endl;
+
+    for (auto& val : t->mapArray) {
+        // Play num games on each map 
+        for (int i = 0; i < t->numOfGames; i = i + 1) {
+            // Load a new game engine and command processor
+            GameEngine* gameEngine = new GameEngine("");
+            CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+            // Load the map
+            commandProcessor->saveCommand("loadmap " + val);
+            gameEngine->transition();
+
+            // Validate the map
+            commandProcessor->saveCommand("validatemap");
+            gameEngine->transition();
+
+            // Add players
+            if ((val.find(".map") != std::string::npos) && (gameEngine->_map->validate())) {
+                for (int i = 1; i <= t->playerStrategies.size(); i = i + 1) {
+                    // Add players
+                    commandProcessor->saveCommand("addplayer player" + i + ' ' + t->playerStrategies[i]);
+                    gameEngine->transition();
+                }
+            }
+            else {
+                // If map is empty stop game and don't use this map
+                cout << "Map is invalid/empty and will not be used" << endl;
+                validMap = false;
+                break;
+            }
+            
+            // Start Game phase
+            commandProcessor->saveCommand("gamestart");
+            gameEngine->transition();
+
+            // Main Game Loop
+            int winner = gameEngine->mainGameLoop(t->maxNumOfTurns);
+            cout << endl;
+
+            delete gameEngine;
+        }
+        if (!validMap) 
+        { 
+            break; 
+        }
+
+    }
+
+    // TO DO: Output the details of tournament mode games
+
+    
+
+}
+
+// ---------------------------------------------
+// ------------ Tournament Section -------------
+// ---------------------------------------------
+
+Tournament::Tournament(vector<string> mapArray, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns)
+{
+    this->mapArray = mapArray;
+    this->playerStrategies = playerStrategies;
+    this->numOfGames = numOfGames;
+    this->maxNumOfTurns = maxNumOfTurns;
+}
+
+Tournament::Tournament(const Tournament& tournament)
+{
+    this->mapArray = tournament.mapArray;
+    this->playerStrategies = tournament.playerStrategies;
+    this->numOfGames = tournament.numOfGames;
+    this->maxNumOfTurns = tournament.maxNumOfTurns;
+}
+
+Tournament& Tournament::operator=(const Tournament& tournament)
+{
+    this->mapArray = tournament.mapArray;
+    this->playerStrategies = tournament.playerStrategies;
+    this->numOfGames = tournament.numOfGames;
+    this->maxNumOfTurns = tournament.maxNumOfTurns;
+    return *this;
+}
+
+Tournament::~Tournament()
+{
+}
+
+ostream& operator<<(ostream& out, const Tournament& t)
+{
+    out << "Tournament with" << t.mapArray.size() << " maps, " << t.playerStrategies.size() << " player strategies, " << t.numOfGames << "games and " << t.maxNumOfTurns << "maximum number of turns per game." << endl;
+    return out;
 }

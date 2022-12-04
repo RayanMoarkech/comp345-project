@@ -22,6 +22,7 @@ class CommandProcessor;
 class Command;
 class Territory;
 class Tournament;
+class PlayerStrategy;
 
 
 // ---------------------------------------------
@@ -101,6 +102,7 @@ public:
     bool allPlayerCardsPlayed() const;
     int validateGameRound();
     void mainGameLoop();
+    void executeTournament(Tournament* t);
 
     vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 
@@ -114,9 +116,9 @@ private:
     string _fileName;
     Map *_map;
     vector<Player *> _players;
+    vector<PlayerStrategy *> _playerStrats;
     Deck *deck;
     OrdersList* ordersList;
-    void initiateTournament();
 
     bool executeCurrentStateAction(int nextStateIndex, const string &option);
 
@@ -126,20 +128,27 @@ private:
 
 // ---------------------------------------------
 // ------------ Tournament Section -------------
-// Tournament holds
+// Tournament holds the parameters necessary to 
+// execute tournament mode
 // ---------------------------------------------
 // ---------------------------------------------
 
 class Tournament {
 public:
-    Tournament(vector<Map*> maps, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns, GameEngine*);
+    Tournament(vector<string>  mapArray, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns);
     Tournament(const Tournament& tournament);
-    Tournament& operator =(const Tournament&);
+    Tournament& operator =(const Tournament& tournament);
     ~Tournament();
 
     friend ostream& operator << (ostream& out, const Tournament& t);
 private:
     friend class GameEngine;
+    vector<string>  mapArray;
+    vector<Map*> maps;
+    vector<string> playerStrategies;
+    int numOfGames;
+    int maxNumOfTurns;
+
 
 };
 

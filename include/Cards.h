@@ -25,6 +25,7 @@ enum CardType {BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY }; // Possible 
 class Card {
 private:
     CardType type; // Type of the card
+		Deck* deck; // The deck that it belongs to
 
 public:
     Card(); // Default constructor
@@ -36,6 +37,10 @@ public:
     ~Card(); // Destructor
 
     std::string getCardType(); // Returns the type of the card
+
+		void setDeck(Deck* deck);
+
+		Deck* getDeck();
 
     Card &operator=(const Card &card); // Assignment operator overloading
 

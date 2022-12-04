@@ -11,6 +11,7 @@ using std::cout;
 using std::endl;
 #include <algorithm>
 #include <random>
+#include <typeinfo>
 
 #include "../include/Cards.h"
 #include "../include/CommandProcessing.h"
@@ -18,6 +19,7 @@ using std::endl;
 #include "../include/Map.h"
 #include "../include/Orders.h"
 #include "../include/Player.h"
+#include "../include/PlayerStrategies.h"
 
 // Holds the state names to be used across class
 static const string stateName[]{"start",
@@ -454,8 +456,12 @@ void GameEngine::issueOrdersPhase()
 
 void GameEngine::executeOrdersPhase()
 {
-    for (Order* o : this->ordersList->getOrdersList())
-        o->execute();
+    for (Order* order : this->ordersList->getOrdersList()){
+        if(typeid(order).name()=="Bomb"||typeid(order).name()=="Advance")
+            if(typeid(order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() == "NeutralPlayerStrategy")
+                order->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(new AggressivePlayerStrategy());
+        order->execute();
+    }
     this->ordersList = nullptr;
 }
 

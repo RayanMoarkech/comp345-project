@@ -819,7 +819,6 @@ Order* CheaterPlayerStrategy::issueOrder()
   cout << "----------------------------------" << endl;
   cout << endl;
 
-  //To Defend
   if (!this->getPlayer()->getAttackList().empty())
   {
     cout <<"Cheater has already attacked before this turn!." << endl;
@@ -828,6 +827,7 @@ Order* CheaterPlayerStrategy::issueOrder()
 
   vector<Territory*> territoriesToAttack = this->getPlayer()->getNeighbouringEnemyTerritories();
   this->getPlayer()->setAttackList(territoriesToAttack);
+
   for (Territory* territory : territoriesToAttack)
   {
    territory->setOwnedBy(this->getPlayer(),territory->getNumberOfArmies() );

@@ -23,22 +23,22 @@ int Player::idCounter = 1;
 
 //Default constructor
 Player::Player() {
-    this->id = idCounter++;
-    this->name = "Player " + std::to_string(this->id);
+	this->id = idCounter++;
+	this->name = "Player " + std::to_string(this->id);
 	this->ownedTerritories = {};
 	this->playerHand  = new Hand();
 	this->playerOrders = new OrdersList();
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
-    this->armyUnits = 0;
+	this->armyUnits = 0;
 	this->ps = new HumanPlayerStrategy(); //default player is human
 }
 
 //Copy constructor (Deep)
 Player::Player(const Player& player) {
 	//Deep copy all territories
-    this->id = idCounter++;
-    this->name = player.name;
+	this->id = idCounter++;
+	this->name = player.name;
 	this->ownedTerritories = {};
 	for (Territory* t : player.ownedTerritories)
 	{
@@ -51,20 +51,20 @@ Player::Player(const Player& player) {
 	this->negotiatingWith = std::list<Player*>(player.negotiatingWith);
 	this->isNeutral = player.isNeutral;
 	this->conqueredTerritory = player.conqueredTerritory;
-    this->armyUnits = player.armyUnits;
+	this->armyUnits = player.armyUnits;
 }
 
 //Parametrized constructor
 Player::Player(string name, vector<Territory*> ownedTerritories, Hand* playerHand, OrdersList* playerOrders)
 {
-    this->id = idCounter++;
-    this->name = std::move(name);
+	this->id = idCounter++;
+	this->name = std::move(name);
 	this->ownedTerritories = ownedTerritories;
 	this->playerHand = playerHand;
 	this->playerOrders = playerOrders;
 	this->isNeutral = false;
 	this->conqueredTerritory = false;
-    this->armyUnits = 0;
+	this->armyUnits = 0;
 }
 
 Player::Player(bool isNeutral)
@@ -74,7 +74,7 @@ Player::Player(bool isNeutral)
 	this->playerOrders = new OrdersList();
 	this->isNeutral = isNeutral;
 	this->conqueredTerritory = false;
-    this->armyUnits = 0;
+	this->armyUnits = 0;
 	this->name = "Neutral Player";
 }
 
@@ -101,17 +101,17 @@ Player& Player::operator=(const Player& player)
 	this->negotiatingWith = negotiatingWith;
 	this->isNeutral = isNeutral;
 	this->conqueredTerritory = conqueredTerritory;
-    this->id = player.id;
+	this->id = player.id;
 	this->ownedTerritories = player.ownedTerritories;
 	this->playerHand = player.playerHand;
 	this->playerOrders = player.playerOrders;
-    this->armyUnits = player.armyUnits;
+	this->armyUnits = player.armyUnits;
 	return *this;
 }
 
 string Player::getName()
 {
-    return this->name;
+	return this->name;
 }
 
 void Player::setName(string name)
@@ -121,12 +121,12 @@ void Player::setName(string name)
 
 void Player::setArmyUnits(int armyUnits)
 {
-    this->armyUnits = armyUnits;
+	this->armyUnits = armyUnits;
 }
 
 int Player::getArmyUnits()
 {
-    return this->armyUnits;
+	return this->armyUnits;
 }
 
 vector<Territory*> Player::getAttackList()
@@ -149,10 +149,20 @@ void Player::setDefendList(vector<Territory*> toDefendList)
 	this->toDefendList = toDefendList;
 }
 
+void Player::setIssuedArmyUnits(int armyUnits)
+{
+	this->issuedArmyUnits = armyUnits;
+}
+
+int Player::getIssuedArmyUnits()
+{
+	return this->issuedArmyUnits;
+}
+
 //Stream Insertion Operator for Player class
 ostream& operator<<(ostream& os, const Player& player)
 {
-    os << "Player " << player.name << " with id " << player.id << "." << endl;
+	os << "Player " << player.name << " with id " << player.id << "." << endl;
 	vector<Territory*> ownedTerritories = player.ownedTerritories;
 	os << "Player owns territories: " << endl;
 	//print all territory names
@@ -239,7 +249,7 @@ vector<Territory*> Player::getNeighbouringEnemyTerritories(Territory* t)
 	{
 		if (!isIn(neighbouringTerritories, adjTerritory) && !isIn(ownedTerritories, adjTerritory))
 		{
-				neighbouringTerritories.push_back(adjTerritory);
+			neighbouringTerritories.push_back(adjTerritory);
 		}
 	}
 	return neighbouringTerritories;
@@ -337,6 +347,24 @@ bool Player::ownsCard(string cardType)
 	return false;
 }
 
+// Remove a card from the hand of the player and put it back to the deck it belongs to
+void Player::removeCardFromHand(string cardType)
+{
+	for (int i = 0; i < this->playerHand->cards.size(); i++)
+	{
+		cout << i << endl;
+		if (this->playerHand->cards.at(i)->getCardType() == cardType)
+		{
+			Card* card = this->playerHand->cards.at(i);
+			// return card to deck
+			card->getDeck()->returnCard(card);
+			// remove card from hand
+			this->getPlayerHand()->cards.erase(this->getPlayerHand()->cards.begin() + i);
+			break;
+		}
+	}
+}
+
 PlayerStrategy* Player::getPlayerStrategy()
 {
 	return this->ps;
@@ -345,14 +373,4 @@ PlayerStrategy* Player::getPlayerStrategy()
 void Player::setPlayerStrategy(PlayerStrategy* ps)
 {
 	this->ps = ps;
-}
-
-GameEngine* Player::getGameEngine()
-{
-	return this->gameEngine;
-}
-
-void Player::setGameEngine(GameEngine* gameEngine)
-{
-	this->gameEngine = gameEngine;
 }

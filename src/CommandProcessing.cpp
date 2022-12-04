@@ -292,7 +292,7 @@ bool CommandProcessor::validateTournamentCommand(const vector<string>& tournamen
 
     std::vector<std::string> stratOptions {"aggressive", "benevolent", "neutral", "cheater"};
      
-    // Check that they are acceptale player strategies
+    // Check that they are acceptable player strategies
     for (auto& strat : playerStratArray) {
         if (std::find(stratOptions.begin(), stratOptions.end(), strat) == stratOptions.end()) {
             cout << "These are not acceptable player strategies" << endl;

@@ -39,6 +39,7 @@ public:
 	*/
 	virtual bool validate() = 0; // Method to check if order is valid
 	virtual void execute() = 0; // Method to check if order is valid and then execute if it is
+    virtual Territory * getTargetTerritory() = 0;
 };
 
 //Deploy Class Definition
@@ -72,10 +73,13 @@ public:
 	bool validate() override;
 	void execute() override;
 	std::string stringToLog() override; // Method for logging
+    Territory *getTargetTerritory() const;
+
 private:
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
-	unsigned int numOfArmyUnits;
+    unsigned int numOfArmyUnits;
+
 	virtual std::ostream& print(std::ostream& out) const;
 };
 
@@ -91,8 +95,11 @@ public:
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
 	std::string stringToLog() override; // Method for logging
+    Territory *getTargetTerritory() const;
+
 private:
 	Territory* targetTerritory;
+
 };
 
 class Blockade : public Order {

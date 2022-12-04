@@ -149,6 +149,16 @@ void Player::setDefendList(vector<Territory*> toDefendList)
 	this->toDefendList = toDefendList;
 }
 
+void Player::setIssuedArmyUnits(int armyUnits)
+{
+	this->issuedArmyUnits = armyUnits;
+}
+
+int Player::getIssuedArmyUnits()
+{
+	return this->issuedArmyUnits;
+}
+
 //Stream Insertion Operator for Player class
 ostream& operator<<(ostream& os, const Player& player)
 {

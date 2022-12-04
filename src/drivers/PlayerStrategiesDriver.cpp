@@ -19,7 +19,9 @@ void testPlayerStrategies()
         << "------------------------------------------------------" << endl
         << endl;
 
-    Deck* deck = new Deck();
+		GameEngine* gameEngine = new GameEngine();
+
+    Deck* deck = gameEngine->getDeck();
     Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
 
     Hand* playerOneHand = new Hand();

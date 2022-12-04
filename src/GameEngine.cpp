@@ -479,8 +479,17 @@ void GameEngine::executeOrdersPhase()
     for (Order* order : this->ordersList->getOrdersList()){
         if(typeid(order).name()=="Bomb"||typeid(order).name()=="Advance")
             if(typeid(order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() == "NeutralPlayerStrategy"){
+                cout << endl;
+                cout << "**********************************" << endl;
+                cout << order->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
+                cout << "**********************************" << endl;
+
                 delete order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy();
                 order->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(new AggressivePlayerStrategy(order->getTargetTerritory()->getOwnedBy()));
+
+                cout << "**********************************" << endl;
+                cout << order->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type has changed to Aggressive" << endl;
+                cout << "**********************************" << endl;
             }
         order->execute();
     }

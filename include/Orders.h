@@ -30,9 +30,9 @@ public:
 	virtual ~Order();
 
 
-	Order& operator=(const Order& o); //Assignment 
+	Order& operator=(const Order& o); //Assignment
 	friend std::ostream& operator<<(std::ostream& out, const Order& toOutput); //Stream insertion operator
-	Player* getPlayer(); // Get the player that an order belongs too 
+	Player* getPlayer(); // Get the player that an order belongs too
 
 	/*
 	* Pure virtual methods that will be overridden in derived classes
@@ -46,13 +46,13 @@ class Deploy : public Order {
 public:
 	Deploy(); //Default Constructor
 	Deploy(Player* player, Territory* territory, unsigned int numOfArmyUnits); //Parametized constructor
-	~Deploy(); //Destructor 
+	~Deploy(); //Destructor
 	Deploy(const Deploy& toCopy); //Copy constructor
 	Deploy& operator=(const Deploy& rightSide); //Assignment operator
 	friend std::ostream& operator<<(std::ostream& out, const Deploy& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-    std::string stringToLog() override; // Method for logging
+	std::string stringToLog() override; // Method for logging
 
 private:
 	Territory* targetTerritory;
@@ -65,13 +65,13 @@ class Advance : public Order {
 public:
 	Advance(); //Default Constructor
 	Advance(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametrized constructor
-	~Advance(); //Destructor 
+	~Advance(); //Destructor
 	Advance(const Advance& toCopy); //Copy constructor
 	Advance& operator=(const Advance& rightSide); //Assignment operator
 	friend std::ostream& operator<<(std::ostream& out, const Advance& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-    std::string stringToLog() override; // Method for logging
+	std::string stringToLog() override; // Method for logging
 private:
 	Territory* sourceTerritory;
 	Territory* targetTerritory;
@@ -83,14 +83,14 @@ class Bomb : public Order {
 public:
 	Bomb(); //Default Constructor
 	Bomb(Player* player, Territory* target); //Parametrized constructor
-	~Bomb(); //Destructor 
+	~Bomb(); //Destructor
 	Bomb(const Bomb& toCopy); //Copy constructor
 	Bomb& operator=(const Bomb& rightSide); //Assignment operator
 	friend std::ostream& operator<<(std::ostream& out, const Bomb& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
-    std::string stringToLog() override; // Method for logging
+	std::string stringToLog() override; // Method for logging
 private:
 	Territory* targetTerritory;
 };
@@ -99,14 +99,14 @@ class Blockade : public Order {
 public:
 	Blockade(); //Default Constructor
 	Blockade(Player* player, Territory* target); //Parametrized constructor
-	~Blockade(); //Destructor 
+	~Blockade(); //Destructor
 	Blockade(const Blockade& toCopy); //Copy constructor
 	Blockade& operator=(const Blockade& rightSide); //Assignment operator
 	friend std::ostream& operator<<(std::ostream& out, const Blockade& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
-    std::string stringToLog() override; // Method for logging
+	std::string stringToLog() override; // Method for logging
 private:
 	Territory* targetTerritory;
 };
@@ -115,13 +115,13 @@ class Airlift : public Order {
 public:
 	Airlift(); //Default Constructor
 	Airlift(Player* player, Territory* source, Territory* target, unsigned int numOfArmyUnits); //Parametrized constructor
-	~Airlift(); //Destructor 
+	~Airlift(); //Destructor
 	Airlift(const Airlift& toCopy); //Copy constructor
 	Airlift& operator=(const Airlift& rightSide); //Assignment operator
 	friend std::ostream& operator<<(std::ostream& out, const Airlift& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
-    std::string stringToLog() override; // Method for logging
+	std::string stringToLog() override; // Method for logging
 private:
 	unsigned int numOfArmyUnits;
 	Territory* sourceTerritory;
@@ -133,14 +133,14 @@ class Negotiate : public Order {
 public:
 	Negotiate(); //Default Constructor
 	Negotiate(Player* player, Player* target); //Parametrized constructor
-	~Negotiate(); //Destructor 
+	~Negotiate(); //Destructor
 	Negotiate(const Negotiate& toCopy); //Copy constructor
 	Negotiate& operator=(const Negotiate& rightSide); //Assignment operator
 	friend std::ostream& operator<<(std::ostream& out, const Negotiate& toOutput); //Stream insertion operator
 	bool validate() override;
 	void execute() override;
 	virtual std::ostream& print(std::ostream& out) const;
-    std::string stringToLog() override; // Method for logging
+	std::string stringToLog() override; // Method for logging
 private:
 	Player* targetPlayer;
 };
@@ -180,6 +180,6 @@ public:
 
 	std::list<Order*> getOrdersList();
 
-    // Method for logging
-    std::string stringToLog();
+	// Method for logging
+	std::string stringToLog();
 };

@@ -458,8 +458,10 @@ void GameEngine::executeOrdersPhase()
 {
     for (Order* order : this->ordersList->getOrdersList()){
         if(typeid(order).name()=="Bomb"||typeid(order).name()=="Advance")
-            if(typeid(order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() == "NeutralPlayerStrategy")
-                order->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(new AggressivePlayerStrategy());
+            if(typeid(order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() == "NeutralPlayerStrategy"){
+                delete order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy();
+                order->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(new AggressivePlayerStrategy(order->getTargetTerritory()->getOwnedBy()));
+            }
         order->execute();
     }
     this->ordersList = nullptr;

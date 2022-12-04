@@ -215,6 +215,8 @@ Order* BenevolentPlayerStrategy::issueOrder()
 		}
 	}
 	cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;
+	this->toAdvanceIndex = 0;
+	this->toDefendIndex = 0;
 	return nullptr;
 }
 

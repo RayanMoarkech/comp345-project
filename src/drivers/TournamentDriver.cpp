@@ -5,6 +5,9 @@
 #include "../../include/GameEngine.h"
 #include "../../include/CommandProcessing.h"
 
+#include <iostream>
+ using std::cout;
+
 void testTournament()
 {
     GameEngine* game = new GameEngine();

@@ -151,26 +151,29 @@ Order* BenevolentPlayerStrategy::issueOrder()
 		return nullptr;
 	}
 
+	// Get the remaining army units not used in issue orders
+	int remainingArmyUnits = this->_player->getArmyUnits() - this->_player->getIssuedArmyUnits();
+
 	//Deploy on toDefend territories, will not be able to issue other orders until
 	//all armies are deployed
 	//Deploys to weakest countries in priority
-	if (this->getPlayer()->getArmyUnits() != 0)
+	if (remainingArmyUnits != 0)
 	{
-		cout << "Total remaining of army units to deploy: " << this->getPlayer()->getArmyUnits() << endl;
+		cout << "Total remaining of army units to deploy: " << remainingArmyUnits << endl;
 		// Divide army units by 3 to not deploy all armies to a single territory
 		// Every turn this number will get smaller, proportionally deploying more
 		// armies to the weakest countries.
-		int armiesToDeploy = this->getPlayer()->getArmyUnits() / 3;
-		if (armiesToDeploy == 0) { armiesToDeploy = 1; };
+		int armiesToDeploy = remainingArmyUnits / 3;
+		if (armiesToDeploy == 0) { armiesToDeploy = 1; }
 		Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toDefendIndex);
 		cout << this->getPlayer()->getName() << " (Benevolant) will deploy " << armiesToDeploy <<
 			" armies to territory " << this->getPlayer()->getDefendList().at(this->toDefendIndex)->getName() << endl;
 		this->toDefendIndex++;
-		this->getPlayer()->setArmyUnits(this->getPlayer()->getArmyUnits() - armiesToDeploy);
+		this->getPlayer()->setIssuedArmyUnits(this->getPlayer()->getIssuedArmyUnits() + armiesToDeploy);
 		return new Deploy(this->getPlayer(), weakestCountry, armiesToDeploy);
 	}
 
-	if (this->getPlayer()->getArmyUnits() == 0)
+	if (remainingArmyUnits == 0)
 	{
 		//Only plays Blockade and Airlift cards (Defensive cards)
 		if (this->getPlayer()->ownsCard("Blockade"))
@@ -290,12 +293,24 @@ Order* AggressivePlayerStrategy::issueOrder() {
 		return nullptr;
 	}
 
+	// If the player has bomb card
+	if (this->_player->ownsCard("Bomb"))
+	{
+		this->_player->removeCardFromHand("Bomb");
+		return new Bomb(this->getPlayer(), this->_player->getAttackList().at(0));
+	}
+
 	// always advances to enemy territories until it cannot do so anymore
 	Territory* enemyCountry = this->getPlayer()->getAttackList().at(0);
 	int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
-	cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
-			 << enemyCountry->getName() << " from " << strongestCountry->getName() << endl;
-	return new Advance(this->getPlayer(), strongestCountry, enemyCountry, armiesToAdvance);
+	if (armiesToAdvance > 1)
+	{
+		cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
+				 << enemyCountry->getName() << " from " << strongestCountry->getName() << endl;
+		return new Advance(this->getPlayer(), strongestCountry, enemyCountry, armiesToAdvance);
+	}
+
+	return nullptr;
 }
 void AggressivePlayerStrategy::toAttack()
 {
@@ -359,9 +374,12 @@ Order* HumanPlayerStrategy::issueOrder() {
 		return nullptr;
 	}
 
+	// Get the remaining army units not used in issue orders
+	int remainingArmyUnits = this->_player->getArmyUnits() - this->_player->getIssuedArmyUnits();
+
 	//Deploy on toDefend territories, will not be able to issue other orders until
 	//all armies are deployed
-	if (this->getPlayer()->getArmyUnits() != 0)
+	if (remainingArmyUnits != 0)
 	{
 		cout << "Choose territory and how many many army units to deploy." << endl;
 		cout << endl;
@@ -375,7 +393,7 @@ Order* HumanPlayerStrategy::issueOrder() {
 		int territoryToDefend = -1;
 		int armyUnitsToDeploy;
 
-		cout << "Total remaining of army units to deploy: " << this->getPlayer()->getArmyUnits() << endl;
+		cout << "Total remaining of army units to deploy: " << remainingArmyUnits << endl;
 		cout << "Choose territory: ";
 		cin >> territoryToDefend;
 
@@ -389,20 +407,20 @@ Order* HumanPlayerStrategy::issueOrder() {
 		{
 			cout << "Number of army units to deploy to " << this->getPlayer()->getDefendList().at(territoryToDefend - 1)->getName() << ": ";
 			cin >> armyUnitsToDeploy;
-			while (armyUnitsToDeploy > this->getPlayer()->getArmyUnits() || armyUnitsToDeploy <= 0)
+			while (armyUnitsToDeploy > remainingArmyUnits || armyUnitsToDeploy <= 0)
 			{
 				cout << "Not a valid number of army units" << endl;
 				cout << endl;
 				cout << "Number of army units to deploy to " << this->getPlayer()->getDefendList().at(territoryToDefend - 1)->getName() << ": ";
 				cin >> armyUnitsToDeploy;
 			}
-			this->getPlayer()->setArmyUnits(this->getPlayer()->getArmyUnits() - armyUnitsToDeploy);
+			this->getPlayer()->setIssuedArmyUnits(this->_player->getIssuedArmyUnits() + armyUnitsToDeploy);
 			return new Deploy(this->getPlayer(), this->getPlayer()->getDefendList().at(territoryToDefend - 1), 
 				armyUnitsToDeploy);
 		}
 	}
 
-	if (this->getPlayer()->getArmyUnits() == 0)
+	if (remainingArmyUnits == 0)
 		{
 			cout << "1 - Defend: Advance armies to your own territory" << endl;
 			cout << "2 - Attack: Advance armies to an enemy territory" << endl;

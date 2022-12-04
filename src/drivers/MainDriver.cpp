@@ -22,6 +22,7 @@ void testLoggingObserver();
 
 // Phase 3
 void testPlayerStrategies();
+void testTournament();
 
 int main(int argc, char *argv[]) {
     // Phase 1
@@ -63,6 +64,6 @@ int main(int argc, char *argv[]) {
     testLoggingObserver();*/
 
     testPlayerStrategies();
-
+    testTournament();
     return 0;
 }

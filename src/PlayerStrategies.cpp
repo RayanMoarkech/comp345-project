@@ -125,19 +125,19 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(const PlayerStrategy &playerStrateg
 // never issues any order
 Order* NeutralPlayerStrategy::issueOrder()
 {
+    // Neutral player does not issue Orders.
     return nullptr;
 }
 
 void NeutralPlayerStrategy::toAttack()
 {
-    // TODO: not sure what to put here
+    // Neutral player does not Attack.
 }
 
 // is attacked, it becomes an Aggressive player
 void NeutralPlayerStrategy::toDefend()
 {
-	//TODO
-    //return new AggressivePlayerStrategy(*this);
+    // Neutral player does not defend.
 }
 
 // Destructor

@@ -103,7 +103,7 @@ public:
     bool allPlayerCardsPlayed() const;
     int validateGameRound();
     int mainGameLoop(int maxLoop = 50); // Default maximum of loops to 50
-    void executeTournament(Tournament* t);
+    static vector<string> executeTournament(Tournament* t);
 
     vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 
@@ -151,7 +151,7 @@ private:
     vector<string> playerStrategies;
     int numOfGames;
     int maxNumOfTurns;
-//    vector<string> resultArray;
+    vector<string> resultArray;
 };
 
 #endif

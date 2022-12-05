@@ -709,12 +709,12 @@ ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
   return strm;
 }
 
-void GameEngine::executeTournament(Tournament* t)
+vector<string> GameEngine::executeTournament(Tournament* t)
 {
-    this->tournament = t;
+
     bool validMap = true;
     cout << endl;
-    std::vector<std::string>  resultArray;
+    t->resultArray={};
 
     for (auto& val : t->mapArray) {
         // Play num games on each map
@@ -744,7 +744,7 @@ void GameEngine::executeTournament(Tournament* t)
                 cout << "Map is invalid/empty and will not be used" << endl;
                 validMap = false;
                 for (int i = 0; i < t->numOfGames; i = i + 1) {
-                    resultArray.push_back("Invalid");
+                    t->resultArray.push_back("Invalid");
                 }
                 break;
             }
@@ -756,10 +756,10 @@ void GameEngine::executeTournament(Tournament* t)
             // Main Game Loop
             int winner = gameEngine->mainGameLoop(t->maxNumOfTurns);
             if (winner != -1) {
-                resultArray.push_back(gameEngine->_players[winner]->getName());
+                t->resultArray.push_back(gameEngine->_players[winner]->getName());
             }
             else {
-                resultArray.push_back("Draw");
+                t->resultArray.push_back("Draw");
             }
             cout << endl;
 
@@ -769,9 +769,7 @@ void GameEngine::executeTournament(Tournament* t)
         {
             break;
         }
-
     }
-
     // Output the details of tournament mode games
     cout << "Tournament Mode: " << endl;
     cout << "M: ";
@@ -799,11 +797,12 @@ void GameEngine::executeTournament(Tournament* t)
     for (auto& val : t->mapArray) {
         cout << left << setw(30) << val;
         for (int i = 0; i < t->numOfGames; i = i + 1) {
-//            cout << left << setw(10) << resultArray[res];
+            cout << left << setw(10) << t->resultArray[res];
             res++;
         }
         cout << endl;
     }
+    return t->resultArray;
 }
 
 // ---------------------------------------------
@@ -816,6 +815,7 @@ Tournament::Tournament(vector<string> mapArray, vector<string> playerStrategies,
     this->playerStrategies = playerStrategies;
     this->numOfGames = numOfGames;
     this->maxNumOfTurns = maxNumOfTurns;
+    resultArray= {};
     notify();
 }
 
@@ -825,6 +825,7 @@ Tournament::Tournament(const Tournament& tournament)
     this->playerStrategies = tournament.playerStrategies;
     this->numOfGames = tournament.numOfGames;
     this->maxNumOfTurns = tournament.maxNumOfTurns;
+    resultArray= {};
 }
 
 Tournament& Tournament::operator=(const Tournament& tournament)
@@ -833,6 +834,7 @@ Tournament& Tournament::operator=(const Tournament& tournament)
     this->playerStrategies = tournament.playerStrategies;
     this->numOfGames = tournament.numOfGames;
     this->maxNumOfTurns = tournament.maxNumOfTurns;
+    this->resultArray = tournament.resultArray;
     return *this;
 }
 
@@ -864,20 +866,21 @@ std::string Tournament::stringToLog() {
     }
 
     int res = 0;
+    std::string resultString;
     std::string mapResults;
     for (auto& val : this->mapArray) {
         std::setw(30);
-        mapResults += val + "\n";
-    }
-
-    std::string resultString;
+        mapResults += "\n" + val ;
         for (int i = 0; i < this->numOfGames; i = i + 1) {
             std::setw(10);
-//            resultString += resultArray[res] + "\t\t\t";
+            resultString += "\t\t\t" + GameEngine::executeTournament(this)[res];
             res++;
         }
+        resultString += "\n";
+
+    }
 
     return "Tournament Mode: \nM: " + mapString + "\nP: " + playerString + "\nG: " +
         std::to_string(this->numOfGames) + "\nD: " + std::to_string(this->maxNumOfTurns) + "\n"
-        + "Results: \n" + "\t\t\t" + header + "\n" + mapResults + "\n" + resultString;
+        + "Results: \n" + "\t\t\t" + header + "\n" + mapResults + resultString;
     };

@@ -72,10 +72,10 @@ int main(int argc, char *argv[]) {
 
 //    testPlayerStrategies();
 
-//		testBenevolentStrategy();
-//		testCheaterStrategy();
-//		testAggressiveStrategy();
-//		testNeutralStrategy();
+		testBenevolentStrategy();
+		testCheaterStrategy();
+		testAggressiveStrategy();
+		testNeutralStrategy();
 
     testTournament();
 

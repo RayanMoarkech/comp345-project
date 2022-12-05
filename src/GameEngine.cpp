@@ -789,7 +789,7 @@ void GameEngine::executeTournament(Tournament* t)
 
     cout << endl;
     cout << "Results: " << endl;
-    cout << left << setw(20) << " ";
+    cout << left << setw(30) << " ";
     for (int i = 0; i < t->numOfGames; i = i + 1) {
         cout << left << setw(10) << "Game " + std::to_string(i) + " ";
     }
@@ -797,7 +797,7 @@ void GameEngine::executeTournament(Tournament* t)
     
     int res = 0;
     for (auto& val : t->mapArray) {
-        cout << left << setw(20) << val;
+        cout << left << setw(30) << val;
         for (int i = 0; i < t->numOfGames; i = i + 1) {
             cout << left << setw(10) << resultArray[res];
             res++;

@@ -237,21 +237,26 @@ Order* BenevolentPlayerStrategy::issueOrder()
 						strongestCountry = territory;
 						break;
 					}
-					armiesToAdvance = territory->getNumberOfArmies() / 3;
+					if (this->advancedArmy[territory->getName()])
+						armiesToAdvance = (territory->getNumberOfArmies() - this->advancedArmy[territory->getName()]) / 3;
+					else
+						armiesToAdvance = territory->getNumberOfArmies() / 3;
 				}
 				if (armiesToAdvance != 0)
 				{
 					this->toAdvanceIndex++;
 					cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
 							 << weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
+					if (this->advancedArmy[strongestCountry->getName()])
+						this->advancedArmy[strongestCountry->getName()] += armiesToAdvance;
+					else
+						this->advancedArmy[strongestCountry->getName()] = armiesToAdvance;
 					return new Advance(this->getPlayer(), strongestCountry, weakestCountry, armiesToAdvance);
 				}
 			}
 		}
 	}
 	cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;
-	this->toAdvanceIndex = 0;
-	this->toDefendIndex = 0;
 	return nullptr;
 }
 
@@ -306,7 +311,7 @@ Order* AggressivePlayerStrategy::issueOrder() {
 
 	// Remove all unusable cards
 	this->_player->removeCardFromHand("Diplomacy");
-	this->_player->removeCardFromHand("Bomb");
+	this->_player->removeCardFromHand("Reinforcement");
 	this->_player->removeCardFromHand("Airlift");
 	this->_player->removeCardFromHand("Blockade");
 

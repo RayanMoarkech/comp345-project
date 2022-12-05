@@ -487,6 +487,7 @@ void GameEngine::issueOrdersPhase()
             }
         }
 
+				allPlayersDone = true;
         for (int i = 0; i < this->_players.size(); i++)
         {
             // Players cannot finish issuing orders until all armies are deployed
@@ -500,6 +501,7 @@ void GameEngine::issueOrdersPhase()
 						{
 							allPlayersDone = false;
 							count--;
+							break;
 						}
             else {
                 // Check the end of the list, if the last #ofplayers orders are null, 
@@ -513,7 +515,7 @@ void GameEngine::issueOrdersPhase()
                 }
                 else
                 {
-                    allPlayersDone = true;
+                    allPlayersDone &= true;
                 }
             }
         }
@@ -530,7 +532,15 @@ void GameEngine::issueOrdersPhase()
 				AggressivePlayerStrategy* aggressivePlayerStrategy = dynamic_cast<AggressivePlayerStrategy *>(p->getPlayerStrategy());
 				if (aggressivePlayerStrategy)
 				{
-					aggressivePlayerStrategy->setAdvanced(false);
+						aggressivePlayerStrategy->setAdvanced(false);
+				}
+
+				BenevolentPlayerStrategy* benevolentPlayerStrategy = dynamic_cast<BenevolentPlayerStrategy *>(p->getPlayerStrategy());
+				if (benevolentPlayerStrategy)
+				{
+						benevolentPlayerStrategy->toAdvanceIndex = 0;
+						benevolentPlayerStrategy->toDefendIndex = 0;
+						benevolentPlayerStrategy->advancedArmy = {};
 				}
     }
 }

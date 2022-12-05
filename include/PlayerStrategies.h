@@ -8,6 +8,7 @@
     using std::ostream;
 #include <string>
     using std::string;
+#include <map>
 
 class Player;
 class Order;
@@ -79,6 +80,8 @@ public:
 
 		int toDefendIndex = 0;
 		int toAdvanceIndex = 0;
+
+		std::map<string, int> advancedArmy = {};
 
 		virtual ~BenevolentPlayerStrategy();
 };

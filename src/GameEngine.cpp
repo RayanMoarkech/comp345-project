@@ -830,7 +830,7 @@ vector<string> GameEngine::executeTournament(Tournament* t)
     cout << "Results: " << endl;
     cout << left << setw(30) << " ";
     for (int i = 0; i < t->numOfGames; i = i + 1) {
-        cout << left << setw(10) << "Game " + std::to_string(i) + " ";
+        cout << left << setw(20) << "Game " + std::to_string(i) + " ";
     }
     cout << endl;
     
@@ -838,7 +838,7 @@ vector<string> GameEngine::executeTournament(Tournament* t)
     for (auto& val : t->mapArray) {
         cout << left << setw(30) << val;
         for (int i = 0; i < t->numOfGames; i = i + 1) {
-            cout << left << setw(10) << t->resultArray[res];
+            cout << left << setw(20) << t->resultArray[res];
             res++;
         }
         cout << endl;

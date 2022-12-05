@@ -13,6 +13,9 @@ using std::endl;
 #include <random>
 #include <typeinfo>
 #include <sstream>
+#include <iomanip>
+using std::left;
+using std::setw;
 
 #include "../include/Cards.h"
 #include "../include/CommandProcessing.h"
@@ -711,6 +714,7 @@ void GameEngine::executeTournament(Tournament* t)
     this->tournament = t;
     bool validMap = true;
     cout << endl;
+    std::vector<std::string>  resultArray;
 
     for (auto& val : t->mapArray) {
         // Play num games on each map
@@ -729,9 +733,9 @@ void GameEngine::executeTournament(Tournament* t)
 
             // Add players
             if ((val.find(".map") != std::string::npos) && (gameEngine->_map->validate())) {
-                for (int i = 1; i <= t->playerStrategies.size(); i = i + 1) {
+                for (int i = 0; i < t->playerStrategies.size(); i = i + 1) {
                     // Add players
-                    commandProcessor->saveCommand("addplayer player" + i + ' ' + t->playerStrategies[i]);
+                    commandProcessor->saveCommand("addplayer player" + std::to_string(i) + " " + t->playerStrategies[i]);
                     gameEngine->transition();
                 }
             }
@@ -739,6 +743,9 @@ void GameEngine::executeTournament(Tournament* t)
                 // If map is empty stop game and don't use this map
                 cout << "Map is invalid/empty and will not be used" << endl;
                 validMap = false;
+                for (int i = 0; i < t->numOfGames; i = i + 1) {
+                    resultArray.push_back("Invalid");
+                }
                 break;
             }
 
@@ -748,6 +755,12 @@ void GameEngine::executeTournament(Tournament* t)
 
             // Main Game Loop
             int winner = gameEngine->mainGameLoop(t->maxNumOfTurns);
+            if (winner != -1) {
+                resultArray.push_back(gameEngine->_players[winner]->getName());
+            }
+            else {
+                resultArray.push_back("Draw");
+            }
             cout << endl;
 
             delete gameEngine;
@@ -759,10 +772,37 @@ void GameEngine::executeTournament(Tournament* t)
 
     }
 
-    // TO DO: Output the details of tournament mode games
+    // Output the details of tournament mode games
+    cout << "Tournament Mode: " << endl;
+    cout << "M: ";
+    for (auto& val : t->mapArray) {
+        cout << val + " ";
+    }
+    cout << endl;
+    cout << "P: ";
+    for (auto& val : t->playerStrategies) {
+        cout << val + " ";
+    }
+    cout << endl;
+    cout << "G: " << t->numOfGames << endl;
+    cout << "D: " << t->maxNumOfTurns << endl;
 
-
-
+    cout << endl;
+    cout << "Results: " << endl;
+    cout << left << setw(10) << " ";
+    for (int i = 0; i < t->numOfGames; i = i + 1) {
+        cout << left << setw(5) << "Game " + std::to_string(i);
+    }
+    
+    int res = 0;
+    for (auto& val : t->mapArray) {
+        cout << left << setw(10) << val;
+        for (int i = 0; i < t->numOfGames; i = i + 1) {
+            cout << left << setw(10) << resultArray[res];
+            res++;
+        }
+        cout << endl;
+    }
 }
 
 // ---------------------------------------------

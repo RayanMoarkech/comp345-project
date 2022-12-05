@@ -21,6 +21,7 @@ void testOrderExecution();
 void testLoggingObserver();
 
 // Phase 3
+void testStrategies();
 void testPlayerStrategies();
 void testTournament();
 
@@ -63,7 +64,10 @@ int main(int argc, char *argv[]) {
     testOrderExecution();
     testLoggingObserver();*/
 
-    testPlayerStrategies();
-    testTournament();
+		// Phase 3
+
+		testStrategies();
+//    testPlayerStrategies();
+//    testTournament();
     return 0;
 }

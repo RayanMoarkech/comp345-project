@@ -9,6 +9,7 @@
 #include "../../include/Map.h"
 #include "../../include/Orders.h"
 #include "../../include/Cards.h"
+#include "../../include/CommandProcessing.h"
 
 
 void testPlayerStrategies()
@@ -81,4 +82,90 @@ void testPlayerStrategies()
 
     gameEngine->issueOrdersPhase();
     gameEngine->issueOrdersPhase();
+}
+
+void testStrategies()
+{
+	cout << endl
+			 << "------------------------------------------------------" << endl
+			 << "Test Player Strategy" << endl
+			 << "------------------------------------------------------" << endl
+			 << endl;
+
+	GameEngine* gameEngine = new GameEngine("");
+	CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+	// Load the map
+	commandProcessor->saveCommand("loadmap 001_I72_Ghtroc720.map");
+	gameEngine->transition();
+
+	// Validate the map
+	commandProcessor->saveCommand("validatemap");
+	gameEngine->transition();
+
+	// Add Cheater Player
+//	commandProcessor->saveCommand("addplayer CheaterP cheater");
+//	gameEngine->transition();
+
+	// Add Benevolant Player
+	commandProcessor->saveCommand("addplayer BenevolantP benevolant");
+	gameEngine->transition();
+
+
+	commandProcessor->saveCommand("addplayer BenevolantP2 benevolant");
+	gameEngine->transition();
+
+	// Add Aggressive Player
+//	commandProcessor->saveCommand("addplayer AggressiveP aggressive");
+//	gameEngine->transition();
+
+	// Add Neutral Player
+//	commandProcessor->saveCommand("addplayer NeutralP neutral");
+//	gameEngine->transition();
+
+	// Start Game phase
+	commandProcessor->saveCommand("gamestart");
+	gameEngine->transition();
+
+	// Main Game Loop
+	gameEngine->mainGameLoop();
+
+	delete gameEngine;
+}
+
+void testHumanStrategy()
+{
+	cout << endl
+			 << "------------------------------------------------------" << endl
+			 << "Test Human Strategy" << endl
+			 << "------------------------------------------------------" << endl
+			 << endl;
+
+	GameEngine* gameEngine = new GameEngine("");
+	CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+	// Load the map
+	commandProcessor->saveCommand("loadmap 001_I72_Ghtroc720.map");
+	gameEngine->transition();
+
+	// Validate the map
+	commandProcessor->saveCommand("validatemap");
+	gameEngine->transition();
+
+	// Add Cheater Player
+	commandProcessor->saveCommand("addplayer HumanP human");
+	gameEngine->transition();
+
+	// Add Benevolant Player
+	commandProcessor->saveCommand("addplayer BenevolantP benevolant");
+	gameEngine->transition();
+
+	// Start Game phase
+	commandProcessor->saveCommand("gamestart");
+	gameEngine->transition();
+
+	// Main Game Loop
+	gameEngine->mainGameLoop();
+
+	delete gameEngine;
 }

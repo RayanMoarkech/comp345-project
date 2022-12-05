@@ -144,7 +144,7 @@ GameEngine::GameEngine(string fileName) {
   _nextStateIndex = 0;
   _map = nullptr;
   _players = {};
-  deck = new Deck();
+  deck = nullptr;
   _playerStrats = {};
   tournament = nullptr;
   if (fileName == "") {

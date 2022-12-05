@@ -22,7 +22,7 @@ void testLoggingObserver();
 
 // Phase 3
 void testPlayerStrategies();
-void testBenevolantStrategy();
+void testBenevolentStrategy();
 void testCheaterStrategy();
 void testAggressiveStrategy();
 void testNeutralStrategy();
@@ -72,10 +72,10 @@ int main(int argc, char *argv[]) {
 
 //    testPlayerStrategies();
 
-		testBenevolantStrategy();
-		testCheaterStrategy();
-		testAggressiveStrategy();
-		testNeutralStrategy();
+//		testBenevolentStrategy();
+//		testCheaterStrategy();
+//		testAggressiveStrategy();
+//		testNeutralStrategy();
 
     testTournament();
 

@@ -146,7 +146,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 {
 	cout << endl;
 	cout << "----------------------------------" << endl;
-	cout << this->getPlayer()->getName() << "'s Turn - Type: Benevolant" << endl;
+	cout << this->getPlayer()->getName() << "'s Turn - Type: Benevolent" << endl;
 	cout << "----------------------------------" << endl;
 	cout << endl;
 
@@ -172,7 +172,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 		int armiesToDeploy = remainingArmyUnits / 3;
 		if (armiesToDeploy == 0) { armiesToDeploy = 1; }
 		Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toDefendIndex);
-		cout << this->getPlayer()->getName() << " (Benevolant) will deploy " << armiesToDeploy <<
+		cout << this->getPlayer()->getName() << " (Benevolent) will deploy " << armiesToDeploy <<
 			" armies to territory " << this->getPlayer()->getDefendList().at(this->toDefendIndex)->getName() << endl;
 		this->toDefendIndex++;
 		this->getPlayer()->setIssuedArmyUnits(this->getPlayer()->getIssuedArmyUnits() + armiesToDeploy);

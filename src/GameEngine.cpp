@@ -275,7 +275,7 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
 										ps = new HumanPlayerStrategy();
 								else if (strategy == "aggressive")
 										ps = new AggressivePlayerStrategy();
-								else if (strategy == "benevolant")
+								else if (strategy == "benevolent")
 										ps = new BenevolentPlayerStrategy();
 								else if (strategy == "neutral")
 										ps = new NeutralPlayerStrategy();

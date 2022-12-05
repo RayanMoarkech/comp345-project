@@ -16,7 +16,7 @@ void testPlayerStrategies()
 {
     cout << endl
         << "------------------------------------------------------" << endl
-        << "Test Human and Benevolant Strategies" << endl
+        << "Test Human and Benevolent Strategies" << endl
         << "------------------------------------------------------" << endl
         << endl;
 
@@ -73,10 +73,10 @@ void testPlayerStrategies()
     player2->setArmyUnits(19);
 
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
-    BenevolentPlayerStrategy* benevolantPlayer = new BenevolentPlayerStrategy(player2);
+    BenevolentPlayerStrategy* benevolentPlayer = new BenevolentPlayerStrategy(player2);
 
     player1->setPlayerStrategy(humanPlayer);
-    player2->setPlayerStrategy(benevolantPlayer);
+    player2->setPlayerStrategy(benevolentPlayer);
 
     gameEngine->_players = players;
 
@@ -84,11 +84,11 @@ void testPlayerStrategies()
     gameEngine->issueOrdersPhase();
 }
 
-void testBenevolantStrategy()
+void testBenevolentStrategy()
 {
 	cout << endl
 			 << "------------------------------------------------------" << endl
-			 << "Test Benevolant Strategy" << endl
+			 << "Test Benevolent Strategy" << endl
 			 << "------------------------------------------------------" << endl
 			 << endl;
 
@@ -103,11 +103,11 @@ void testBenevolantStrategy()
 	commandProcessor->saveCommand("validatemap");
 	gameEngine->transition();
 
-	// Add Benevolant Player
-	commandProcessor->saveCommand("addplayer BenevolantP1 benevolant");
+	// Add Benevolent Player
+	commandProcessor->saveCommand("addplayer BenevolentP1 benevolant");
 	gameEngine->transition();
 
-	commandProcessor->saveCommand("addplayer BenevolantP2 benevolant");
+	commandProcessor->saveCommand("addplayer BenevolentP2 benevolant");
 	gameEngine->transition();
 
 	// Start Game phase
@@ -251,8 +251,8 @@ void testHumanStrategy()
 	commandProcessor->saveCommand("addplayer HumanP human");
 	gameEngine->transition();
 
-	// Add Benevolant Player
-	commandProcessor->saveCommand("addplayer BenevolantP benevolant");
+	// Add Benevolent Player
+	commandProcessor->saveCommand("addplayer BenevolentP benevolant");
 	gameEngine->transition();
 
 	// Start Game phase

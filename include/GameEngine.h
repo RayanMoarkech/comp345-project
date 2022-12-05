@@ -103,7 +103,7 @@ public:
     bool allPlayerCardsPlayed() const;
     int validateGameRound();
     int mainGameLoop(int maxLoop = 50); // Default maximum of loops to 50
-    void executeTournament(Tournament* t);
+    static vector<string> executeTournament(Tournament* t);
 
     vector<int> getOwnedTerritories(vector<int> ownedTerritory);
 
@@ -135,7 +135,7 @@ private:
 // ---------------------------------------------
 // ---------------------------------------------
 
-class Tournament {
+class Tournament: public ILoggable, public Subject {
 public:
     Tournament(vector<string>  mapArray, vector<string> playerStrategies, int numOfGames, int maxNumOfTurns);
     Tournament(const Tournament& tournament);
@@ -143,6 +143,7 @@ public:
     ~Tournament();
 
     friend ostream& operator << (ostream& out, const Tournament& t);
+    std::string stringToLog();
 private:
     friend class GameEngine;
     vector<string>  mapArray;
@@ -150,8 +151,7 @@ private:
     vector<string> playerStrategies;
     int numOfGames;
     int maxNumOfTurns;
-
-
+    vector<string> resultArray;
 };
 
 #endif

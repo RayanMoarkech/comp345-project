@@ -200,33 +200,35 @@ static bool isIn(vector<Territory*> territoryVector, Territory* territory)
 //returns owned territories in random order
 void Player::toDefend()
 {
-	cout << endl;
-	cout << this->getName() << " 's Territories to Defend in Prioritized Order" << endl;
-	cout << endl;
-
-	vector<Territory*> territoriesToDefend = this->ownedTerritories;
-	std::random_shuffle(territoriesToDefend.begin(), territoriesToDefend.end());
-	for (Territory* t : territoriesToDefend)
-	{
-		cout << t->getName() << endl;
-	}
-	this->toDefendList = territoriesToDefend;
+//	cout << endl;
+//	cout << this->getName() << " 's Territories to Defend in Prioritized Order" << endl;
+//	cout << endl;
+//
+//	vector<Territory*> territoriesToDefend = this->ownedTerritories;
+//	std::random_shuffle(territoriesToDefend.begin(), territoriesToDefend.end());
+//	for (Territory* t : territoriesToDefend)
+//	{
+//		cout << t->getName() << endl;
+//	}
+//	this->toDefendList = territoriesToDefend;
+	return this->ps->toDefend();
 }
 
 //returns adjacent territories not belong to player in random order
 void Player::toAttack()
 {
-	cout << endl;
-	cout << this->getName() << " 's Territories to Attack in Prioritized Order" << endl;
-	cout << endl;
-
-	vector<Territory*> territoriesToAttack = this->getNeighbouringEnemyTerritories();
-	std::random_shuffle(territoriesToAttack.begin(), territoriesToAttack.end());
-	for (Territory* t : territoriesToAttack)
-	{
-		cout << t->getName() << endl;
-	}
-	this->toAttackList = territoriesToAttack;
+//	cout << endl;
+//	cout << this->getName() << " 's Territories to Attack in Prioritized Order" << endl;
+//	cout << endl;
+//
+//	vector<Territory*> territoriesToAttack = this->getNeighbouringEnemyTerritories();
+//	std::random_shuffle(territoriesToAttack.begin(), territoriesToAttack.end());
+//	for (Territory* t : territoriesToAttack)
+//	{
+//		cout << t->getName() << endl;
+//	}
+//	this->toAttackList = territoriesToAttack;
+	return this->ps->toAttack();
 }
 
 //This method gets all adjacent territories of owned territories and excludes territories that are owned by player

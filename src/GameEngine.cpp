@@ -144,7 +144,7 @@ GameEngine::GameEngine(string fileName) {
   _nextStateIndex = 0;
   _map = nullptr;
   _players = {};
-  deck = new Deck();
+  deck = nullptr;
   _playerStrats = {};
   tournament = nullptr;
   if (fileName == "") {
@@ -471,7 +471,8 @@ void GameEngine::issueOrdersPhase()
         for (int i = 0; i < this->_players.size(); i++)
         {
             // Players cannot finish issuing orders until all armies are deployed
-            if (_players.at(i)->getArmyUnits() != 0)
+						// Players cannot finish issuing orders until all cards are played
+            if (!this->allPlayerCardsPlayed())
             {
                 allPlayersDone = false;
                 break;
@@ -613,7 +614,7 @@ int GameEngine::mainGameLoop(int maxLoop)
 				loop++;
     }
 		if (winnerIndex == -1)
-				cout << "Draw game. Max loop reached." << endl;
+				cout << endl << "Draw game. Max loop reached." << endl;
 		else
 				cout << this->_players[winnerIndex]->getName() << " is the winner." << endl;
 		return winnerIndex;
@@ -628,7 +629,6 @@ vector<int> GameEngine::getOwnedTerritories(vector<int> ownedTerritory)
         if (!ownedTerritory.empty())
         {
             int diff = this->_players[i]->getOwnedTerritories().size() - ownedTerritory[i];
-            cout << ownedTerritory[i];
             if (diff > 0) {
                 cout << this->_players[i]->getName() << " needs to draw " << diff << " cards." << endl;
                 for (int t = 0; t < diff; t++) {
@@ -729,9 +729,10 @@ void GameEngine::executeTournament(Tournament* t)
 
             // Add players
             if ((val.find(".map") != std::string::npos) && (gameEngine->_map->validate())) {
-                for (int i = 1; i <= t->playerStrategies.size(); i = i + 1) {
+                for (int i = 0; i < t->playerStrategies.size(); i++) {
                     // Add players
-                    commandProcessor->saveCommand("addplayer player" + i + ' ' + t->playerStrategies[i]);
+										string command = "addplayer player" + std::to_string(i+1) + " " + t->playerStrategies[i];
+                    commandProcessor->saveCommand(command);
                     gameEngine->transition();
                 }
             }

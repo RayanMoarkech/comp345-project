@@ -137,7 +137,7 @@ void Deploy::execute()
 	// Remove numOfArmyUnits from reinforcement pool
 	// Add numOfArmyUnits to targetTerritory
 
-	player->ownTerritory(targetTerritory, numOfArmyUnits);
+	player->setArmyUnits(player->getArmyUnits() + numOfArmyUnits);
 
 	targetTerritory->addArmies(numOfArmyUnits);
 	cout << "Deploy order executed. Deployed " << numOfArmyUnits << " armies to " << targetTerritory->getName() << "." << endl;
@@ -410,8 +410,8 @@ void Blockade::execute()
 		return;
 	}
 	//Set ownership to the neutral players and double armies
-	targetTerritory->setOwnedBy(new Player(true), targetTerritory->getNumberOfArmies() * 2);
 	targetTerritory->getOwnedBy()->removeTerritory(targetTerritory);
+	targetTerritory->setOwnedBy(new Player(true), targetTerritory->getNumberOfArmies() * 2);
 	executed = true;
 	cout << "Blockade order executed. Territory" << targetTerritory->getName() << " has doubled its army units and is now owned by the neutral player" << endl;
     notify();

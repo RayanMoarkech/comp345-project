@@ -146,6 +146,8 @@ ostream& operator << (ostream& out, const Deck& deck) {
 
 // Draw a card from the deck
 Card* Deck::draw() {
+		if (cards.empty())
+			return nullptr;
     int randomIndex = rand() % cards.size();
     Card* card = cards.at(randomIndex);
     cards.erase(cards.begin() + randomIndex);

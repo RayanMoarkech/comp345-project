@@ -393,6 +393,21 @@ bool GameEngine::startGame()
         Card *card2 = this->deck->draw();
         player->getPlayerHand()->addCard(card2);
         cout << "\t\tDraw Card 2: " << card2->getCardType() << endl;
+
+				bool done = false;
+				while (player->getArmyUnits() > 0 && !done)
+				{
+					for (Territory* ownedTerritory: player->getOwnedTerritories())
+					{
+						if (player->getArmyUnits() == 0)
+						{
+							done = true;
+							break;
+						}
+						player->setArmyUnits(player->getArmyUnits() - 1);
+						ownedTerritory->setNumberOfArmies(1);
+					}
+				}
     }
     return true;
 }
@@ -458,7 +473,8 @@ void GameEngine::issueOrdersPhase()
     OrdersList* allIssuedOrders = new OrdersList();
     //OrdersList* list = new OrdersList();
     vector<Order*> list;
-    while (!allPlayersDone)
+		int count = 15;
+    while (!allPlayersDone && count > 0)
     {
         for (Player* p : this->_players)
         {
@@ -480,6 +496,11 @@ void GameEngine::issueOrdersPhase()
                 allPlayersDone = false;
                 break;
             }
+						else if (allIssuedOrders->getOrdersList().empty())
+						{
+							allPlayersDone = false;
+							count--;
+						}
             else {
                 // Check the end of the list, if the last #ofplayers orders are null, 
                 // then all players are done issuing orders
@@ -505,6 +526,12 @@ void GameEngine::issueOrdersPhase()
         p->setAttackList(vector<Territory*>());
         p->setDefendList(vector<Territory*>());
 				p->setIssuedArmyUnits(0);
+
+				AggressivePlayerStrategy* aggressivePlayerStrategy = dynamic_cast<AggressivePlayerStrategy *>(p->getPlayerStrategy());
+				if (aggressivePlayerStrategy)
+				{
+					aggressivePlayerStrategy->setAdvanced(false);
+				}
     }
 }
 
@@ -516,8 +543,9 @@ void GameEngine::executeOrdersPhase()
 				// Check if order is a Bomb Order
 				Bomb* bombOder = dynamic_cast<Bomb *>(order);
         if(bombOder) {
-						if (typeid(bombOder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() ==
-								"NeutralPlayerStrategy") {
+						NeutralPlayerStrategy* neutralPlayerStrategy =
+										dynamic_cast<NeutralPlayerStrategy*>(bombOder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy());
+						if (neutralPlayerStrategy) {
 								cout << endl;
 								cout << "**********************************" << endl;
 								cout << bombOder->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
@@ -537,8 +565,9 @@ void GameEngine::executeOrdersPhase()
 				// Check if order is a bomb
 				Advance* advanceOrder = dynamic_cast<Advance *>(order);
 				if(advanceOrder) {
-						if (typeid(advanceOrder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() ==
-								"NeutralPlayerStrategy") {
+						NeutralPlayerStrategy* neutralPlayerStrategy =
+										dynamic_cast<NeutralPlayerStrategy*>(advanceOrder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy());
+						if (neutralPlayerStrategy) {
 								cout << endl;
 								cout << "**********************************" << endl;
 								cout << advanceOrder->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
@@ -636,6 +665,8 @@ vector<int> GameEngine::getOwnedTerritories(vector<int> ownedTerritory)
                 cout << this->_players[i]->getName() << " needs to draw " << diff << " cards." << endl;
                 for (int t = 0; t < diff; t++) {
                     Card *card = this->deck->draw();
+										if (!card)
+											break;
                     this->_players[i]->getPlayerHand()->addCard(card);
                     cout << "\t\tDraw Card: " << card->getCardType() << endl;
                 }

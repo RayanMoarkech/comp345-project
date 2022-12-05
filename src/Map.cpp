@@ -18,6 +18,7 @@
     using std::for_each;
 
 #include "../include/Map.h"
+#include "../include/Player.h"
 
 
 // ---------------------------------------------
@@ -324,6 +325,11 @@ void Territory::addArmies(int numArmies)
 void Territory::removeArmies(int numArmies)
 {
     this->numberOfArmies = numberOfArmies - numArmies;
+		if (this->numberOfArmies < 0)
+		{
+			this->getOwnedBy()->removeTerritory(this);
+			this->setOwnedBy(new Player(true), this->getNumberOfArmies() * 2);
+		}
 }
 
 vector<Territory*> Territory::getAdjacentTerritories() {
@@ -333,8 +339,14 @@ vector<Territory*> Territory::getAdjacentTerritories() {
 // A territory is owned by a player and contain a number of armies.
 void Territory::setOwnedBy(Player* ownedBy, int numberOfArmies)
 {
-   this->ownedBy = ownedBy;
-   this->numberOfArmies = numberOfArmies;
+	// Replace old owner
+	if (this->ownedBy)
+	{
+		this->ownedBy->removeTerritory(this);
+		ownedBy->addOwnedTerritory(this);
+	}
+	this->ownedBy = ownedBy;
+	this->numberOfArmies = numberOfArmies;
 }
 
 void Territory::setNumberOfArmies(int numberOfArmies)

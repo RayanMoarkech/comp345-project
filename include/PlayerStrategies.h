@@ -88,6 +88,8 @@ public:
 // ---------------------------------------------
 
 class AggressivePlayerStrategy : public PlayerStrategy {
+private:
+		bool advanced = false;
 public:
 		AggressivePlayerStrategy();
 		AggressivePlayerStrategy(Player *player);
@@ -100,6 +102,7 @@ public:
 		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
+		void setAdvanced(int advanced);
 
 		virtual ~AggressivePlayerStrategy();
 };

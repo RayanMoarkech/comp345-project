@@ -870,7 +870,7 @@ std::string Tournament::stringToLog() {
     std::string mapResults;
     for (auto& val : this->mapArray) {
         std::setw(30);
-        mapResults += "\n" + val ;
+        mapResults +=  val + "\n";
         for (int i = 0; i < this->numOfGames; i = i + 1) {
             std::setw(10);
             resultString += "\t\t\t" + GameEngine::executeTournament(this)[res];

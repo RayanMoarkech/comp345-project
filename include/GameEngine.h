@@ -118,7 +118,6 @@ private:
     CommandProcessor *_commandProcessor;
     string _fileName;
     Map *_map;
-    vector<Player *> _players;
     vector<PlayerStrategy *> _playerStrats;
     Deck *deck;
     OrdersList* ordersList;

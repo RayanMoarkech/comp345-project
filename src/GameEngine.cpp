@@ -278,6 +278,8 @@ bool GameEngine::executeCurrentStateAction(int nextStateIndex, const string &opt
 										ps = new NeutralPlayerStrategy();
 								else if (strategy == "cheater")
 										ps = new CheaterPlayerStrategy();
+								else
+									ps = new HumanPlayerStrategy();
 						}
             player = new Player(option, {}, new Hand(), new OrdersList(), ps);
 						ps->setPlayer(player);
@@ -505,22 +507,51 @@ void GameEngine::issueOrdersPhase()
 
 void GameEngine::executeOrdersPhase()
 {
-    for (Order* order : this->ordersList->getOrdersList()){
-        if(typeid(order).name()=="Bomb"||typeid(order).name()=="Advance")
-            if(typeid(order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() == "NeutralPlayerStrategy"){
-                cout << endl;
-                cout << "**********************************" << endl;
-                cout << order->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
-                cout << "**********************************" << endl;
+    for (Order* order : this->ordersList->getOrdersList())
+		{
+				// Check if order is a Bomb Order
+				Bomb* bombOder = dynamic_cast<Bomb *>(order);
+        if(bombOder) {
+						if (typeid(bombOder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() ==
+								"NeutralPlayerStrategy") {
+								cout << endl;
+								cout << "**********************************" << endl;
+								cout << bombOder->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
+								cout << "**********************************" << endl;
 
-                delete order->getTargetTerritory()->getOwnedBy()->getPlayerStrategy();
-                order->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(new AggressivePlayerStrategy(order->getTargetTerritory()->getOwnedBy()));
+								delete bombOder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy();
+								bombOder->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(
+													new AggressivePlayerStrategy(bombOder->getTargetTerritory()->getOwnedBy()));
 
-                cout << "**********************************" << endl;
-                cout << order->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type has changed to Aggressive" << endl;
-                cout << "**********************************" << endl;
-            }
-        order->execute();
+								cout << "**********************************" << endl;
+								cout << bombOder->getTargetTerritory()->getOwnedBy()->getName()
+										 << "'s strategy's type has changed to Aggressive" << endl;
+								cout << "**********************************" << endl;
+						}
+						order->execute();
+				}
+
+				// Check if order is a bomb
+				Advance* advanceOrder = dynamic_cast<Advance *>(order);
+				if(advanceOrder) {
+						if (typeid(advanceOrder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() ==
+								"NeutralPlayerStrategy") {
+								cout << endl;
+								cout << "**********************************" << endl;
+								cout << advanceOrder->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
+								cout << "**********************************" << endl;
+
+								delete advanceOrder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy();
+								advanceOrder->getTargetTerritory()->getOwnedBy()->setPlayerStrategy(
+												new AggressivePlayerStrategy(advanceOrder->getTargetTerritory()->getOwnedBy()));
+
+								cout << "**********************************" << endl;
+								cout << advanceOrder->getTargetTerritory()->getOwnedBy()->getName()
+										 << "'s strategy's type has changed to Aggressive" << endl;
+								cout << "**********************************" << endl;
+						}
+						order->execute();
+				}
     }
     this->ordersList = nullptr;
 }

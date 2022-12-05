@@ -39,7 +39,6 @@ public:
 	*/
 	virtual bool validate() = 0; // Method to check if order is valid
 	virtual void execute() = 0; // Method to check if order is valid and then execute if it is
-    virtual Territory * getTargetTerritory() = 0;
 };
 
 //Deploy Class Definition

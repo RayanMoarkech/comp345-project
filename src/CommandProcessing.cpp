@@ -386,6 +386,9 @@ bool CommandProcessor::validate(Command *command, int currentStateIndex,
     userCommand = commandText;
   } else if (commandText == "addplayer") {
     ss >> commandOption;
+		string strategy;
+		ss >> strategy;
+		commandOption += " " + strategy;
     if (commandOption == "") {
       cout << "You did not enter the player name." << endl;
       command->saveEffect("User did not enter the player name.");

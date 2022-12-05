@@ -19,6 +19,7 @@
 	using std::string;
 
 #include "../include/Cards.h"
+#include "../include/Map.h"
 
 
 //Static Methods
@@ -109,6 +110,13 @@ Order* NeutralPlayerStrategy::issueOrder()
     cout << "----------------------------------" << endl;
     cout << endl;
 
+		// Remove all unusable cards
+		this->_player->removeCardFromHand("Diplomacy");
+		this->_player->removeCardFromHand("Bomb");
+		this->_player->removeCardFromHand("Airlift");
+		this->_player->removeCardFromHand("Blockade");
+		this->_player->removeCardFromHand("Reinforcement");
+
     // Neutral player does not issue Orders.
     return nullptr;
 }
@@ -150,6 +158,11 @@ Order* BenevolentPlayerStrategy::issueOrder()
 	cout << "----------------------------------" << endl;
 	cout << endl;
 
+	// Remove all unusable cards
+	this->_player->removeCardFromHand("Diplomacy");
+	this->_player->removeCardFromHand("Bomb");
+	this->_player->removeCardFromHand("Reinforcement");
+
 	//To Defend
 	if (this->getPlayer()->getDefendList().empty())
 	{
@@ -163,7 +176,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 	//Deploy on toDefend territories, will not be able to issue other orders until
 	//all armies are deployed
 	//Deploys to weakest countries in priority
-	if (remainingArmyUnits != 0)
+	if (remainingArmyUnits > 0)
 	{
 		cout << "Total remaining of army units to deploy: " << remainingArmyUnits << endl;
 		// Divide army units by 3 to not deploy all armies to a single territory
@@ -171,7 +184,8 @@ Order* BenevolentPlayerStrategy::issueOrder()
 		// armies to the weakest countries.
 		int armiesToDeploy = remainingArmyUnits / 3;
 		if (armiesToDeploy == 0) { armiesToDeploy = 1; }
-		Territory* weakestCountry = this->getPlayer()->getDefendList().at(this->toDefendIndex);
+		if (this->toDefendIndex == this->_player->getDefendList().size()) { this->toDefendIndex = 0; }
+		Territory* weakestCountry = this->_player->getDefendList().at(this->toDefendIndex);
 		cout << this->getPlayer()->getName() << " (Benevolent) will deploy " << armiesToDeploy <<
 			" armies to territory " << this->getPlayer()->getDefendList().at(this->toDefendIndex)->getName() << endl;
 		this->toDefendIndex++;
@@ -215,20 +229,34 @@ Order* BenevolentPlayerStrategy::issueOrder()
 			if (!adjacentOwnedCountries.empty())
 			{
 				Territory *strongestCountry = adjacentOwnedCountries.front();
-				int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
+				int armiesToAdvance = 0;
+				for (Territory* territory: adjacentOwnedCountries)
+				{
+					if (armiesToAdvance != 0)
+					{
+						strongestCountry = territory;
+						break;
+					}
+					if (this->advancedArmy[territory->getName()])
+						armiesToAdvance = (territory->getNumberOfArmies() - this->advancedArmy[territory->getName()]) / 3;
+					else
+						armiesToAdvance = territory->getNumberOfArmies() / 3;
+				}
 				if (armiesToAdvance != 0)
 				{
 					this->toAdvanceIndex++;
 					cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
 							 << weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
+					if (this->advancedArmy[strongestCountry->getName()])
+						this->advancedArmy[strongestCountry->getName()] += armiesToAdvance;
+					else
+						this->advancedArmy[strongestCountry->getName()] = armiesToAdvance;
 					return new Advance(this->getPlayer(), strongestCountry, weakestCountry, armiesToAdvance);
 				}
 			}
 		}
 	}
 	cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;
-	this->toAdvanceIndex = 0;
-	this->toDefendIndex = 0;
 	return nullptr;
 }
 
@@ -245,7 +273,7 @@ void BenevolentPlayerStrategy::toDefend()
 	vector<Territory*> toDefend = this->_player->getOwnedTerritories();
 
 	sort(toDefend.begin(), toDefend.end(), 
-		[](const Territory* t1, const Territory* t2) {return *t1 < *t2; });
+		[](Territory* t1, Territory* t2) {return t1->getNumberOfArmies() < t2->getNumberOfArmies(); });
 	cout << "Prioritized list of territories to defend: " << endl;
 	cout << endl;
 	for (Territory* t : toDefend)
@@ -281,6 +309,12 @@ Order* AggressivePlayerStrategy::issueOrder() {
 	cout << "----------------------------------" << endl;
 	cout << endl;
 
+	// Remove all unusable cards
+	this->_player->removeCardFromHand("Diplomacy");
+	this->_player->removeCardFromHand("Reinforcement");
+	this->_player->removeCardFromHand("Airlift");
+	this->_player->removeCardFromHand("Blockade");
+
 	// To defend
 	if (this->getPlayer()->getDefendList().empty())
 	{
@@ -288,23 +322,24 @@ Order* AggressivePlayerStrategy::issueOrder() {
 		return nullptr;
 	}
 
-	int playerArmyUnits = this->getPlayer()->getArmyUnits();
-	Territory* strongestCountry = this->getPlayer()->getAttackList().at(0);
-
-	// Deploys or advances armies on its strongest country
-	if (playerArmyUnits != 0)
-	{
-		cout << "Total remaining of army units to deploy: " << playerArmyUnits << endl;
-		cout << this->getPlayer()->getName() << " (Aggressive) will deploy " << playerArmyUnits <<
-				 " armies to territory " << this->getPlayer()->getDefendList().at(0)->getName() << endl;
-		return new Deploy(this->getPlayer(), strongestCountry, playerArmyUnits);
-	}
-
-	// To defend
+	// To attack
 	if (this->getPlayer()->getAttackList().empty())
 	{
 		this->toAttack();
 		return nullptr;
+	}
+
+	int playerArmyUnits = this->_player->getArmyUnits() - this->_player->getIssuedArmyUnits();
+	Territory* strongestCountry = this->getPlayer()->getDefendList().at(0);
+
+	// Deploys or advances armies on its strongest country
+	if (playerArmyUnits > 0)
+	{
+		cout << "Total remaining of army units to deploy: " << playerArmyUnits << endl;
+		cout << this->getPlayer()->getName() << " (Aggressive) will deploy " << playerArmyUnits <<
+				 " armies to territory " << this->getPlayer()->getDefendList().at(0)->getName() << endl;
+		this->_player->setIssuedArmyUnits(playerArmyUnits);
+		return new Deploy(this->getPlayer(), strongestCountry, playerArmyUnits);
 	}
 
 	// If the player has bomb card
@@ -315,20 +350,30 @@ Order* AggressivePlayerStrategy::issueOrder() {
 	}
 
 	// always advances to enemy territories until it cannot do so anymore
-	Territory* enemyCountry = this->getPlayer()->getAttackList().at(0);
-	int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
-	if (armiesToAdvance > 1)
+	if (!this->advanced)
 	{
-		cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
-				 << enemyCountry->getName() << " from " << strongestCountry->getName() << endl;
-		return new Advance(this->getPlayer(), strongestCountry, enemyCountry, armiesToAdvance);
+		Territory* enemyCountry = this->getPlayer()->getAttackList().at(0);
+		int armiesToAdvance = strongestCountry->getNumberOfArmies() - 1;
+		if (armiesToAdvance > 0)
+		{
+			cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
+					 << enemyCountry->getName() << " from " << strongestCountry->getName() << endl;
+			this->advanced = true;
+			return new Advance(this->getPlayer(), strongestCountry, enemyCountry, armiesToAdvance);
+		}
 	}
 
 	return nullptr;
 }
 void AggressivePlayerStrategy::toAttack()
 {
-	vector<Territory*> toAttack = this->_player->getNeighbouringEnemyTerritories(this->_player->getDefendList().at(0));
+	vector<Territory*> toAttack = {};
+	for (Territory* territory: this->_player->getDefendList())
+	{
+		if (!toAttack.empty())
+			break;
+		toAttack = this->_player->getNeighbouringEnemyTerritories(territory);
+	}
 	this->_player->setAttackList(toAttack);
 }
 
@@ -339,7 +384,7 @@ void AggressivePlayerStrategy::toDefend()
 	vector<Territory*> toDefend = this->_player->getOwnedTerritories();
 
 	sort(toDefend.begin(), toDefend.end(),
-			 [](const Territory* t1, const Territory* t2) {return *t1 > *t2; });
+			 [](Territory* t1, Territory* t2) {return t1->getNumberOfArmies() > t2->getNumberOfArmies(); });
 	cout << "Prioritized list of territories to defend: " << endl;
 	cout << endl;
 	for (Territory* t : toDefend)
@@ -347,6 +392,11 @@ void AggressivePlayerStrategy::toDefend()
 		cout << t->getName() << ": " << t->getNumberOfArmies() << " armies" << endl;
 	}
 	this->_player->setDefendList(toDefend);
+}
+
+void AggressivePlayerStrategy::setAdvanced(int advanced)
+{
+	this->advanced = advanced;
 }
 
 // Destructor
@@ -858,6 +908,13 @@ Order* CheaterPlayerStrategy::issueOrder()
   cout << this->getPlayer()->getName() << "'s Turn - Type: Cheater" << endl;
   cout << "----------------------------------" << endl;
   cout << endl;
+
+	// Remove all unusable cards
+	this->_player->removeCardFromHand("Diplomacy");
+	this->_player->removeCardFromHand("Bomb");
+	this->_player->removeCardFromHand("Airlift");
+	this->_player->removeCardFromHand("Blockade");
+	this->_player->removeCardFromHand("Reinforcement");
 
   if (!this->getPlayer()->getAttackList().empty())
   {

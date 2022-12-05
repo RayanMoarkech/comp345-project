@@ -393,6 +393,21 @@ bool GameEngine::startGame()
         Card *card2 = this->deck->draw();
         player->getPlayerHand()->addCard(card2);
         cout << "\t\tDraw Card 2: " << card2->getCardType() << endl;
+
+				bool done = false;
+				while (player->getArmyUnits() > 0 && !done)
+				{
+					for (Territory* ownedTerritory: player->getOwnedTerritories())
+					{
+						if (player->getArmyUnits() == 0)
+						{
+							done = true;
+							break;
+						}
+						player->setArmyUnits(player->getArmyUnits() - 1);
+						ownedTerritory->setNumberOfArmies(1);
+					}
+				}
     }
     return true;
 }
@@ -447,7 +462,7 @@ bool GameEngine::allPlayerCardsPlayed() const
     for (Player* p : this->_players)
     {
         cout << p->getName() << ": " << p->getPlayerHand()->cards.size() << " cards." << endl;
-        allCardsPlayed = allCardsPlayed && (p->getPlayerHand()->cards.size() != 0);
+        allCardsPlayed = allCardsPlayed && (p->getPlayerHand()->cards.size() == 0);
     }
     return allCardsPlayed;
 }
@@ -458,7 +473,8 @@ void GameEngine::issueOrdersPhase()
     OrdersList* allIssuedOrders = new OrdersList();
     //OrdersList* list = new OrdersList();
     vector<Order*> list;
-    while (!allPlayersDone)
+		int count = 15;
+    while (!allPlayersDone && count > 0)
     {
         for (Player* p : this->_players)
         {
@@ -471,6 +487,7 @@ void GameEngine::issueOrdersPhase()
             }
         }
 
+				allPlayersDone = true;
         for (int i = 0; i < this->_players.size(); i++)
         {
             // Players cannot finish issuing orders until all armies are deployed
@@ -480,6 +497,12 @@ void GameEngine::issueOrdersPhase()
                 allPlayersDone = false;
                 break;
             }
+						else if (allIssuedOrders->getOrdersList().empty())
+						{
+							allPlayersDone = false;
+							count--;
+							break;
+						}
             else {
                 // Check the end of the list, if the last #ofplayers orders are null, 
                 // then all players are done issuing orders
@@ -492,7 +515,7 @@ void GameEngine::issueOrdersPhase()
                 }
                 else
                 {
-                    allPlayersDone = true;
+                    allPlayersDone &= true;
                 }
             }
         }
@@ -505,6 +528,20 @@ void GameEngine::issueOrdersPhase()
         p->setAttackList(vector<Territory*>());
         p->setDefendList(vector<Territory*>());
 				p->setIssuedArmyUnits(0);
+
+				AggressivePlayerStrategy* aggressivePlayerStrategy = dynamic_cast<AggressivePlayerStrategy *>(p->getPlayerStrategy());
+				if (aggressivePlayerStrategy)
+				{
+						aggressivePlayerStrategy->setAdvanced(false);
+				}
+
+				BenevolentPlayerStrategy* benevolentPlayerStrategy = dynamic_cast<BenevolentPlayerStrategy *>(p->getPlayerStrategy());
+				if (benevolentPlayerStrategy)
+				{
+						benevolentPlayerStrategy->toAdvanceIndex = 0;
+						benevolentPlayerStrategy->toDefendIndex = 0;
+						benevolentPlayerStrategy->advancedArmy = {};
+				}
     }
 }
 
@@ -516,8 +553,9 @@ void GameEngine::executeOrdersPhase()
 				// Check if order is a Bomb Order
 				Bomb* bombOder = dynamic_cast<Bomb *>(order);
         if(bombOder) {
-						if (typeid(bombOder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() ==
-								"NeutralPlayerStrategy") {
+						NeutralPlayerStrategy* neutralPlayerStrategy =
+										dynamic_cast<NeutralPlayerStrategy*>(bombOder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy());
+						if (neutralPlayerStrategy) {
 								cout << endl;
 								cout << "**********************************" << endl;
 								cout << bombOder->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
@@ -537,8 +575,9 @@ void GameEngine::executeOrdersPhase()
 				// Check if order is a bomb
 				Advance* advanceOrder = dynamic_cast<Advance *>(order);
 				if(advanceOrder) {
-						if (typeid(advanceOrder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy()).name() ==
-								"NeutralPlayerStrategy") {
+						NeutralPlayerStrategy* neutralPlayerStrategy =
+										dynamic_cast<NeutralPlayerStrategy*>(advanceOrder->getTargetTerritory()->getOwnedBy()->getPlayerStrategy());
+						if (neutralPlayerStrategy) {
 								cout << endl;
 								cout << "**********************************" << endl;
 								cout << advanceOrder->getTargetTerritory()->getOwnedBy()->getName() << "'s strategy's type is Neutral" << endl;
@@ -575,7 +614,7 @@ int GameEngine::validateGameRound()
             continue;
         }
         // Check if player owns all territories
-        if (ownedTerritoryCount == this->_map->getTerritories().size())
+        if (ownedTerritoryCount >= this->_map->getTerritories().size())
         {
             cout << player->getName() << " owns all the territories." << endl << endl;
             return i;
@@ -636,6 +675,8 @@ vector<int> GameEngine::getOwnedTerritories(vector<int> ownedTerritory)
                 cout << this->_players[i]->getName() << " needs to draw " << diff << " cards." << endl;
                 for (int t = 0; t < diff; t++) {
                     Card *card = this->deck->draw();
+										if (!card)
+											break;
                     this->_players[i]->getPlayerHand()->addCard(card);
                     cout << "\t\tDraw Card: " << card->getCardType() << endl;
                 }
@@ -709,12 +750,12 @@ ostream &operator<<(ostream &strm, const GameEngine &gameEngine) {
   return strm;
 }
 
-void GameEngine::executeTournament(Tournament* t)
+vector<string> GameEngine::executeTournament(Tournament* t)
 {
-    this->tournament = t;
+
     bool validMap = true;
     cout << endl;
-    std::vector<std::string>  resultArray;
+    t->resultArray={};
 
     for (auto& val : t->mapArray) {
         // Play num games on each map
@@ -744,7 +785,7 @@ void GameEngine::executeTournament(Tournament* t)
                 cout << "Map is invalid/empty and will not be used" << endl;
                 validMap = false;
                 for (int i = 0; i < t->numOfGames; i = i + 1) {
-                    resultArray.push_back("Invalid");
+                    t->resultArray.push_back("Invalid");
                 }
                 break;
             }
@@ -756,10 +797,10 @@ void GameEngine::executeTournament(Tournament* t)
             // Main Game Loop
             int winner = gameEngine->mainGameLoop(t->maxNumOfTurns);
             if (winner != -1) {
-                resultArray.push_back(gameEngine->_players[winner]->getName());
+                t->resultArray.push_back(gameEngine->_players[winner]->getName());
             }
             else {
-                resultArray.push_back("Draw");
+                t->resultArray.push_back("Draw");
             }
             cout << endl;
 
@@ -769,9 +810,7 @@ void GameEngine::executeTournament(Tournament* t)
         {
             break;
         }
-
     }
-
     // Output the details of tournament mode games
     cout << "Tournament Mode: " << endl;
     cout << "M: ";
@@ -791,7 +830,7 @@ void GameEngine::executeTournament(Tournament* t)
     cout << "Results: " << endl;
     cout << left << setw(30) << " ";
     for (int i = 0; i < t->numOfGames; i = i + 1) {
-        cout << left << setw(10) << "Game " + std::to_string(i) + " ";
+        cout << left << setw(20) << "Game " + std::to_string(i) + " ";
     }
     cout << endl;
     
@@ -799,11 +838,12 @@ void GameEngine::executeTournament(Tournament* t)
     for (auto& val : t->mapArray) {
         cout << left << setw(30) << val;
         for (int i = 0; i < t->numOfGames; i = i + 1) {
-            cout << left << setw(10) << resultArray[res];
+            cout << left << setw(20) << t->resultArray[res];
             res++;
         }
         cout << endl;
     }
+    return t->resultArray;
 }
 
 // ---------------------------------------------
@@ -816,6 +856,8 @@ Tournament::Tournament(vector<string> mapArray, vector<string> playerStrategies,
     this->playerStrategies = playerStrategies;
     this->numOfGames = numOfGames;
     this->maxNumOfTurns = maxNumOfTurns;
+    resultArray= {};
+    notify();
 }
 
 Tournament::Tournament(const Tournament& tournament)
@@ -824,6 +866,7 @@ Tournament::Tournament(const Tournament& tournament)
     this->playerStrategies = tournament.playerStrategies;
     this->numOfGames = tournament.numOfGames;
     this->maxNumOfTurns = tournament.maxNumOfTurns;
+    resultArray= {};
 }
 
 Tournament& Tournament::operator=(const Tournament& tournament)
@@ -832,6 +875,7 @@ Tournament& Tournament::operator=(const Tournament& tournament)
     this->playerStrategies = tournament.playerStrategies;
     this->numOfGames = tournament.numOfGames;
     this->maxNumOfTurns = tournament.maxNumOfTurns;
+    this->resultArray = tournament.resultArray;
     return *this;
 }
 
@@ -844,3 +888,40 @@ ostream& operator<<(ostream& out, const Tournament& t)
     out << "Tournament with" << t.mapArray.size() << " maps, " << t.playerStrategies.size() << " player strategies, " << t.numOfGames << "games and " << t.maxNumOfTurns << "maximum number of turns per game." << endl;
     return out;
 }
+
+std::string Tournament::stringToLog() {
+
+    std::string mapString;
+    for (auto& val : this->mapArray) {
+        mapString += val + " ";
+    }
+    std::string playerString;
+    for (auto& val : this->playerStrategies) {
+        playerString += val + " ";
+    }
+
+    std::string header;
+    for (int i = 0; i < this->numOfGames; i = i + 1) {
+        std::setw(10);
+        header += "\t\t\tGame " + std::to_string(i) + " ";
+    }
+
+    int res = 0;
+    std::string resultString;
+    std::string mapResults;
+    for (auto& val : this->mapArray) {
+        std::setw(30);
+        mapResults +=  val + "\n";
+        for (int i = 0; i < this->numOfGames; i = i + 1) {
+            std::setw(10);
+            resultString += "\t\t\t" + GameEngine::executeTournament(this)[res];
+            res++;
+        }
+        resultString += "\n";
+
+    }
+
+    return "Tournament Mode: \nM: " + mapString + "\nP: " + playerString + "\nG: " +
+        std::to_string(this->numOfGames) + "\nD: " + std::to_string(this->maxNumOfTurns) + "\n"
+        + "Results: \n" + "\t\t\t" + header + "\n" + mapResults + resultString;
+    };

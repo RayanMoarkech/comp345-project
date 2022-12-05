@@ -329,6 +329,13 @@ bool Player::getConqueredTerritory()
 
 void Player::addOwnedTerritory(Territory *territory)
 {
+		for (Territory* ownedTerritory: this->ownedTerritories)
+		{
+			if (ownedTerritory == territory)
+			{
+				return;
+			}
+		}
     this->ownedTerritories.push_back(territory);
 }
 

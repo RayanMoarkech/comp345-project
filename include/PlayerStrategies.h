@@ -8,6 +8,7 @@
     using std::ostream;
 #include <string>
     using std::string;
+#include <map>
 
 class Player;
 class Order;
@@ -80,6 +81,8 @@ public:
 		int toDefendIndex = 0;
 		int toAdvanceIndex = 0;
 
+		std::map<string, int> advancedArmy = {};
+
 		virtual ~BenevolentPlayerStrategy();
 };
 
@@ -88,6 +91,8 @@ public:
 // ---------------------------------------------
 
 class AggressivePlayerStrategy : public PlayerStrategy {
+private:
+		bool advanced = false;
 public:
 		AggressivePlayerStrategy();
 		AggressivePlayerStrategy(Player *player);
@@ -100,6 +105,7 @@ public:
 		//    friend ostream& operator<<(ostream& os, PlayerStrategies&
 		//    playerStrategies); PlayerStrategies& operator=(const PlayerStrategies&
 		//    playerStrategies);
+		void setAdvanced(int advanced);
 
 		virtual ~AggressivePlayerStrategy();
 };

@@ -212,10 +212,10 @@ void testNeutralStrategy()
 	gameEngine->transition();
 
 	// Add Neutral Player
-	commandProcessor->saveCommand("addplayer Neutral1 neutral");
+	commandProcessor->saveCommand("addplayer NeutralP neutral");
 	gameEngine->transition();
 
-	commandProcessor->saveCommand("addplayer Neutral2 neutral");
+	commandProcessor->saveCommand("addplayer AggressiveP aggressive");
 	gameEngine->transition();
 
 	// Start Game phase

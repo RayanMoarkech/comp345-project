@@ -21,8 +21,12 @@ void testOrderExecution();
 void testLoggingObserver();
 
 // Phase 3
-void testStrategies();
 void testPlayerStrategies();
+void testBenevolantStrategy();
+void testCheaterStrategy();
+void testAggressiveStrategy();
+void testNeutralStrategy();
+void testHumanStrategy();
 void testTournament();
 
 int main(int argc, char *argv[]) {
@@ -66,8 +70,14 @@ int main(int argc, char *argv[]) {
 
 		// Phase 3
 
-		testStrategies();
 //    testPlayerStrategies();
-//    testTournament();
+
+		testBenevolantStrategy();
+		testCheaterStrategy();
+		testAggressiveStrategy();
+		testNeutralStrategy();
+
+    testTournament();
+
     return 0;
 }

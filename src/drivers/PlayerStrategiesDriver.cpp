@@ -84,11 +84,47 @@ void testPlayerStrategies()
     gameEngine->issueOrdersPhase();
 }
 
-void testStrategies()
+void testBenevolantStrategy()
 {
 	cout << endl
 			 << "------------------------------------------------------" << endl
-			 << "Test Player Strategy" << endl
+			 << "Test Benevolant Strategy" << endl
+			 << "------------------------------------------------------" << endl
+			 << endl;
+
+	GameEngine* gameEngine = new GameEngine("");
+	CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+	// Load the map
+	commandProcessor->saveCommand("loadmap 001_I72_Ghtroc720.map");
+	gameEngine->transition();
+
+	// Validate the map
+	commandProcessor->saveCommand("validatemap");
+	gameEngine->transition();
+
+	// Add Benevolant Player
+	commandProcessor->saveCommand("addplayer BenevolantP1 benevolant");
+	gameEngine->transition();
+
+	commandProcessor->saveCommand("addplayer BenevolantP2 benevolant");
+	gameEngine->transition();
+
+	// Start Game phase
+	commandProcessor->saveCommand("gamestart");
+	gameEngine->transition();
+
+	// Main Game Loop
+	gameEngine->mainGameLoop();
+
+	delete gameEngine;
+}
+
+void testCheaterStrategy()
+{
+	cout << endl
+			 << "------------------------------------------------------" << endl
+			 << "Test Cheater Strategy" << endl
 			 << "------------------------------------------------------" << endl
 			 << endl;
 
@@ -104,24 +140,83 @@ void testStrategies()
 	gameEngine->transition();
 
 	// Add Cheater Player
-//	commandProcessor->saveCommand("addplayer CheaterP cheater");
-//	gameEngine->transition();
-
-	// Add Benevolant Player
-	commandProcessor->saveCommand("addplayer BenevolantP benevolant");
+	commandProcessor->saveCommand("addplayer CheaterP1 cheater");
 	gameEngine->transition();
 
+	commandProcessor->saveCommand("addplayer CheaterP2 cheater");
+	gameEngine->transition();
 
-	commandProcessor->saveCommand("addplayer BenevolantP2 benevolant");
+	// Start Game phase
+	commandProcessor->saveCommand("gamestart");
+	gameEngine->transition();
+
+	// Main Game Loop
+	gameEngine->mainGameLoop();
+
+	delete gameEngine;
+}
+
+void testAggressiveStrategy()
+{
+	cout << endl
+			 << "------------------------------------------------------" << endl
+			 << "Test Aggressive Strategy" << endl
+			 << "------------------------------------------------------" << endl
+			 << endl;
+
+	GameEngine* gameEngine = new GameEngine("");
+	CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+	// Load the map
+	commandProcessor->saveCommand("loadmap 001_I72_Ghtroc720.map");
+	gameEngine->transition();
+
+	// Validate the map
+	commandProcessor->saveCommand("validatemap");
 	gameEngine->transition();
 
 	// Add Aggressive Player
-//	commandProcessor->saveCommand("addplayer AggressiveP aggressive");
-//	gameEngine->transition();
+	commandProcessor->saveCommand("addplayer AggressiveP1 aggressive");
+	gameEngine->transition();
+
+	commandProcessor->saveCommand("addplayer AggressiveP2 aggressive");
+	gameEngine->transition();
+
+	// Start Game phase
+	commandProcessor->saveCommand("gamestart");
+	gameEngine->transition();
+
+	// Main Game Loop
+	gameEngine->mainGameLoop();
+
+	delete gameEngine;
+}
+
+void testNeutralStrategy()
+{
+	cout << endl
+			 << "------------------------------------------------------" << endl
+			 << "Test Neutral Strategy" << endl
+			 << "------------------------------------------------------" << endl
+			 << endl;
+
+	GameEngine* gameEngine = new GameEngine("");
+	CommandProcessor* commandProcessor = gameEngine->getCommandProcessor();
+
+	// Load the map
+	commandProcessor->saveCommand("loadmap 001_I72_Ghtroc720.map");
+	gameEngine->transition();
+
+	// Validate the map
+	commandProcessor->saveCommand("validatemap");
+	gameEngine->transition();
 
 	// Add Neutral Player
-//	commandProcessor->saveCommand("addplayer NeutralP neutral");
-//	gameEngine->transition();
+	commandProcessor->saveCommand("addplayer Neutral1 neutral");
+	gameEngine->transition();
+
+	commandProcessor->saveCommand("addplayer Neutral2 neutral");
+	gameEngine->transition();
 
 	// Start Game phase
 	commandProcessor->saveCommand("gamestart");

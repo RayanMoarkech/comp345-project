@@ -728,9 +728,10 @@ void GameEngine::executeTournament(Tournament* t)
 
             // Add players
             if ((val.find(".map") != std::string::npos) && (gameEngine->_map->validate())) {
-                for (int i = 1; i <= t->playerStrategies.size(); i = i + 1) {
+                for (int i = 0; i < t->playerStrategies.size(); i++) {
                     // Add players
-                    commandProcessor->saveCommand("addplayer player" + i + ' ' + t->playerStrategies[i]);
+										string command = "addplayer player" + std::to_string(i+1) + " " + t->playerStrategies[i];
+                    commandProcessor->saveCommand(command);
                     gameEngine->transition();
                 }
             }

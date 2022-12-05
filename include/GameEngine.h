@@ -109,6 +109,8 @@ public:
 
     std::string stringToLog();
 
+    vector<Player*> _players;
+
 private:
     vector<State *> _state;
     int _currentStateIndex;

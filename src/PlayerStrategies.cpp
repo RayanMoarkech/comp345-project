@@ -221,6 +221,8 @@ Order* BenevolentPlayerStrategy::issueOrder()
 		}
 	}
 	cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;
+	this->toAdvanceIndex = 0;
+	this->toDefendIndex = 0;
 	return nullptr;
 }
 
@@ -435,6 +437,19 @@ Order* HumanPlayerStrategy::issueOrder() {
 			cout << "5 - Airlift Card" << endl;
 			cout << "6 - Negociate Card" << endl;
 			cout << "0 - End Issuing Orders" << endl;
+			cout << endl;
+			if (this->getPlayer()->getPlayerHand()->cards.size() == 0)
+			{
+				cout << "You have no cards in hand." << endl;
+			}
+			else {
+				cout << "Your Hand: " << endl;
+				for (Card* c : this->getPlayer()->getPlayerHand()->cards)
+				{
+					cout << "- " <<  c->getCardType() << " card" << endl;
+				}
+			}
+			cout << endl;
 			int orderType = -1;
 			cin >> orderType;
 			while (orderType < 0 && orderType > 6)
@@ -448,6 +463,19 @@ Order* HumanPlayerStrategy::issueOrder() {
 				cout << "5 - Airlift Card" << endl;
 				cout << "6 - Negociate Card" << endl;
 				cout << "0 - Not issuing one more order" << endl;
+				cout << endl;
+				if (this->getPlayer()->getPlayerHand()->cards.size() == 0)
+				{
+					cout << "You have no cards in hand" << endl;
+				}
+				else {
+					cout << "Your Hand: " << endl;
+					for (Card* c : this->getPlayer()->getPlayerHand()->cards)
+					{
+						cout << c->getCardType() << " card" << endl;
+					}
+				}
+				cout << endl;
 				cin >> orderType;
 			}
 

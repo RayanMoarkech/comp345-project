@@ -1,6 +1,7 @@
 #include <iostream>
 	using std::cout;
 	using std::endl;
+#include <typeinfo>
 
 #include "../../include/PlayerStrategies.h"
 #include "../../include/Player.h"
@@ -8,6 +9,7 @@
 #include "../../include/Map.h"
 #include "../../include/Orders.h"
 #include "../../include/Cards.h"
+
 
 void testPlayerStrategies()
 {
@@ -17,7 +19,9 @@ void testPlayerStrategies()
         << "------------------------------------------------------" << endl
         << endl;
 
-    Deck* deck = new Deck();
+		GameEngine* gameEngine = new GameEngine();
+
+    Deck* deck = gameEngine->getDeck();
     Map* map = MapLoader::load("./001_I72_Ghtroc720.map");
 
     Hand* playerOneHand = new Hand();
@@ -70,9 +74,11 @@ void testPlayerStrategies()
     HumanPlayerStrategy* humanPlayer = new HumanPlayerStrategy(player1);
     BenevolentPlayerStrategy* benevolantPlayer = new BenevolentPlayerStrategy(player2);
 
-    for (int i=0; i < 40; i++)
-    {
-        humanPlayer->issueOrder();
-        benevolantPlayer->issueOrder();
-    }
+    player1->setPlayerStrategy(humanPlayer);
+    player2->setPlayerStrategy(benevolantPlayer);
+
+    gameEngine->_players = players;
+
+    gameEngine->issueOrdersPhase();
+    gameEngine->issueOrdersPhase();
 }

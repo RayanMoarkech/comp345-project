@@ -104,10 +104,10 @@ void testBenevolentStrategy()
 	gameEngine->transition();
 
 	// Add Benevolent Player
-	commandProcessor->saveCommand("addplayer BenevolentP1 benevolant");
+	commandProcessor->saveCommand("addplayer BenevolentP1 benevolent");
 	gameEngine->transition();
 
-	commandProcessor->saveCommand("addplayer BenevolentP2 benevolant");
+	commandProcessor->saveCommand("addplayer BenevolentP2 benevolent");
 	gameEngine->transition();
 
 	// Start Game phase
@@ -252,7 +252,7 @@ void testHumanStrategy()
 	gameEngine->transition();
 
 	// Add Benevolent Player
-	commandProcessor->saveCommand("addplayer BenevolentP benevolant");
+	commandProcessor->saveCommand("addplayer BenevolentP benevolent");
 	gameEngine->transition();
 
 	// Start Game phase

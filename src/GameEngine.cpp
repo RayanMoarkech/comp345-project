@@ -447,7 +447,7 @@ bool GameEngine::allPlayerCardsPlayed() const
     for (Player* p : this->_players)
     {
         cout << p->getName() << ": " << p->getPlayerHand()->cards.size() << " cards." << endl;
-        allCardsPlayed = allCardsPlayed && (p->getPlayerHand()->cards.size() != 0);
+        allCardsPlayed = allCardsPlayed && (p->getPlayerHand()->cards.size() == 0);
     }
     return allCardsPlayed;
 }
@@ -575,7 +575,7 @@ int GameEngine::validateGameRound()
             continue;
         }
         // Check if player owns all territories
-        if (ownedTerritoryCount == this->_map->getTerritories().size())
+        if (ownedTerritoryCount >= this->_map->getTerritories().size())
         {
             cout << player->getName() << " owns all the territories." << endl << endl;
             return i;

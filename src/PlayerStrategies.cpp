@@ -150,6 +150,11 @@ Order* BenevolentPlayerStrategy::issueOrder()
 	cout << "----------------------------------" << endl;
 	cout << endl;
 
+	// Remove all unusable cards
+	this->_player->removeCardFromHand("Diplomacy");
+	this->_player->removeCardFromHand("Bomb");
+	this->_player->removeCardFromHand("Reinforcement");
+
 	//To Defend
 	if (this->getPlayer()->getDefendList().empty())
 	{
@@ -163,7 +168,7 @@ Order* BenevolentPlayerStrategy::issueOrder()
 	//Deploy on toDefend territories, will not be able to issue other orders until
 	//all armies are deployed
 	//Deploys to weakest countries in priority
-	if (remainingArmyUnits != 0)
+	if (remainingArmyUnits > 0)
 	{
 		cout << "Total remaining of army units to deploy: " << remainingArmyUnits << endl;
 		// Divide army units by 3 to not deploy all armies to a single territory
@@ -288,6 +293,13 @@ Order* AggressivePlayerStrategy::issueOrder() {
 		return nullptr;
 	}
 
+	// To attack
+	if (this->getPlayer()->getAttackList().empty())
+	{
+		this->toAttack();
+		return nullptr;
+	}
+
 	int playerArmyUnits = this->getPlayer()->getArmyUnits();
 	Territory* strongestCountry = this->getPlayer()->getAttackList().at(0);
 
@@ -298,13 +310,6 @@ Order* AggressivePlayerStrategy::issueOrder() {
 		cout << this->getPlayer()->getName() << " (Aggressive) will deploy " << playerArmyUnits <<
 				 " armies to territory " << this->getPlayer()->getDefendList().at(0)->getName() << endl;
 		return new Deploy(this->getPlayer(), strongestCountry, playerArmyUnits);
-	}
-
-	// To defend
-	if (this->getPlayer()->getAttackList().empty())
-	{
-		this->toAttack();
-		return nullptr;
 	}
 
 	// If the player has bomb card

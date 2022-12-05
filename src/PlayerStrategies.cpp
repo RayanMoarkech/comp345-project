@@ -212,12 +212,18 @@ Order* BenevolentPlayerStrategy::issueOrder()
 			//sort from strongest to weakest
 			sort(adjacentOwnedCountries.begin(), adjacentOwnedCountries.end(),
 				[](const Territory* t1, const Territory* t2) {return *t1 > *t2; });
-			Territory* strongestCountry = adjacentOwnedCountries.front();
-			int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
-			this->toAdvanceIndex++;
-			cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
-				<< weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
-			return new Advance(this->getPlayer(), strongestCountry, weakestCountry, armiesToAdvance);
+			if (!adjacentOwnedCountries.empty())
+			{
+				Territory *strongestCountry = adjacentOwnedCountries.front();
+				int armiesToAdvance = strongestCountry->getNumberOfArmies() / 3;
+				if (armiesToAdvance != 0)
+				{
+					this->toAdvanceIndex++;
+					cout << this->getPlayer()->getName() << " will advance " << armiesToAdvance << " armies to "
+							 << weakestCountry->getName() << " from " << strongestCountry->getName() << endl;
+					return new Advance(this->getPlayer(), strongestCountry, weakestCountry, armiesToAdvance);
+				}
+			}
 		}
 	}
 	cout << this->getPlayer()->getName() << " has no more orders to issue." << endl;

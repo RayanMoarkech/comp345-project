@@ -799,7 +799,7 @@ void GameEngine::executeTournament(Tournament* t)
     for (auto& val : t->mapArray) {
         cout << left << setw(30) << val;
         for (int i = 0; i < t->numOfGames; i = i + 1) {
-            cout << left << setw(10) << resultArray[res];
+//            cout << left << setw(10) << resultArray[res];
             res++;
         }
         cout << endl;
@@ -816,6 +816,7 @@ Tournament::Tournament(vector<string> mapArray, vector<string> playerStrategies,
     this->playerStrategies = playerStrategies;
     this->numOfGames = numOfGames;
     this->maxNumOfTurns = maxNumOfTurns;
+    notify();
 }
 
 Tournament::Tournament(const Tournament& tournament)
@@ -844,3 +845,39 @@ ostream& operator<<(ostream& out, const Tournament& t)
     out << "Tournament with" << t.mapArray.size() << " maps, " << t.playerStrategies.size() << " player strategies, " << t.numOfGames << "games and " << t.maxNumOfTurns << "maximum number of turns per game." << endl;
     return out;
 }
+
+std::string Tournament::stringToLog() {
+
+    std::string mapString;
+    for (auto& val : this->mapArray) {
+        mapString += val + " ";
+    }
+    std::string playerString;
+    for (auto& val : this->playerStrategies) {
+        playerString += val + " ";
+    }
+
+    std::string header;
+    for (int i = 0; i < this->numOfGames; i = i + 1) {
+        std::setw(10);
+        header += "\t\t\tGame " + std::to_string(i) + " ";
+    }
+
+    int res = 0;
+    std::string mapResults;
+    for (auto& val : this->mapArray) {
+        std::setw(30);
+        mapResults += val + "\n";
+    }
+
+    std::string resultString;
+        for (int i = 0; i < this->numOfGames; i = i + 1) {
+            std::setw(10);
+//            resultString += resultArray[res] + "\t\t\t";
+            res++;
+        }
+
+    return "Tournament Mode: \nM: " + mapString + "\nP: " + playerString + "\nG: " +
+        std::to_string(this->numOfGames) + "\nD: " + std::to_string(this->maxNumOfTurns) + "\n"
+        + "Results: \n" + "\t\t\t" + header + "\n" + mapResults + "\n" + resultString;
+    };

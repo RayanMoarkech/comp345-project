@@ -532,7 +532,6 @@ void GameEngine::executeOrdersPhase()
 										 << "'s strategy's type has changed to Aggressive" << endl;
 								cout << "**********************************" << endl;
 						}
-						order->execute();
 				}
 
 				// Check if order is a bomb
@@ -554,8 +553,9 @@ void GameEngine::executeOrdersPhase()
 										 << "'s strategy's type has changed to Aggressive" << endl;
 								cout << "**********************************" << endl;
 						}
-						order->execute();
 				}
+
+				order->execute();
     }
     this->ordersList = nullptr;
 }
